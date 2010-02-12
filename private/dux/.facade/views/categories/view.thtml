@@ -1,0 +1,15 @@
+<h2><?php echo $category['Category']['title']?></h2>
+<?php if(!empty($category['Decorative'][0])) echo $mediaAssistant->mediaLink($category['Decorative'][0],array('class'=>'alt deco'),'crop',false,null);?>
+<?php echo $textAssistant->htmlFormatted($category['Category']['description'],$category['Resource']) ?>
+<div class='product_list'>
+<?php if(!empty($category['Product'])):?>
+<?php foreach($category['Product'] as $product):?>
+<div class="item">
+<h3><?php echo $html->link($product['title'], '/products/'.$product['slug']);?>
+<?php if(!empty($product['Decorative'][0])) echo $mediaAssistant->mediaLink($product['Decorative'][0],array('class'=>'alt deco'),'crop',false,null,'Product');?></h3>
+</div>
+<?php endforeach; ?>
+<?php else:?>
+<p>There are no products in this product range at this time.</p>
+<?php endif;?>
+</div>

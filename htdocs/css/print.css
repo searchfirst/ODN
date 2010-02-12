@@ -1,0 +1,8 @@
+body {
+padding: 10mm;
+margin: 0;
+}
+
+#menu, #header, #search, #user_details {
+display: none;
+}

@@ -1,0 +1,1 @@
+<?php require(CAKE_CORE_INCLUDE_PATH.'/shared/vendors/phpthumb/phpthumb.class.php')?>

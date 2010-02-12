@@ -1,0 +1,5 @@
+<p>Do you really wish to delete this section?</p>
+<?php echo $html->formTag("/sections/delete/$id") ?>
+<?php echo $html->hidden('Section/id', array('value'=>$id)) ?>
+<?php echo $html->submitTag('Yes, delete this section.') ?>
+</form>

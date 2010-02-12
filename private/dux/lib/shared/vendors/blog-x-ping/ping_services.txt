@@ -1,0 +1,52 @@
+##	blog-x-ping - Sample Ping server list
+##		http://system-x.info/?pageid=26&menutree=61
+##
+##		A lightweight yet powerful library to automatically ping blog
+##		aggregator services to notify them of updated syndication	feeds,
+##		using Weblogs.Com XML-RPC compatible pinging services.
+##
+##	entries in the file loaded by blog-x-ping will be pinged in the 
+##	order in which they appear in the file, entries consist of the 
+##	url to the desired ping server, which must	contain an http:// 
+##	string at the	start and can optionally include a path to the ping
+##	XML-RPC server if it is required, and a port number preceded by a 
+##	colon (:) for the ping server if it isn't running on the standard
+##	HTTP port (port 80)
+##
+##	e.g.
+##	http://testping.test.test:8080/testping
+##
+##	entries can also include an optional case sensitive ping type
+##	description string containing either weblogUpdates.ping or if the
+##	ping server supports extended pings weblogUpdates.extendedPing
+##	the ping type description must be preceded by a comma (,) 
+##
+##	e.g.
+##  http://testping.test.test:8080/testping,weblogUpdates.extendedPing
+##	or
+##  http://testping.test.test:8080/testping,weblogUpdates.ping
+##
+##	if the ping type description is not specified it defaults to
+##	weblogUpdates.ping as this is the most commonly supported ping
+##	type.
+##
+##	lines can be commented out by adding two hash symbols (##) as the
+##	first two characters on the line, all lines starting this way will
+##	be ignored by the do_ping command, the system also ignores lines
+##	which contain nothing but white space.
+
+http://blogsearch.google.com/ping/RPC2,weblogUpdates.extendedPing
+##http://api.moreover.com/RPC2,weblogUpdates.extendedPing
+http://api.feedster.com/ping.php
+##http://bulkfeeds.net/rpc
+http://ping.feedburner.com/rpc.php
+http://ping.feeds.yahoo.com/RPC2
+http://ping.syndic8.com/xmlrpc.php
+http://ping.weblogalot.com/rpc.php
+##http://rpc.blogrolling.com:80/pinger/ 
+http://rpc.pingomatic.com/RPC2
+##http://rpc.tailrank.com/feedburner/RPC2
+http://rpc.technorati.com/rpc/ping
+http://rpc.weblogs.com/RPC2,weblogUpdates.extendedPing
+##http://www.blogpeople.net/servlet/weblogUpdates
+##http://rpc.icerocket.com:10080/

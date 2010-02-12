@@ -1,0 +1,1 @@
+<?php $phpthumb->OutputThumbnail();?>

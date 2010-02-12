@@ -1,0 +1,35 @@
+/* Sample sIFR config
+var nueva = {src: '/js/sifr/nueva-condensed.swf'};
+sIFR.activate(nueva);
+sIFR.replace(nueva, {
+	selector: 'h1',
+	wmode: 'transparent',
+	css: {'.sIFR-root': {'color':'#FFFFFF','letter-spacing':1,'text-transform':'lowercase','font-style':'italic','background-color':'#000000'}},
+	filters: {
+		Glow: {
+			knockout: false,
+			distance: 0,
+			color: '#777777',
+			strength: 2,
+			blurX: 6,
+			blurY: 3
+		}
+	}
+});
+
+sIFR.replace(nueva, {
+	selector: 'h2',
+	wmode: 'transparent',
+	css: {'.sIFR-root': {'color':'#FFFFFF','letter-spacing':1,'text-transform':'lowercase','font-style':'italic','background-color':'#000000'}},
+	filters: {
+		Glow: {
+			knockout: false,
+			distance: 0,
+			color: '#777777',
+			strength: 1,
+			blurX: 2,
+			blurY: 2
+		}
+	}
+});
+*/

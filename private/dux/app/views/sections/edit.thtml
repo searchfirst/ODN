@@ -1,0 +1,28 @@
+<h2>Edit Section</h2>
+<form action="<?php echo $html->url('/sections/edit/'.$html->tagValue('Section/id')); ?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<div class="options">
+<fieldset>
+<?php if(MOONLIGHT_ARTICLES_ENABLE_COMMENTS):?>
+<?php echo $form->input('Section/moderated',array('type'=>'checkbox','value'=>1,'div'=>false,'label'=>'Moderate Comments'))?> 
+<?php endif;?>
+</fieldset>
+</div>
+<fieldset> 
+<?php echo $form->input('Section/title',array('size'=>'60','div'=>false,'error'=>'Please enter the Title.'))?> 
+</fieldset>
+<fieldset> 
+<?php echo $form->input('Section/description',array('cols'=>'60','rows'=>'20','div'=>false,'error'=>'Please enter the Description.'))?> 
+</fieldset>
+<?php if(empty($section['Decorative'][0])):?>
+<fieldset>
+<label for="Fileupload">Upload an image</label>
+<?php echo $form->hidden('Fileupload/type][',array('value'=>MOONLIGHT_RESTYPE_DECO,'id'=>'FileuploadType'))?> 
+<input type="file" name="Fileupload[]" id="Fileupload" value="" />
+<?php if(isset($GLOBALS['Fileupload_error'])) echo "<div class=\"error_message\">{$GLOBALS['Fileupload_error']}</div>"?> 
+</fieldset>
+<?php endif;?>
+<fieldset>
+<?php echo $form->hidden('Section/id')?> 
+<?php echo $form->submit('Save',array('div'=>false))?> 
+</fieldset>
+</form>

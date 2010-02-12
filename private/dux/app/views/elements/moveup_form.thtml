@@ -1,0 +1,14 @@
+<?php
+$controller = isset($controller)?Inflector::underscore($controller):Inflector::underscore($this->name);
+$model = isset($model)?$model:$this->modelNames[0];
+?>
+<form method="post" action="<?php echo $html->url("/$controller/moveup/")?>">
+<?php echo $form->hidden("$model/id",array('id'=>"{$model}Id{$id}",'value'=>$id))?> 
+<?php echo $form->hidden("$model/prev_id",array('id'=>"{$model}PrevId{$id}",'value'=>$prev_id))?>
+<?php echo $form->submitImage("http://{$_SERVER['HTTP_HOST']}".$this->webroot."img/moveup-icon.png",array(
+	'id'=>"{$model}Submit{$id}",
+	'name'=>"data[$model][submit]",
+	'src'=>$html->url('/img/moveup-icon.png'),
+	'alt'=>"Move item up",
+	'title'=>"Move item up"))?> 
+</form>

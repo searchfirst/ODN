@@ -1,0 +1,46 @@
+<?php
+$mw_menu_prefix = array(''=>'Home','categories'=>'Services');
+$menu_ommissions = array('contact'=>'Contact Us');
+$mw_menu_suffix = array();
+if(!is_array($moonlight_website_menu)) $moonlight_website_menu = array();
+?>
+<div id="menu">
+<ul>
+<?php
+if(!empty($mw_menu_prefix)) foreach($mw_menu_prefix as $slug => $title)
+	if(!in_array($slug,array_keys($menu_ommissions))) echo "<li class=\"$slug\">".$html->link($title,"/$slug").'</li>';
+if(!empty($moonlight_website_menu)) foreach($moonlight_website_menu as $slug => $title)
+	if(!in_array($slug,array_keys($menu_ommissions))) echo "<li class=\"$slug\">".$html->link($title,"/$slug").'</li>';
+if(!empty($mw_menu_suffix)) foreach($mw_menu_suffix as $slug => $title)
+	if(!in_array($slug,array_keys($menu_ommissions))) echo "<li class=\"$slug\">".$html->link($title,"/$slug").'</li>';
+?>
+</ul>
+</div>
+
+<div id="submenu">
+<?php if(!empty($moonlight_product_list)):?>
+<ul class="tab-bar">
+<?php foreach($moonlight_product_list as $product_item) {?>
+<li<?php
+if(!empty($current_parent_section) && ($current_parent_section == 'category-'.$product_item['Category']['slug'])) echo " class=\"current tabs-selected\"";
+?>><a href="#item-<?php echo $product_item['Category']['slug'] ?>"><?php echo $product_item['Category']['title'] ?>
+ <span class="description"><?php echo $textAssistant->plainSnippet($product_item['Category']['description']) ?></span></a></li>
+<?php }?>
+</ul>
+
+<?php foreach($moonlight_product_list as $product_item) {?>
+<div id="item-<?php echo $product_item['Category']['slug'] ?>">
+<?php if(!empty($product_item['Product'])):?>
+<?php foreach(array_splice($product_item['Product'],0,3) as $product_subitem) {?>
+<h3><?php echo $html->link($product_subitem['title'],"/products/{$product_subitem['slug']}")?></h3>
+<p><?php echo $textAssistant->plainSnippet($product_subitem['description']) ?></p>
+<?php }?>
+<?php else:?>
+<?php echo $textAssistant->htmlFormattedSnippet2($product_item['Category']['description']) ?>
+<?php endif; ?>
+<p class="read_more"><?php echo $html->link('View More',"/categories/{$product_item['Category']['slug']}"); ?></p>
+</div>
+<?php }?>
+
+<?php endif;?>
+</div>

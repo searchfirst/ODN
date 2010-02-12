@@ -1,0 +1,41 @@
+<?php if(isset($mod_date_for_layout)) header('Last-Modified: '.$time->toRSS($mod_date_for_layout)); ?>
+<?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="charset=utf-8" />
+<title><?php echo $title_for_layout;?> » <?php echo MOONLIGHT_WEBSITE_NAME ?></title>
+<?php echo $html->css('vendors/sIFR-print','stylesheet',array('media'=>'print'));?> 
+<?php echo $html->css('vendors/sIFR-screen','stylesheet',array('media'=>'screen'));?> 
+<?php echo $html->css('vendors/thickbox','stylesheet',array('media'=>'screen'));?> 
+<?php echo $html->css('default','stylesheet',array('media'=>'screen'));?> 
+<!--[if lte IE 6]><?php print $html->css('ie','stylesheet',array('media'=>'screen'));?><![endif]-->
+<?php echo $javascript->link('sifr/sifr');?> 
+<?php echo $javascript->link('sifr/sifr-config');?> 
+<?php echo $javascript->link('thickbox/jquery');?> 
+<?php echo $javascript->link('thickbox/thickbox');?> 
+<?php echo $javascript->link('tabs/jquery.tabs.pack.js')?> 
+<?php echo $javascript->link('tabs/jquery.tabs.config.js')?> 
+</head>
+<body><div id="main">
+<div id="header">
+<h1><?php echo MOONLIGHT_WEBSITE_NAME ?></h1>
+</div><!-- /header -->
+
+<?php print $this->renderElement('menu')?> 
+
+<?php echo $this->renderElement('sidebar')?> 
+
+<div id="content">
+<?php
+if ($session->check('Message.flash'))
+    $session->flash();
+echo $content_for_layout;
+?> 
+</div><!-- /content -->
+
+<?php echo $this->renderElement('footer') ?> 
+
+</div></body>
+</html>

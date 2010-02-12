@@ -1,0 +1,46 @@
+<h2>Website [<?php echo $textAssistant->link($website['Customer']['company_name'],"/customers/view/{$website['Customer']['id']}")?>]</h2>
+<div class="options">
+<?php echo $this->renderElement('edit_form',array('id'=>$website['Website']['id'],'title'=>$website['Website']['uri']))?> 
+<?php //echo $this->renderElement('delete_form',array('id'=>$website['Website']['id'],'title'=>$website['Website']['title']))?> 
+</div>
+
+<div id="item_display">
+<ul>
+<li><a href="#item_display_description">Details</a></li>
+</ul>
+
+<div id="item_display_description">
+<div class="service_info">
+<div class="options">
+<?php echo $this->renderElement('new_item_form',array(
+	'parentClass'=>'Customer','parentName'=>$website['Customer']['company_name'],'parentId'=>$website['Customer']['id'],'model'=>'Service','controller'=>'Services','website'=>$website['Website']['id']))?> 
+</div>
+<h3>Services</h3>
+<ul class="item_list">
+<?php foreach($website['Service'] as $service):?>
+<li class="item"><?php echo $html->link($service['title'], '/services/view/' . $service['id'])?></li>
+<?php endforeach;?>
+</ul>
+<?php if(empty($website['Service'])):?>
+<p>No Services</p>
+<?php endif;?>
+</div>
+
+
+<h3 class="tabs-heading">Details</h3>
+<dl>
+<dt>Address [URI]</dt>
+<dd><?php echo $textAssistant->link($website['Website']['uri'],"http://{$website['Website']['uri']}")?></dd>
+<?php if(!empty($website['Website']['aliases'])):?>
+<dt>Aliases</dt>
+<dd><?php echo $website['Website']['aliases']?></dd>
+<?php endif;?>
+<dt>FTP Host Address</dt>
+<dd><?php echo $website['Website']['ftp_host']?></dd>
+<dt>FTP Username</dt>
+<dd><?php echo $textAssistant->htmlFormatted($website['Website']['ftp_username'])?></dd>
+<dt>FTP Password</dt>
+<dd><?php echo $textAssistant->htmlFormatted($website['Website']['ftp_password'])?></dd>
+</dl>
+</div>
+</div>
