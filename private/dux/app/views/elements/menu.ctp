@@ -24,6 +24,7 @@
 		</ul>
 		</div>
 	</li>
+	<?php if(isset($current_user)):?>
 	<li class="tools"><span>Tools</span>
 		<div>
 		<ul>
@@ -35,5 +36,6 @@
 		</ul>
 		</div>
 	</li>
+	<?php endif;?>
 </ul>
 </div>
