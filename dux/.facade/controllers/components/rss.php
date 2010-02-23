@@ -1,1 +1,0 @@
-<?php require(CAKE_CORE_INCLUDE_PATH.'/shared/components/rss.php')?>

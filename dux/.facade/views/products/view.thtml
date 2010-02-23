@@ -1,7 +1,0 @@
-<h2><?php echo $product['Category']['title']?>: <?php echo $product['Product']['title'] ?></h2>
-<div class="product_display">
-<?php if(!empty($product['Decorative'][0])) echo $mediaAssistant->mediaLink($product['Decorative'][0],array("class"=>"deco"),'crop',true,array("rel"=>"pagegallery"));?>
-
-<?php echo $textAssistant->htmlFormatted($product['Product']['description'],$product['Resource'],'Product',array("rel"=>"pagegallery"))?>
-
-</div>
