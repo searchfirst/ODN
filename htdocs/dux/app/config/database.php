@@ -1,1 +1,13 @@
-<?php require(CAKE_CORE_INCLUDE_PATH.'/shared/config/database.php');?>
+<?php
+class DATABASE_CONFIG
+{
+	var $default = array('driver' => 'mysqli',
+								'connect' => 'mysql_connect',
+								'host' => 'localhost',
+								'login' => 'dux',
+								'password' => 'lonelyhearts',
+								'database' => 'dux',
+								'encoding' => 'UTF8',
+								'prefix' => '');
+}
+?>
