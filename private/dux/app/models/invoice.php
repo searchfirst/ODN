@@ -106,10 +106,10 @@ class Invoice extends AppModel {
 		return file_put_contents($filename,$fdf_string);
 	}
 	
-	function isCacheOld($created,$filename) {
+	function isCacheOld($modified,$filename) {
 		$file_date = filectime($filename);
-		$invoice_date = strtotime($created);
-		return $invoice_date > $file_date;
+		$last_mod_date = strtotime($modified);
+		return $last_mod_date > $file_date;
 	}
 	
 	function getVatRates() {

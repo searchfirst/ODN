@@ -12,4 +12,6 @@
 <?php echo $javascript->link('jquery/date_picker/date_picker_config')?> 
 <?php echo $javascript->link('jquery/simplemodal/simplemodal')?> 
 <?php echo $javascript->link('jquery/jdmenu/jdMenu')?> 
+<?php echo $javascript->link('jquery/csv')?> 
+<?php echo $javascript->link('jquery/table')?> 
 <?php echo $javascript->link('forms')?>

@@ -1,4 +1,4 @@
-<form action="<?php echo $html->url('/invoices/raise'); ?>" method="post" accept-charset="UTF-8">
+<form action="<?php echo $html->url('/invoices/raise'); ?>" method="post" accept-charset="UTF-8" id="invoice_raise">
 <fieldset> 
 <legend>Raise Invoice</legend>
 <?php echo $form->input('Invoice.description',array(
@@ -16,3 +16,11 @@
 <?php echo $form->submit('Add')?> 
 <?php // echo $form->submit('Add',array('label'=>false,'div'=>false))?> 
 </form>
+<div id="table_preview"></div>
+<script type="text/javascript">
+$('#invoice_raise *').bind('change',function(e){
+    $("#table_preview").html("<img src='/js/jquery/thickbox/loadingAnimation.gif' alt='Loading...' />");
+	var csv = "1,2,3";
+	$("#table_preview").table($.csv()(csv));
+});
+</script>

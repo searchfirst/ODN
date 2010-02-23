@@ -157,7 +157,10 @@ class CustomersController extends AppController {
 	}
 
 	function search() {
-		$query = strtoupper($this->params['form']['q']);
+		if(isset($this->params['url']['q'])) {
+			$q_string = $this->params['url']['q'];
+		}
+		$query = strtoupper($q_string);
 		$customers = $this->Customer->search($query);
 		$this->set('customers', $customers);
 		if(count($customers)==1) {

@@ -71,22 +71,4 @@ $(document).ready(function() {
 		}
 	});
 
-	
-/*	$('#d_menu li').filter(function(index){ return $('div',this).length==1; }).bind('mouseover',function(e){
-		var isChild = $(e.currentTarget).has($(e.relatedTarget)).length;
-		if(!isChild) {
-			var leftpoint = $(this).position().left + 'px';
-			//$('#d_menu .customers div').css('left',leftpoint).fadeIn('fast');
-			$(this).children('div').css('left',leftpoint).fadeIn('fast');
-		}
-	});
-	
-	$('#d_menu .customers').bind('mouseout',function(e){
-		var isChild = $(e.currentTarget).has($(e.relatedTarget)).length;
-		if(!(isChild)) {
-			//$('#d_menu .customers div').fadeOut('fast');
-			$(this).children('div').fadeOut('fast')
-		}
-	});*/
-	
 });
