@@ -14,7 +14,8 @@
 	if (!defined('ROOT')) {
 		 //define('ROOT', 'FULL PATH TO DIRECTORY WHERE APP DIRECTORY IS LOCATED DO NOT ADD A TRAILING DIRECTORY SEPARATOR';
 		 //You should also use the DS define to seperate your directories
-		 define('ROOT', DS.'home'.DS.'searchfirst'.DS.'sfd.dux.me.uk'.DS.'user'.DS.'htdocs'.DS.'dux');
+		//define('ROOT', DS.'home'.DS.'searchfirst'.DS.'sfd.dux.me.uk'.DS.'user'.DS.'htdocs'.DS.'dux');
+		define('ROOT', dirname(__FILE__).DS.'dux');
 	}
 	if (!defined('APP_DIR')) {
 		 //define('APP_DIR', 'DIRECTORY NAME OF APPLICATION';
@@ -27,7 +28,7 @@
 	if (!defined('CAKE_CORE_INCLUDE_PATH')) {
 		 //define ('CAKE_CORE_INCLUDE_PATH', FULL PATH TO DIRECTORY WHERE CAKE CORE IS INSTALLED DO NOT ADD A TRAILING DIRECTORY SEPARATOR';
 		 //You should also use the DS define to seperate your directories
-		 define('CAKE_CORE_INCLUDE_PATH', DS.'home'.DS.'searchfirst'.DS.'sfd.dux.me.uk'.DS.'user'.DS.'htdocs'.DS.'dux'.DS.'lib');
+		 define('CAKE_CORE_INCLUDE_PATH', ROOT.DS.'lib');
 	}
 ///////////////////////////////
 //DO NOT EDIT BELOW THIS LINE//

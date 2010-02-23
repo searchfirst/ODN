@@ -2,7 +2,3 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
-#AuthType Basic
-#AuthName "HTTP Auth Test"
-#AuthUserFile /home/searchfirst/sfd.dux.me.uk/user/htdocs/.htpasswd
-#Require valid-user
