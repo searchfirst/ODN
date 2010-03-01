@@ -20,7 +20,16 @@
 <script type="text/javascript">
 $('#invoice_raise *').bind('change',function(e){
     $("#table_preview").html("<img src='/js/jquery/thickbox/loadingAnimation.gif' alt='Loading...' />");
-	var csv = "1,2,3";
-	$("#table_preview").table($.csv()(csv));
+	var invoice_summary = $('#invoice_raise textarea').val();
+	var invoice_amount = $('#invoice_raise #InvoiceAmount').val();
+	var invoice_vat_enabled = $('#invoice_raise #InvoiceVatIncluded').attr('checked');
+	if(invoice_vat_enabled) {
+		$invoice_totals = "VAT Total," + (0.175 * invoice_amount) + "\n" + "Grand Total," + (1.175 * invoice_amount);
+	} else {
+		
+	}
+	var invoice_csv = "<strong>Detail</strong>,<strong>Cost</strong>\n" + invoice_summary;
+	var final_csv = $.csv()(invoice_csv);
+	$("#table_preview").table({replace:false,data:final_csv});
 });
 </script>
