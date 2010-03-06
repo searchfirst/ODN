@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+
 	$("#ServiceTitle").each(function() {
 		//var name = $(this).attr('name');
 		if($(this).val()!='other') {

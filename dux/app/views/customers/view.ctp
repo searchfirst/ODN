@@ -17,7 +17,7 @@ echo " highlight_customer_{$customer['Customer']['id']}";
 <div id="item_display_information">
 <h3 class="tabs-heading">Information</h3>
 
-<div class="customer_info">
+<div class="customer_info infobox">
 <h3 class="collapse_hook">Details</h3>
 <div class="collapse">
 	<dl>
@@ -55,7 +55,7 @@ echo " highlight_customer_{$customer['Customer']['id']}";
 </div>
 </div>
 
-<div class="service_info">
+<div class="service_info infobox">
 <div class="options">
 <?php echo $this->renderElement('new_item_form',array(
 	'parentClass'=>'Customer','parentName'=>$customer['Customer']['company_name'],'parentId'=>$customer['Customer']['id'],'model'=>'Service','controller'=>'Services'))?> 
@@ -71,7 +71,7 @@ echo " highlight_customer_{$customer['Customer']['id']}";
 <?php $x_website = '';?>
 <?php foreach($customer['Service'] as $service):?>
 <?php if($x_website!=$service['Website']['uri']):?>
-<tr><th colspan="4"><?php echo $html->link($service['Website']['uri'],"/ajax/websites/view/{$service['Website']['id']}?width=400;height=200",array('class'=>'thickbox'));?><?php
+<tr><th colspan="5"><?php echo $html->link($service['Website']['uri'],"/ajax/websites/view/{$service['Website']['id']}?width=400;height=200",array('class'=>'thickbox'));?><?php
 if(!empty($service['Website']['aliases'])){
 echo ' <small>('.$service['Website']['aliases'].')</small>';
 }
@@ -96,7 +96,7 @@ if($service['cancelled']) echo '/'.str_replace(', 00:00','',$time->niceShort($se
 <?php endif;?>
 </div>
 
-<div class="invoice_info">
+<div class="invoice_info infobox">
 <div class="options">
 <?php //echo $this->renderElement('new_item_form_ajax',array(
 	//'parentClass'=>'Customer','parentName'=>$customer['Customer']['company_name'],'parentId'=>$customer['Customer']['id'],'model'=>'Invoice','controller'=>'Invoices'))?> 
