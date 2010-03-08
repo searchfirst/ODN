@@ -2,15 +2,13 @@
 class FacadesController extends AppController
 {
 	var $name = 'Facades';
+	var $primaryModel = 'Customer';
 	var $helpers = array('Status');
 	var $pageTitle = 'Home';
 	var $layout = 'home';
-	var $uses = array('Section','Service');
+	var $uses = array('Service');
 
 	function index() {
-		$section = $this->Section->findBySlug('home');
-		$this->set('home_section',$section);
-		$this->set('home_articles',$section['Article']);
 		$this->pageTitle = 'Dashboard';
 		global $current_user;
 		$active_projects = $this->Service->findAll(

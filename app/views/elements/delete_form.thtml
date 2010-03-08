@@ -1,6 +1,6 @@
 <?php
 $controller = isset($controller)?Inflector::underscore($controller):Inflector::underscore($this->name);
-$model = isset($model)?$model:$this->modelNames[0];
+$model = isset($model)?$model:$primary_model;
 ?>
 <form method="post" action="<?php echo $html->url("/$controller/delete/$id")?>" enctype="multipart/form-data" class="model_command">
 <?php echo $form->hidden("$model/id", array('id'=>"{$model}DeleteId{$id}",'value'=>0))?> 

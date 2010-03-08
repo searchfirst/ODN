@@ -2,6 +2,7 @@
 class ArticlesController extends AppController {
 
 	var $name = 'Articles';
+	var $primaryModel = 'Article';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 	var $components = array('Rss');
 

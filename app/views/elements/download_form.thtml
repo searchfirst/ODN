@@ -1,6 +1,6 @@
 <?php
 $controller = isset($controller)?$controller:$this->name;
-$model = isset($model)?$model:$this->modelNames[0];
+$model = isset($model)?$model:$primary_model;
 ?>
 <form method="post" action="<?php echo $html->url("/".Inflector::underscore($this->name)."/edit/".$parent[$model]['id'])?>" enctype="multipart/form-data">
 <fieldset>

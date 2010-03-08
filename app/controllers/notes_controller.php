@@ -2,6 +2,7 @@
 class NotesController extends AppController
 {
 	var $name = 'Notes';
+	var $primaryModel = 'Note';
 	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 
 	function beforeFilter() {
@@ -33,7 +34,6 @@ class NotesController extends AppController
 			$this->set('services',$service_tmp);
 			$this->data['Note']['customer_id'] = $this->data['Referrer']['customer_id'];
 		} else {
-			$this->cleanUpFields();
 			if($this->Note->save($this->data)) {
 				$this->Session->setFlash("Note added.");
 				$this->redirect($this->referer('/'));

@@ -2,6 +2,7 @@
 class InvoicesController extends AppController
 {
 	var $name = 'Invoices';
+	var $primaryModel = 'Invoice';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 
 	function beforeFilter() {
@@ -71,7 +72,6 @@ class InvoicesController extends AppController
 			$this->set('services',$service_tmp);
 			$this->set('vat_rates',$this->Invoice->getVatRates());
 		} else {
-			$this->cleanUpFields();
 			if($this->Invoice->save($this->data)) {
 				$this->Session->setFlash('Invoice Successfully Raised');
 				$this->redirect($this->referer());
@@ -104,7 +104,6 @@ class InvoicesController extends AppController
 			$this->set('website',$this->data);
 			$this->set('customer', $this->Website->Customer->generateList());
 		} else {
-			$this->cleanUpFields();
 			if($this->Website->save($this->data)) {
 				$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
 				if(isset($GLOBALS['moonlight_inline_count_set']))
@@ -128,7 +127,6 @@ class InvoicesController extends AppController
 			$this->data = $this->Invoice->read(null, $id);
 			$this->set('invoice',$this->data);
 		} else {
-			$this->cleanUpFields();
 			if(isset($this->data['Note'])) {
 				$note['Note'] = $this->data['Note'];
 				unset($this->data['Note']);

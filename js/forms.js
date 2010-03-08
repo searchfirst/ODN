@@ -7,15 +7,7 @@ $(document).ready(function() {
 		};
 	});
 	
-	$("#ServiceTitle").change(onChange);
-	
-	$('.ModifyStatusButton').bind('click',function(e){
-		$(this).parent().find('a.thickbox').click();
-		$('.date_pick').datePicker();
-		return false;
-	});
-	
-	function onChange() {
+	$("#ServiceTitle").change(function() {
 		var desiredName = $(this).attr('name');
 		if($(this).val()=='other') {
 			$(this).parent().next("input").attr('name',desiredName).fadeIn('fast');
@@ -23,8 +15,14 @@ $(document).ready(function() {
 		} else {
 			$(this).parent().next("input").removeAttr('name').fadeOut('fast');
 		}
-	};
+	});
 	
+	$('.ModifyStatusButton').bind('click',function(e){
+		$(this).parent().find('a.thickbox').click();
+		$('.date_pick').datePicker();
+		return false;
+	});
+		
 	$('.date_pick').datePicker({inline:true});
 	
 	$('.customer_menu').addClass('jd_menu').jdMenu();

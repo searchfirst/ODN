@@ -1,5 +1,5 @@
 <?php
-vendor('forge_fdf');
+App::import('Vendor','forge_fdf');
 class Invoice extends AppModel {
 	var $name = 'Invoice';
 	var $validate = array();

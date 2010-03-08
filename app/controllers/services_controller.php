@@ -2,6 +2,7 @@
 class ServicesController extends AppController
 {
 	var $name = 'Services';
+	var $primaryModel = 'Service';
 	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 	var $service_titles = array(
 		'SEO Plan 1'=>'SEO Plan 1',
@@ -48,11 +49,14 @@ class ServicesController extends AppController
 			$this->data['Service']['customer_id'] =!empty($this->data['Referrer']['customer_id'])?$this->data['Referrer']['customer_id']:null;
 			$this->data['Service']['website_id'] =!empty($this->data['Referrer']['website_id'])?$this->data['Referrer']['website_id']:null;
 			$this->set('service',$this->data);
-			$this->set('customer', $this->Service->Customer->generateList());
-			$this->set('website', $this->Service->Website->generateList(array('Website.customer_id'=>$this->data['Service']['customer_id']),null,null,'{n}.Website.id','{n}.Website.uri'));
-			$this->set('user', $this->Service->User->generateList());
+			$this->set('customer',
+				Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+			$this->set('website',Set::combine($this->Service->Website->find('all',array(
+					'recursive'=>0,
+					'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
+			)),'{n}.Website.id','{n}.Website.uri'));
+			$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
 		} else {
-			$this->cleanUpFields();
 			if($this->Service->save($this->data)) {
 				$this->Session->setFlash("Service added successfully.");
 				if(isset($GLOBALS['moonlight_inline_count_set']))
@@ -63,9 +67,13 @@ class ServicesController extends AppController
 				$this->Session->setFlash('Please correct the errors below');
 				$this->data['Referral']['customer_id'] = $this->data['Service']['customer_id'];
 				$this->data['Referral']['website_id'] = $this->data['Service']['website_id'];
-				$this->set('customer', $this->Service->Customer->generateList());
-				$this->set('website', $this->Service->Website->generateList());
-				$this->set('user', $this->Service->User->generateList());
+				$this->set('customer',
+					Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+				$this->set('website',Set::combine($this->Service->Website->find('all',array(
+						'recursive'=>0,
+						'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
+				)),'{n}.Website.id','{n}.Website.uri'));
+				$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
 			}
 		}
 	}
@@ -79,11 +87,11 @@ class ServicesController extends AppController
 			$this->data = $this->Service->findById($id);
 			$this->set('service',$this->data);
 			$this->pageTitle = "Edit Service: {$this->data['Service']['title']}";
-			$this->set('user', $this->Service->User->generateList());
-			$this->set('customers', $this->Service->Customer->generateList());
+			$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
+			$this->set('customers',
+				Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 		} else {
 			$this->set('service',$this->Service->find(array('Service.id'=>$id)));
-			$this->cleanUpFields();
 			if($this->Service->save($this->data)) {
 				$this->Session->setFlash("Website saved successfully.");
 				$this->redirect("/".strtolower($this->name)."/view/$id");
@@ -91,8 +99,9 @@ class ServicesController extends AppController
 				$this->Session->setFlash('Please correct errors below.');
 				pr($this->data);
 				//$this->set('service',$this->data);
-				$this->set('user', $this->Service->User->generateList());
-				$this->set('customers', $this->Service->Customer->generateList());
+				$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
+				$this->set('customers',
+					Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 				$this->pageTitle = 'Edit Service: '.$this->data['Service']['title'];
 			}
 		}

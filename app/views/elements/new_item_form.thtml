@@ -1,5 +1,5 @@
 <?php
-if(!isset($model)) $model = $this->modelNames[0];
+if(!isset($model)) $model = $primary_model;
 if(!isset($controller)) $controller = $this->name;
 ?>
 <form method="post" action="<?php echo $html->url("/".Inflector::underscore($controller)."/add")?>?height=300&amp;width=300">

@@ -21,7 +21,7 @@ class Customer extends AppModel {
 		"Referral" => array(
 			"className" => "Customer",
 			"foreignKey" => "customer_id",
-			"order"=>"Referral.company_name",
+			"order"=>"Referral.status",
 			"dependent" => true,
 		),
 		"Service" => array(

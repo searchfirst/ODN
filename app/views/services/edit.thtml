@@ -9,8 +9,8 @@
 </fieldset>
 <?php if(!empty($service['Services']['website_id'])) echo $form->hidden('Service.website_id',$service['Service']['website_id'])?>
 <?php if(!empty($service['Service']['customer_id'])):?>
-<?php echo $form->hidden('Service.customer_id',$service['Service']['customer_id'])?> 
-<?php echo $form->hidden('Service.id')?>
+<?php echo $form->hidden('Service.customer_id')?> 
+<?php echo $form->hidden('Service.id')?> 
 <?php endif;?>
 <?php echo $form->submit('Save Changes')?> 
 </form>

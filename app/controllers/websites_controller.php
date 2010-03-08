@@ -2,6 +2,7 @@
 class WebsitesController extends AppController
 {
 	var $name = 'Websites';
+	var $primaryModel = 'Website';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 
 	function beforeFilter() {
@@ -50,9 +51,9 @@ class WebsitesController extends AppController
 		if(empty($this->data) || isset($this->data['Referrer']['customer_id'])) {
 			$this->data['Website']['customer_id'] =!empty($this->data['Referrer']['customer_id'])?$this->data['Referrer']['customer_id']:null;
 			$this->set('website',$this->data);
-			$this->set('customer', $this->Website->Customer->generateList());
+			$this->set('customer',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+//			$this->set('customer', $this->Website->Customer->generateList());
 		} else {
-			$this->cleanUpFields();
 			if($this->Website->save($this->data)) {
 				$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
 				if(isset($GLOBALS['moonlight_inline_count_set']))
@@ -62,7 +63,7 @@ class WebsitesController extends AppController
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
 				$this->data['Referral']['customer_id'] = $this->data['Website']['customer_id'];
-				$this->set('customer', $this->Website->Customer->generateList());
+				$this->set('customer',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 			}
 		}
 	}
@@ -75,16 +76,15 @@ class WebsitesController extends AppController
 			}
 			$this->data = $this->Website->read(null, $id);
 			$this->set('website',$this->data);
-			$this->set('customers', $this->Website->Customer->generateList());
+			$this->set('customers',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 		} else {
-			$this->cleanUpFields();
 			if($this->Website->save($this->data)) {
 				$this->Session->setFlash("Website saved successfully.");
 				$this->redirect("/".strtolower($this->name)."/view/$id");
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
 				$this->set('product',$this->data);
-				$this->set('customers', $this->Website->Customer->generateList());
+				$this->set('customers',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 			}
 		}
 	}

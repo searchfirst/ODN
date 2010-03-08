@@ -9,7 +9,7 @@
 <?php echo $form->input('Website.ftp_password', array('size'=>'40','maxlength'=>'150','error'=>'Please enter the Password.'))?> 
 </fieldset>
 <?php if(!empty($website['Website']['customer_id'])):?>
-<?php echo $form->hidden('Website.customer_id',$website['Website']['customer_id'])?> 
+<?php echo $form->hidden('Website.customer_id',array('value'=>$website['Website']['customer_id']))?> 
 <?php else:?>
 <fieldset>
 <legend>Customer</legend>

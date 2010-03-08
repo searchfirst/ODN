@@ -1,9 +1,9 @@
 <h2 class="<?php
-echo strtolower($status->customerStatus($customer['Customer']['status']));
+echo Inflector::underscore($status->customerStatus($customer['Customer']['status']));
 echo " highlight_customer_{$customer['Customer']['id']}";
 ?>"><?php if(!empty($customer['Reseller']['id'])) echo $html->link($customer['Reseller']['company_name'],"/customers/view/{$customer['Reseller']['id']}").' - ' ?><?php echo $customer['Customer']['company_name']?></h2>
 <div class="options">
-<?php echo $this->renderElement('edit_form',array('id'=>$customer['Customer']['id'],'title'=>$customer['Customer']['company_name']))?> 
+<?php echo $html->link("Edit Customer","/ajax/customers/edit/{$customer['Customer']['id']}",array('class'=>'edit button thickbox'));?>
 </div>
 
 <div id="item_display">
@@ -57,10 +57,10 @@ echo " highlight_customer_{$customer['Customer']['id']}";
 
 <div class="service_info infobox">
 <div class="options">
-<?php echo $this->renderElement('new_item_form',array(
-	'parentClass'=>'Customer','parentName'=>$customer['Customer']['company_name'],'parentId'=>$customer['Customer']['id'],'model'=>'Service','controller'=>'Services'))?> 
-<?php echo $this->renderElement('new_item_form',array(
-	'parentClass'=>'Customer','parentName'=>$customer['Customer']['company_name'],'parentId'=>$customer['Customer']['id'],'model'=>'Website','controller'=>'Websites'))?> 
+<?php //echo $this->renderElement('new_item_form',array(
+//	'parentClass'=>'Customer','parentName'=>$customer['Customer']['company_name'],'parentId'=>$customer['Customer']['id'],'model'=>'Service','controller'=>'Services'))?> 
+<?php echo $html->link('Add Service',"/ajax/services/add?customer_id={$customer['Customer']['id']}",array('class'=>'add button thickbox'));?>
+<?php echo $html->link('Add Website',"/ajax/websites/add?customer_id={$customer['Customer']['id']}",array('class'=>'add button thickbox'));?>
 </div>
 <h3>Services</h3>
 <table class="item_list">
@@ -71,17 +71,28 @@ echo " highlight_customer_{$customer['Customer']['id']}";
 <?php $x_website = '';?>
 <?php foreach($customer['Service'] as $service):?>
 <?php if($x_website!=$service['Website']['uri']):?>
-<tr><th colspan="5"><?php echo $html->link($service['Website']['uri'],"/ajax/websites/view/{$service['Website']['id']}?width=400;height=200",array('class'=>'thickbox'));?><?php
+<tr><th colspan="5"><ul class="jd_menu"><li>
+<?php echo $html->link($service['Website']['uri'],"/ajax/websites/view/{$service['Website']['id']}?width=400;height=200",array('class'=>'thickbox'));?><?php
 if(!empty($service['Website']['aliases'])){
 echo ' <small>('.$service['Website']['aliases'].')</small>';
 }
-?></th></tr>
+?>
+<ul>
+<li><?php echo $html->link('Edit Website',"/ajax/websites/edit/{$service['Website']['id']}",array('class'=>'thickbox')) ?></li>
+</ul>
+<li></ul></th></tr>
 <?php $x_website = $service['Website']['uri']; endif; ?>
 <tr class="<?php
 echo strtolower($status->serviceStatus($service['status']));
 echo " highlight_service_".$service['id'];
 ?>">
-<td><?php echo $html->link($service['title'], "/ajax/services/view/{$service['id']}?width=600;height=400",array('class'=>'thickbox'))?></td>
+<td><ul class="jd_menu"><li>
+<?php echo $html->link($service['title'], "/ajax/services/view/{$service['id']}?width=600;height=400",array('class'=>'thickbox'))?>
+<ul>
+<li><?php echo $html->link('Edit Service',"/ajax/services/edit/{$service['id']}",array('class'=>'thickbox')) ?></li>
+<li><?php echo $html->link('Change Status',"/ajax/services/change_status/{$service['id']}",array('class'=>'thickbox')) ?></li>
+</ul>
+</li></ul></td>
 <td><?php echo $service['User']['name'] ?></td>
 <td><?php echo $status->serviceSchedule($service['schedule']);?></td>
 <td><?php echo $status->serviceStatus($service['status']) ?></td>
@@ -89,11 +100,11 @@ echo " highlight_service_".$service['id'];
 if($service['cancelled']) echo '/'.str_replace(', 00:00','',$time->niceShort($service['cancelled']));?></td>
 </tr>
 <?php endforeach;?>
+<?php if(empty($customer['Service'])):?>
+<tr><td colspan="5">No Services</td></tr>
+<?php endif;?>
 </tbody>
 </table>
-<?php if(empty($customer['Service'])):?>
-<p>No Services</p>
-<?php endif;?>
 </div>
 
 <div class="invoice_info infobox">
@@ -131,12 +142,13 @@ if($service['cancelled']) echo '/'.str_replace(', 00:00','',$time->niceShort($se
 
 <div class="note_list">
 
-<div class="options"><form method="post" action="/notes/add" class="model_command">
+<div class="options"><!--form method="post" action="/notes/add" class="model_command">
 <button name="data[Customer][submit]" value="" class="thickbox" alt="/ajax/notes/add?customer_id=<?php echo $customer['Customer']['id']?>" title="Add Note">
 <img src="/img/new-item-icon.png" alt="" />
 Add Note</button>
 <input type="hidden" name="data[Referrer][customer_id]" value="<?php echo $customer['Customer']['id'] ?>" />
-</form>
+</form-->
+<?php echo $html->link('Add Note',"/ajax/notes/add?customer_id={$customer['Customer']['id']}",array('class'=>'add button thickbox')) ?>
 </div>
 
 <h3>Notes</h3>

@@ -1,8 +1,4 @@
 <h2>Website [<?php echo $textAssistant->link($website['Customer']['company_name'],"/customers/view/{$website['Customer']['id']}")?>]</h2>
-<div class="options">
-<?php echo $this->renderElement('edit_form',array('id'=>$website['Website']['id'],'title'=>$website['Website']['uri']))?> 
-<?php //echo $this->renderElement('delete_form',array('id'=>$website['Website']['id'],'title'=>$website['Website']['title']))?> 
-</div>
 
 <div id="item_display">
 <ul>

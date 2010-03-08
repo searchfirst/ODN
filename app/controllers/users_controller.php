@@ -2,6 +2,7 @@
 class UsersController extends AppController {
 
 	var $name = 'Users';
+	var $primaryModel = 'User';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 
 	function beforeFilter() {
@@ -42,7 +43,6 @@ class UsersController extends AppController {
 			if(isset($this->data['Referrer']['customer_id'])) $this->set('customer',array('Customer'=>array('customer_id'=>$this->data['Referrer']['customer_id'])));
 			else $this->set('customer',array('Customer'=>array('customer_id'=>null)));
 		} else {
-			$this->cleanUpFields();
 			if($this->Customer->save($this->data)) {
 				$newcustomer = $this->Customer->getLastInsertId();
 				if(!empty($this->data['Website']['uri'])) {
@@ -63,8 +63,6 @@ class UsersController extends AppController {
 	}
 
 	function edit($id = null) {
-//		$this->set('customer_list',
-//			$this->Customer->generateList(array("OR"=>array('Customer.customer_id'=>'IS NULL','Customer.customer_id'=>0)),null,null,'{n}.Customer.id','{n}.Customer.company_name'));
 		if( (isset($this->data['User']['submit'])) || (empty($this->data)) ) {
 			if(!$id) {
 				$this->Session->setFlash('Invalid User');
@@ -72,17 +70,12 @@ class UsersController extends AppController {
 			}
 			$this->data = $this->User->find(array('User.id'=>$id),null,'User.id ASC');
 			$this->set('user', $this->data);
-//			$this->set('resellers', $this->Customer->Reseller->generateList());
 		} else {
-			$this->cleanUpFields();
 			if($this->User->save($this->data)) {
 				$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
 				$this->redirect("/".strtolower($this->name)."/view/$id");
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
-//				$this->set('customer', $this->Customer->read(null, $id));
-//				$this->set('resources', $this->Customer->Resource->generateList());
-//				$this->set('resellers', $this->Customer->Reseller->generateList());
 			}
 		}
 	}

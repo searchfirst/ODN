@@ -15,8 +15,7 @@
 </fieldset>
 <fieldset>
 <legend>Website</legend>
-<?php echo $form->input('Website.title',array('size'=>'40','maxlength'=>'150','label'=>'Website Title','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Website.uri',array('size'=>'40','maxlength'=>'150','label'=>'Web Address','error'=>'Please enter the Company Name.'))?> 
+<?php echo $form->input('Website.uri',array('size'=>'40','maxlength'=>'150','label'=>'Web Address','error'=>'Web Address.'))?> 
 </fieldset>
 <?php if(!empty($customer_list) && empty($customer['Referral']) && !empty($customer['Customer'])):?>
 <fieldset>
