@@ -6,7 +6,7 @@ class Note extends AppModel {
 	var $recursive = 2;
 
 	var $hasMany = array();
-	var $belongsTo = array('Website','Customer','User');
+	var $belongsTo = array('Website','Customer','User','Service');
 
 	function beforeSave() {
 		if(empty($this->data['Note']['id']))

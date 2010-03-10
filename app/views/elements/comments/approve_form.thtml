@@ -1,4 +1,0 @@
-<form method="post" action="<?php echo $html->url('/comments/is_approved')?>">
-<?php echo $form->hidden('Comment/id',array('value'=>$id,'id'=>"CommentIsApprovedId$id"))?> 
-<?php echo $form->submit('Approve Comment',array('div'=>false))?>
-</form>

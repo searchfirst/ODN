@@ -66,6 +66,7 @@ class InvoicesController extends AppController
 				null,
 				'Service.cancelled ASC'
 			);
+			$service_tmp = array();
 			foreach($service_list as $service_item) {
 				$service_tmp[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
 			}

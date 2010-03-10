@@ -3,7 +3,7 @@
 <fieldset>
 <legend>Website and FTP Details</legend>
 <?php echo $form->input('Website.uri', array('label'=>array('text'=>'Web Address [URI]','title'=>'No http, eg: www.example.com'),'size'=>'40','maxlength'=>'150','error'=>'Please enter the Address.'))?> 
-<?php echo $form->input('Website.aliases', array('label'=>array('text'=>'Aliases','title'=>'A list of alternate web addresses'),'row'=>3,'cols'=>9,'maxlength'=>'150','error'=>'Please enter the Address.'))?> 
+<?php echo $form->input('Website.aliases', array('label'=>array('text'=>'Aliases','title'=>'A list of alternate web addresses'),'row'=>3,'cols'=>50,'error'=>'Please enter the Address.'))?> 
 <?php echo $form->input('Website.ftp_host', array('size'=>'40','maxlength'=>'150','error'=>'Please enter the Host address.'))?> 
 <?php echo $form->input('Website.ftp_username', array('size'=>'40','maxlength'=>'150','error'=>'Please enter the Username.'))?> 
 <?php echo $form->input('Website.ftp_password', array('size'=>'40','maxlength'=>'150','error'=>'Please enter the Password.'))?> 

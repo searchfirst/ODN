@@ -59,10 +59,13 @@ class ServicesController extends AppController
 		} else {
 			if($this->Service->save($this->data)) {
 				$this->Session->setFlash("Service added successfully.");
-				if(isset($GLOBALS['moonlight_inline_count_set']))
-					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Service->getLastInsertId());
-				else
-					$this->redirect('/'.strtolower($this->name).'/view/'.$this->Service->getLastInsertId());
+				$customer_id = $this->data['Service']['customer_id'];
+				$current_customer_status = $this->Service->Customer->field('Customer.status',array('Customer.id'=>$customer_id));
+				if($current_customer_status!=0) {
+					$update_customer_data = array('Customer'=>array('id'=>$customer_id,'status'=>0));
+					$this->Service->Customer->save($update_customer_data);
+				}
+				$this->redirect($this->referer('/'));
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
 				$this->data['Referral']['customer_id'] = $this->data['Service']['customer_id'];

@@ -1,5 +1,0 @@
-<p>Do you really wish to delete this comment?</p>
-<form method="post" action="<?php echo $html->url("/comments/delete/$id")?>">
-<?php echo $form->hidden('Comment/id', array('value'=>$id))?> 
-<?php echo $form->submit('Yes, delete this comment.',array('div'=>false))?> 
-</form>

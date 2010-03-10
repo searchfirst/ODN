@@ -41,7 +41,7 @@ class Invoice extends AppModel {
 	
 	function getVatTotal(&$invoice) {
 		$c_vat_modifier = $invoice['Invoice']['vat_rate']/100;
-		$vattotal = $invoice['Invoice']['amount'] * $c_vat_modifier;
+		$vattotal = round($invoice['Invoice']['amount'] * $c_vat_modifier,2);
 		if($invoice['Invoice']['vat_included']) return money_format('%.2n',$vattotal);
 		else return 'N/A';
 	}

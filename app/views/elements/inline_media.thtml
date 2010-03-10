@@ -1,4 +1,0 @@
-<?php echo $mediaAssistant->mediaLink($media_data,array('class'=>'alt deco'),'crop',true) ?>
-<?php echo $this->renderElement('delete_form',array('model'=>'Resource','controller'=>'Resources','id'=>$media_data['id'],'title'=>$media_data['title']));?> 
-<?php if($media_previous) echo $this->renderElement('moveup_form',
-	array('model'=>'Resource','controller'=>'Resources','id'=>$media_data['id'],'prev_id'=>$media_previous));?>

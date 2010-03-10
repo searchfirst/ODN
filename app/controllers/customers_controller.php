@@ -5,6 +5,15 @@ class CustomersController extends AppController {
 	var $primaryModel = 'Customer';
 	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 
+	function beforeRender() {
+		parent::beforeRender();
+		$this->set('customer_status_numbers',array(
+			CUSTOMER_STATUS_CANCELLED => 'Cancelled',
+			CUSTOMER_STATUS_PENDING => 'Pending',
+			CUSTOMER_STATUS_ACTIVE => 'Active'
+		));
+	}
+
 	function beforeFilter() {
 		parent::beforeFilter();
 		$this->permissions = array(
@@ -134,9 +143,10 @@ class CustomersController extends AppController {
 	function edit($id = null) {
 		$customer_list = $this->Customer->find('all',array(
 			'fields' => array('Customer.customer_id','Customer.id','Customer.company_name'),
-			'conditions' => array('OR' => array('Customer.customer_id'=>'IS NULL','Customer.customer_id'=>0)),
-			'recursive'=>0,
-			'order'=>'Customer.company_name ASC'
+// 			'conditions' => array('OR' => array('Customer.customer_id'=>'IS NULL','Customer.customer_id'=>0)),
+			'conditions' => array('Customer.customer_id'=>0,array('NOT'=>array('Customer.id'=>$id))),
+			'recursive' => 0,
+			'order' => 'Customer.company_name ASC'
 		));
 		$this->set('customer_list',Set::combine($customer_list,'{n}.Customer.id','{n}.Customer.company_name'));
 
@@ -149,7 +159,6 @@ class CustomersController extends AppController {
 			$this->set('customer', $this->data);
 			//$this->set('resellers', $this->Customer->Reseller->generateList());
 		} else {
-			//$this->Customer->deconstruct($this->data);
 			if($this->Customer->save($this->data)) {
 				$this->Session->setFlash("Customer details saved successfully.");
 				$this->redirect("/customers/view/$id");
@@ -161,8 +170,16 @@ class CustomersController extends AppController {
 		}
 	}
 	
-	function resellers() {
-		$this->set('resellers', $this->Customer->findResellers());
+	function resellers($id=null) {
+		if(!$id) {
+			$this->set('resellers', $this->Customer->findResellers());
+		} else {
+			$reseller = $this->Customer->find('first',array(
+				'conditions' => array('Customer.id'=>$id),
+				'recursive' => 1
+			));
+			$this->set('reseller',$reseller);
+		}
 	}
 
 	function delete($id = null) {

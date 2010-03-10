@@ -1,4 +1,0 @@
-<form method="post" action="<?php echo $html->url('/comments/is_spam')?>">
-<?php echo $form->hidden('Comment/id',array('value'=>$id,"CommentIsSpamId$id"))?>
-<?php echo $form->submit('Delete as Spam')?>
-</form>

@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	setup_modal_dialogs();
+	
 	$("#ServiceTitle").each(function() {
 		//var name = $(this).attr('name');
 		if($(this).val()!='other') {
@@ -49,10 +51,6 @@ $(document).ready(function() {
 		$(this).toggleClass('hidemore');
 	});
 	
-	if($('#flashMessage').is('div.message')) {
-		$('#flashMessage').modal();
-	}
-
 	$('#d_menu li').filter(function(index){ return $('div',this).length==1; }).bind({
 		mouseover: function(e){
 			var isChild = $(e.currentTarget).has($(e.relatedTarget)).length;

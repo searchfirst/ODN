@@ -14,7 +14,7 @@
 		<p><?php echo $html->link('Resellers','/customers/resellers') ?></p>
 		</div>		
 	</li>
-	<li><?php echo $html->link('New Customer',array('controller'=>'customers','action'=>'add','alt_content'=>'dajax'),array('class'=>'new_customer thickbox','title'=>'New Customer'))?></li>
+	<li><?php echo $html->link('New Customer',"/ajax/customers/add",array('class'=>'new_customer modalAJAX','title'=>'New Customer'))?></li>
 	<li><?php echo $html->link('Notes',array('controller'=>'notes','action'=>'index'),array('class'=>'notes','title'=>'Notes'))?></li>
 	<li class="wizards"><span>Wizards</span>
 		<div>

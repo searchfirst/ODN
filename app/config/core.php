@@ -1,5 +1,5 @@
 <?php
-Configure::write('debug', 0);
+Configure::write('debug', 1);
 Configure::write('App.encoding', 'UTF-8');
 define('LOG_ERROR', 2);
 Configure::write('Session.save', 'cake');

@@ -39,18 +39,18 @@ class NotesController extends AppController
 				$this->redirect($this->referer('/'));
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
-				$this->data['Referral']['customer_id'] = $this->data['Note']['customer_id'];
-				$this->data['Referral']['service_id'] = $this->data['Note']['service_id'];
+				$this->data['Referrer']['customer_id'] = $this->data['Note']['customer_id'];
+				$this->data['Referrer']['service_id'] = $this->data['Note']['service_id'];
 				$service_list = $this->Note->Customer->Service->findAll(
 					array('Customer.id'=>$this->data['Referrer']['customer_id']),
 					null,
 					'Service.cancelled'
 				);
+				$service_tmp = array();
 				foreach($service_list as $service_item) {
 					$service_tmp[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
 				}
-
-				$this->set('services',$services_tmp);
+				$this->set('services',$service_tmp);
 			}
 		}
 	}

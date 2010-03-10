@@ -21,7 +21,8 @@ class Customer extends AppModel {
 		"Referral" => array(
 			"className" => "Customer",
 			"foreignKey" => "customer_id",
-			"order"=>"Referral.status",
+			"order"=>"Referral.status ASC",
+			"group"=>"Referral.company_name",
 			"dependent" => true,
 		),
 		"Service" => array(
@@ -37,9 +38,9 @@ class Customer extends AppModel {
 	var $belongsTo = array(
 		"Reseller" => array(
 			"className" => "Customer",
-			"foreignKey" => "customer_id"
+			"foreignKey" => "customer_id",
 		),
-		'User',
+		'User'
 	);
 	var $hasAndBelongsToMany = array(
 		'TechnicalUser'=>array('with'=>'Service','className'=>'User')
