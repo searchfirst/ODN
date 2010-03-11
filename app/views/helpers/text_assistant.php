@@ -1,6 +1,7 @@
 <?php
 App::import('Vendor','markdown');
 App::import('Vendor','smartypants');
+App::import('Vendor','textile');
 class TextAssistantHelper extends Helper {
 	/*	Passing the model name to the functions is to help the media assistant construct
 		urls on pages where the parent model classname may differ from the active model name
@@ -26,6 +27,12 @@ class TextAssistantHelper extends Helper {
 		return $text;
 	}
 	
+	function nl2br($text,$is_html=MOONLIGHT_USE_HTML) {
+		if($is_html) $tag_end = ">";
+		else $tag_end = " />";
+		return preg_replace('/\n{1}/',"<br$tag_end",$text);
+	}
+	
 	function link($title,$url) {
 		return $this->Html->link($this->sanitiseText($title,true,true),$url);
 	}
@@ -44,7 +51,13 @@ class TextAssistantHelper extends Helper {
 	
 	function htmlFormatted($text,$media=false,$model=null,$media_link_attributes=null) {
 		$text = $this->sanitiseText($text,false);
-		$text = SmartyPants(Markdown($text));
+		if(!preg_match('/{\[markdown\]}/',$text)) {
+			$txtl = new Textile();
+			$text = SmartyPants($txtl->TextileThis($text),1);
+		} else {
+			$text = str_replace('{[markdown]}','',$text);
+			$text = SmartyPants(Markdown($text),1);
+		}
 		if($media && count($media))
 			$text = $this->_formatTextFragments($text,$media,$model,$media_link_attributes);
 		else

@@ -30,7 +30,7 @@ function popupBoxAjax(pba_url) {
 		url: pba_url,
 		dataType: 'html',
 		success: function(data,textStatus,XMLHttpRequest) {
-			$.modal(data,{maxHeight:max_modal_height});
+			$.modal(data,{maxHeight:max_modal_height,autoResize:true});
 			$.ajax({url:'/js/modal_load.js',dataType:'script'});
 			toggle_overlay();
 		},

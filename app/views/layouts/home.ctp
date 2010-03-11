@@ -4,13 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="charset=utf-8" />
-<title><?php echo $title_for_layout;?> » <?php echo MOONLIGHT_WEBSITE_NAME ?></title>
-<?php //echo $html->css('vendors/sIFR-print','stylesheet',array('media'=>'print'));?> 
-<?php //echo $html->css('vendors/sIFR-screen','stylesheet',array('media'=>'screen'));?> 
-<?php echo $html->css('vendors/thickbox','stylesheet',array('media'=>'screen'));?> 
+<title><?php echo $title_for_layout;?> | Dux</title>
 <?php echo $html->css('default','stylesheet',array('media'=>'screen'));?> 
 <?php echo $html->css('print','stylesheet',array('media'=>'print'));?> 
-<!--[if lte IE 6]><?php print $html->css('ie','stylesheet',array('media'=>'screen'));?><![endif]-->
 <?php echo $this->renderElement('js/default')?> 
 </head>
 <body><div id="main">

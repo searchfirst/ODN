@@ -24,7 +24,7 @@ $model = strtolower($note['model']);
 $model_id = $note[$model.'_id'];
 echo "highlight_{$model}_{$model_id}";
 ?>"><span><?php echo $note['User']['name']?> (<?php echo $time->niceShort($note['created'])?>)</span>
-<?php echo nl2br($textAssistant->sanitiseText($note['description'])) ?>
+<?php echo $textAssistant->nl2br($textAssistant->sanitiseText($note['description'])) ?>
 </li>
 <?php endforeach;?>
 </ul>

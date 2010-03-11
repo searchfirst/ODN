@@ -660,7 +660,7 @@ list-style: none;
 
 #search {
 position: fixed;
-bottom: 6px;
+bottom: 16px;
 right: 15px;
 z-index: 10;
 }
@@ -672,10 +672,16 @@ vertical-align: top;
 
 #search input[type=search] {
 background-color: rgb(255,255,255);
-padding-left: 1em;
--moz-border-radius: 1em;
+/*padding-left: 16px;*/
+text-indent: 8px;
+-moz-border-radius: 10px;
 /*-moz-background-clip: padding;*/
+width: 164px
 }
+
+@media screen and (-webkit-min-device-pixel-ratio:0){#search input[type=search] {
+text-indent: 0;
+}}
 
 #search .tabs-hide {
 display: none;

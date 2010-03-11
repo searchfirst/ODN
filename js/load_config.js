@@ -24,8 +24,6 @@ $(document).ready(function() {
 		$('.date_pick').datePicker();
 		return false;
 	});
-		
-	$('.date_pick').datePicker({inline:true});
 	
 	$('.customer_menu').addClass('jd_menu').jdMenu();
 	
