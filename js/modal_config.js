@@ -15,7 +15,7 @@ function setup_modal_dialogs() {
 }
 
 function prepare_overlay() {
-	$('body').append('<div id="modalDarkOverlay"><div><img src="/img/theme/loading_animation.gif"></div></div>"')
+	$('body').append('<div id="modalDarkOverlay"><div><img src="/img/theme/loading_animation.gif"></div></div>')
 }
 
 function toggle_overlay() {

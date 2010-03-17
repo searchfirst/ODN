@@ -3,7 +3,6 @@ $(document).ready(function() {
 	setup_modal_dialogs();
 	
 	$("#ServiceTitle").each(function() {
-		//var name = $(this).attr('name');
 		if($(this).val()!='other') {
 			$(this).parent().next("input").removeAttr('name').hide();
 		};
@@ -18,16 +17,10 @@ $(document).ready(function() {
 			$(this).parent().next("input").removeAttr('name').fadeOut('fast');
 		}
 	});
-	
-	$('.ModifyStatusButton').bind('click',function(e){
-		$(this).parent().find('a.thickbox').click();
-		$('.date_pick').datePicker();
-		return false;
-	});
-	
+
 	$('.customer_menu').addClass('jd_menu').jdMenu();
 	
-	$('ul.note_list li,.service_info tr[class~=highlight]').bind('mouseover',function(e){
+	$('ul.note_list li,.infobox tr[class*=highlight]').bind('mouseover',function(e){
 		var currClass = $(this).attr('class');
 		var match = /highlight_/i;
 		var start = currClass.search(match);
@@ -36,7 +29,7 @@ $(document).ready(function() {
 		$('.'+hstring).attr('rel','highlight');
 	});
 
-	$('ul.note_list li,.service_info tr[class~=highlight]').bind('mouseout',function(e){
+	$('ul.note_list li,.infobox tr[class*=highlight]').bind('mouseout',function(e){
 		var currClass = $(this).attr('class');
 		var match = /highlight_/i;
 		var start = currClass.search(match);

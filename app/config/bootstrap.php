@@ -15,7 +15,7 @@ define('MOONLIGHT_WEBMASTER_NAME','Webmaster');
 define('MOONLIGHT_WEBSITE_NAME','Dux');
 define('MOONLIGHT_WEBSITE_DESCRIPTION','Moonlight Client description');
 
-define('MOONLIGHT_USE_HTML',false);
+define('MOONLIGHT_USE_HTML',true);
 define('MOONLIGHT_ALLOW_HTML_IN_DESCRIPTIONS',false);
 define('MOONLIGHT_PERMITTED_HTML_ELEMENTS','');
 define('MOONLIGHT_MEDIA_ACCEPT_TYPES','image/jpeg|image/gif|image/png');

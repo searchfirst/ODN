@@ -30,7 +30,7 @@
 		<ul>
 			<li><a href="https://login.fasthosts.co.uk/">Fasthosts</a></li>
 			<li><a href="http://whiteboard.searchfirst.co.uk">Whiteboard</a></li>
-			<li><a href="http://hit-me.co.uk/cgi-bin/x.cgi?NAVG=SignUp">HitMe [New Tracker]</a></li>
+			<li><a href="http://hit-me.co.uk/cgi-bin/x-t.cgi?NAVG=SignUp">HitMe [New Tracker]</a></li>
 			<li><a href="http://hit-me.co.uk/cgi-bin/admin/admin.cgi">HitMe [Admin]</a></li>
 			<li><a href="http://hit-me.co.uk/cgi-bin/admin/admin.cgi?NAVG=AM">HitMe [Accounts Manager]</a></li>
 		</ul>

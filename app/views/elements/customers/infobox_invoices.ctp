@@ -9,7 +9,7 @@
 </thead>
 <tbody>
 <?php foreach ($customer['Invoice'] as $invoice): ?>
-<tr>
+<tr<?php if(!empty($invoice['service_id'])) echo " class=\"highlight_service_{$invoice['service_id']}\""; ?>>
 <td><ul class="jd_menu"><li><?php echo $html->link(($invoice['reference']!=''?$invoice['reference']:'Invalid Ref No.'),"/ajax/invoices/view/{$invoice['id']}?width=600&amp;height=400",array('class'=>'thickbox')) ?>
 <ul>
 <li><?php echo $html->link('Generate Invoice [PDF]',"/pdf/invoices/view/{$invoice['id']}",array('class'=>'i_pdf')) ?></li>

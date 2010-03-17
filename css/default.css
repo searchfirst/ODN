@@ -36,10 +36,12 @@ color: rgb(67,123,245);
 
 html {
 height: 100%;
+padding: 0;
+margin: 0;
 }
 
 body {
-height: 100%;
+min-height: 100%;
 margin: 0;
 padding: 0;
 font: normal normal normal 85% Geneva,Tahoma,sans-serif;
@@ -50,6 +52,7 @@ background-color: rgb(251,251,251);
 #main {
 min-height: 100%;
 margin: 0;
+padding: 0;
 position: relative;
 }
 
@@ -109,6 +112,19 @@ content: attr(title);
 font-weight: normal;
 clear: left;
 display: block;
+}
+
+form div.radioinline label, form div.radioinline input {
+display: inline-block;
+float: none;
+width: auto;
+}
+
+form div.inline label:after {
+content: ' ';
+display: block;
+width: 100%;
+clear: both;
 }
 
 h1, h2, h3, h4, ol, p, ul {
@@ -443,6 +459,10 @@ display: table-cell;
 vertical-align: top;
 }
 
+#content .customer_display > div.note_list {
+padding-right: 15px;
+}
+
 #content .customer_display > .customer_infoboxes {
 width: 550px;
 }
@@ -585,8 +605,8 @@ background-color: rgb(64,124,197);
 }
 
 div.note_list {
-overflow: auto;
-padding-right: 15px;
+/*overflow: auto;
+padding-right: 15px;*/
 }
 
  .note_list table tbody {

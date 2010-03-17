@@ -55,7 +55,7 @@ class CustomersController extends AppController {
 		$page = isset($this->params['page'])?strtoupper($this->params['page']):'all';
 		$conditions = $this->generateConditions();
 		if($page=='all') {
-			if($this->permissionsStatus['admin']) $customer = $this->Customer->findAll($conditions,null,null,null,null,1);
+			if($this->permissionsStatus['admin']) $customer = $this->Customer->findAll($conditions,null,null,null,null,0);
 			else $customer = $this->Customer->findAllWithService($conditions);
 			$this->set('customers', $customer);
 			$this->pageTitle = 'Customer List';
@@ -93,8 +93,10 @@ class CustomersController extends AppController {
 			$this->render('not_authorised');
 			return true;
 		}
-		if(!empty($customer))
+		if(!empty($customer)) {
 			$this->set('customer', $customer);
+			$this->pageTitle = "{$customer['Customer']['company_name']} | Customer";
+		}
 		else {
 			$this->viewPath = 'errors';
 			$this->render('not_found');
@@ -126,7 +128,7 @@ class CustomersController extends AppController {
 					$this->Customer->Website->save($websitedata);
 				}
 				$this->Session->setFlash("Customer created successfully.");
-				$this->redirect("/".Inflector::underscore($this->name)."/view/$newcustomer");
+				$this->redirect("/customers/view/$newcustomer");
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
 				$customer_list = $this->Customer->find('all',array(

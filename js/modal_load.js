@@ -31,17 +31,7 @@ $('#ServiceStatus').change(function(e) {
 });
 
 $('#ServiceStatus option[selected=selected]').each(function() {
-	$(this).attr('disabled','disabled');
+	if($('#simplemodal-container form').attr('action').match(/change_status/g)) {
+		$(this).attr('disabled','disabled');
+	}
 });
-
-/*
-$('#date_pick_block').bind('click',function(){
-	$(this).css('background-image','none').css('padding-left','0px')
-	$('#date_pick_block').datePicker({
-		inline:true,
-		startDate:'2000-01-01'
-	}).bind('dateSelected',function(e, selectedDate, $td){
-		$('#DatePickHidden').attr('value',selectedDate.asString()+' 00:00:00');
-	});
-});
-*/
