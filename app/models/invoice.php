@@ -116,5 +116,19 @@ class Invoice extends AppModel {
 		//Switch to a better system eventually
 		$vat_array = array('Standard UK VAT (17.5%)'=>'17.5','Credit Crunch UK VAT (15%)'=>'15');
 	}
+
+	function generateReference($customer_id) {
+		$invoice_string = '';
+		$num_inv_this_cmr = $this->findCount(array('Customer.id'=>$customer_id));
+
+		$cur_date_str = strftime('%y%m%d');
+		$unique_inv_count_str = str_pad(((string)$num_inv_this_cmr+1),3,'0',STR_PAD_LEFT);
+		$customer_id_str = str_pad((string)$customer_id,4,'0',STR_PAD_LEFT);
+
+		$invoice_string = $customer_id_str.'-'.$unique_inv_count_str.'-'.$cur_date_str;
+		return $invoice_string;
+	}
+
+
 }
 ?>

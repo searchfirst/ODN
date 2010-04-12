@@ -1,7 +1,7 @@
 <?php
 class Article extends AppModel {
     var $name = 'Article';
-	var $recursive = 2;
+	var $recursive = 1;
 
     var $validate = array(
 		'title'			=>	VALID_NOT_EMPTY,

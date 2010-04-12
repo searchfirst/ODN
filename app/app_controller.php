@@ -43,8 +43,8 @@ class AppController extends Controller {
 			$this->RequestHandler->renderAs($this,'rss');
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Xml')
 			$this->RequestHandler->renderAs($this,'xml');
-		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Ajax')
-			$this->RequestHandler->renderAs($this,'dajax');
+//		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Ajax')
+//			$this->RequestHandler->renderAs($this,'dajax');
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Pdf') {
 			$this->RequestHandler->respondAs('application/pdf');
 			$this->RequestHandler->renderAs($this,'pdf');

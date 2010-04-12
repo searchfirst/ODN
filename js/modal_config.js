@@ -3,7 +3,7 @@ function setup_modal_dialogs() {
 	prepare_overlay();
 
 	if($('#flashMessage').is('div.message')) {
-		$('#flashMessage').modal({minHeight:35});
+		$('#flashMessage').modal({minHeight:75});
 	}	
 
 	$('a.modalAJAX').bind('click',function(event){
@@ -25,12 +25,12 @@ function toggle_overlay() {
 function popupBoxAjax(pba_url) {
 	toggle_overlay();
 	var error = '<h2>Error Retrieving Content</h2><p>There was a problem opening this page.</p>';
-	var max_modal_height = $(document).height() - 44;
+	var max_modal_height = $(window).height() - 44;
 	$.ajax({
 		url: pba_url,
 		dataType: 'html',
 		success: function(data,textStatus,XMLHttpRequest) {
-			$.modal(data,{maxHeight:max_modal_height,autoResize:true});
+			$.modal(data,{minHeight:75,maxHeight:max_modal_height,autoResize:false});
 			$.ajax({url:'/js/modal_load.js',dataType:'script'});
 			toggle_overlay();
 		},

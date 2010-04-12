@@ -1,4 +1,4 @@
-<h2>Edit Customer: <?php echo $html->link($customer['Customer']['company_name'],'/customers/view/'.$customer['Customer']['id']) ?></h2>
+<h2>Edit Customer</h2>
 <form action="<?php echo $html->url("/customers/edit/{$customer['Customer']['id']}")?>" method="post" accept-charset="UTF-8">
 <fieldset> 
 <legend>Company Details</legend>

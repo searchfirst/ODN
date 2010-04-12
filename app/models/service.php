@@ -1,9 +1,30 @@
 <?php
 class Service extends AppModel {
 	var $name = 'Service';
-	var $validate = array();
 	var $order = 'Service.modified';
-	var $recursive = 2;
+	var $recursive = 1;
+
+	var $validate = array(
+		'title'=>array(
+			'rule'=>'notEmpty',
+			'allowEmpty'=>false,
+			'message'=>'You must choose or input a Service'
+		),
+		'website_id'=>array(
+			'rule'=>'notEmpty',
+			'allowEmpty'=>false,
+			'message'=>'You must pick a website'
+		),
+		'user_id'=>array(
+			'rule'=>'notEmpty',
+			'allowEmpty'=>false,
+			'message'=>'You must pick an employee'
+		),
+		'customer_id'=>array(
+			'rule'=>'notEmpty',
+			'allowEmpty'=>false
+		)
+	);
 
 	var $hasMany = array('Note'=>array());
 	var $belongsTo = array('Website','Customer','User');

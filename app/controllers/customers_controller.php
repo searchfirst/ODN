@@ -118,11 +118,9 @@ class CustomersController extends AppController {
 			else
 				$this->set('customer',array('Customer'=>array('customer_id'=>null)));
 		} else {
-			//$this->Customer->deconstruct($this->data);
 			if($this->Customer->save($this->data)) {
 				$newcustomer = $this->Customer->getLastInsertId();
 				if(!empty($this->data['Website']['uri'])) {
-					//$this->data['Website']['title'] = empty($this->data['Website']['title'])?$this->data['Customer']['company_name']:$this->data['Website']['title'];
 					$this->data['Website']['customer_id'] = $newcustomer;
 					$websitedata['Website'] = $this->data['Website'];
 					$this->Customer->Website->save($websitedata);
@@ -159,7 +157,6 @@ class CustomersController extends AppController {
 			}
 			$this->data = $this->Customer->find(array('Customer.id'=>$id),null,'Customer.id ASC');
 			$this->set('customer', $this->data);
-			//$this->set('resellers', $this->Customer->Reseller->generateList());
 		} else {
 			if($this->Customer->save($this->data)) {
 				$this->Session->setFlash("Customer details saved successfully.");
@@ -167,7 +164,6 @@ class CustomersController extends AppController {
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
 				$this->set('customer', $this->Customer->read(null, $id));
-				//$this->set('resellers', $this->Customer->Reseller->generateList());
 			}
 		}
 	}

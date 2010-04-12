@@ -33,8 +33,10 @@ class ServicesController extends AppController
 	);
 
 	function index() {
-		$this->Service->recursive = 0;
-		$this->set('services', $this->Websites->findAll());
+//		$this->Service->recursive = 0;
+//		$this->set('services', $this->Services->find('all'));
+//		$this->Session->setFlash('');
+		$this->redirect('/');
 	}
 	
 	function beforeRender() {
@@ -46,14 +48,15 @@ class ServicesController extends AppController
 
 	function add() {
 		if(empty($this->data) || isset($this->data['Referrer']['customer_id'])) {
-			$this->data['Service']['customer_id'] =!empty($this->data['Referrer']['customer_id'])?$this->data['Referrer']['customer_id']:null;
-			$this->data['Service']['website_id'] =!empty($this->data['Referrer']['website_id'])?$this->data['Referrer']['website_id']:null;
-			$this->set('service',$this->data);
+			if(!empty($this->data['Referrer']['customer_id']))
+				$this->data['Service']['customer_id'] = $this->data['Referrer']['customer_id'];
+			if(!empty($this->data['Referrer']['website_id']))
+				$this->data['Service']['website_id'] = $this->data['Referrer']['website_id'];
 			$this->set('customer',
 				Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 			$this->set('website',Set::combine($this->Service->Website->find('all',array(
-					'recursive'=>0,
-					'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
+				'recursive'=>0,
+				'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
 			)),'{n}.Website.id','{n}.Website.uri'));
 			$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
 		} else {
@@ -65,16 +68,18 @@ class ServicesController extends AppController
 					$update_customer_data = array('Customer'=>array('id'=>$customer_id,'status'=>0));
 					$this->Service->Customer->save($update_customer_data);
 				}
-				$this->redirect($this->referer('/'));
+				if($this->RequestHandler->isAjax())
+					$this->redirect($this->referer('/'));
+				else {
+					$this->redirect("/customers/view/$customer_id");
+				}
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
-				$this->data['Referral']['customer_id'] = $this->data['Service']['customer_id'];
-				$this->data['Referral']['website_id'] = $this->data['Service']['website_id'];
 				$this->set('customer',
 					Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 				$this->set('website',Set::combine($this->Service->Website->find('all',array(
-						'recursive'=>0,
-						'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
+					'recursive'=>0,
+					'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
 				)),'{n}.Website.id','{n}.Website.uri'));
 				$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
 			}
@@ -82,26 +87,25 @@ class ServicesController extends AppController
 	}
 
 	function edit($id) {
-		if( (isset($this->data['Service']['submit'])) || (empty($this->data)) ) {
+//		if( (isset($this->data['Service']['submit'])) || (empty($this->data)) ) {
+		if( empty($this->data) ) {
 			if(!$id) {
-				$this->Session->setFlash('Invalid Website');
-				$this->redirect('/customers/');
+				$this->Session->setFlash('Invalid Service');
+				$this->redirect($this->referer('/'));
 			}
 			$this->data = $this->Service->findById($id);
-			$this->set('service',$this->data);
+			//$this->set('service',$this->data);
 			$this->pageTitle = "Edit Service: {$this->data['Service']['title']}";
 			$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
 			$this->set('customers',
 				Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
 		} else {
-			$this->set('service',$this->Service->find(array('Service.id'=>$id)));
+			//$this->set('service',$this->Service->find(array('Service.id'=>$id)));
 			if($this->Service->save($this->data)) {
 				$this->Session->setFlash("Website saved successfully.");
-				$this->redirect("/".strtolower($this->name)."/view/$id");
+				$this->redirect($this->referer("/customers/view/{$this->data['Service']['customer_id']}"));
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
-				pr($this->data);
-				//$this->set('service',$this->data);
 				$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
 				$this->set('customers',
 					Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));

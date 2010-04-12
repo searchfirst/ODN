@@ -1,14 +1,22 @@
 <?php
 class Website extends AppModel {
-    var $useDbConfig = MOONLIGHT_DB_CONFIG; //Remove this when moving to production
     var $name = 'Website';
     var $validate = array(
-		'title'			=>	VALID_NOT_EMPTY,
-		'description'	=>	VALID_NOT_EMPTY
+		'uri'=>array(
+			'rule'=>'url',
+			'allowEmpty'=>false
+		)
 	);
 	var $belongsTo = array("Customer");
 	var $hasMany = array("Service");
 	var $recursive = 2;
+
+	function beforeSave() {
+		parent::beforeSave();
+		if (isset($this->data['Website']['uri']))
+			$this->data['Website']['uri'] = str_replace('http://','',$this->data['Website']['uri']);
+		return true;
+	}
 
 	function findAllWithService($conditions=null,$fields=null,$order=null,$limit=null,$page=null,$recursive=null,$user=null) {
 		if(!$user) {

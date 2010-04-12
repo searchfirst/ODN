@@ -1,6 +1,11 @@
 <h2>Notes</h2>
-<ul class="item_list">
-<?php foreach($notes as $note):?>
-<li class="item"><?php echo $html->link($note['Customer']['company_name'],"/customers/view/{$note['Customer']['id']}")?> <strong><?php echo $note['User']['name'] ?> (<?php echo $time->niceShort($note['Note']['created']);?>)</strong>: <?php echo htmlentities($note['Note']['description']) ?></li>
+<div class="note_list">
+<ul class="note_list">
+<?php foreach($notes as $x=>$note):?>
+<li class="<?php echo $x%2?"even":"odd" ?>">
+<span><?php echo $html->link($note['Customer']['company_name'],"/customers/view/{$note['Customer']['id']}")?></span>
+<b><?php echo $note['User']['name'] ?> (<?php echo $time->niceShort($note['Note']['created']);?>)</b>:
+<?php echo $textAssistant->htmlFormatted($note['Note']['description']) ?></li>
 <?php endforeach;?>
 </ul>
+</div>

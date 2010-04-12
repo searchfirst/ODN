@@ -1,26 +1,6 @@
-<h2>Service for <?php echo $textAssistant->link($service['Customer']['company_name'],"/customers/view/{$service['Customer']['id']}")?>: <?php echo $service['Service']['title']?></h2>
-<div class="options">
-<?php echo $this->renderElement('edit_form',array('id'=>$service['Service']['id'],'title'=>$service['Service']['title']))?> 
-<?php echo $this->renderElement('service/modify_status',array('id'=>$service['Service']['id'],'selected'=>$service['Service']['status'],'title'=>$service['Service']['title']))?> 
-</div>
-
-<div id="item_display">
-<ul>
-<li><a href="#item_display_description">Details</a></li>
-</ul>
-
-<div id="item_display_description">
-<h3 class="tabs-heading">Details</h3>
-<dl>
+<h2><?php echo $service['Service']['title']?></h2>
 <?php if(!empty($service['Service']['description'])):?>
-<dt>Description</dt>
-<dd><?php echo $textAssistant->htmlFormatted($service['Service']['description'])?></dd>
+<?php echo $textAssistant->htmlFormatted($service['Service']['description'])?>
+<?php else:?>
+<p><em>No details</em> have been given for this Service. Use the Edit Service option to update the details here.</p>
 <?php endif;?>
-<dt>Status</dt>
-<dd><?php echo $status->serviceStatus($service['Service']['status'])?></dd>
-<dt>Pay Schedule</dt>
-<dd><?php echo $status->serviceSchedule($service['Service']['schedule'])?></dd>
-</dl>
-<h3>Notes</h3>
-</div>
-</div>

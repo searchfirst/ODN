@@ -1,4 +1,3 @@
-<?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,7 +7,7 @@
 <?php echo $html->css('print','stylesheet',array('media'=>'print'));?> 
 <?php echo $this->renderElement('js/default')?> 
 </head>
-<body><div id="main">
+<body id="dashboard"><div id="main">
 <div id="header">
 <h1>Dux</h1>
 </div>

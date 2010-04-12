@@ -44,33 +44,22 @@ class InvoicesController extends AppController
 
 	function index() {}
 
-	function _generate_invoice_reference($customer_id) {
-		$invoice_string = '';
-		$num_inv_this_cmr = $this->Invoice->findCount(array('Customer.id'=>$customer_id));
-
-		$cur_date_str = strftime('%y%m%d');
-		$unique_inv_count_str = str_pad(((string)$num_inv_this_cmr+1),3,'0',STR_PAD_LEFT);
-		$customer_id_str = str_pad((string)$customer_id,4,'0',STR_PAD_LEFT);
-
-		$invoice_string = $customer_id_str.'-'.$unique_inv_count_str.'-'.$cur_date_str;
-		return $invoice_string;
-	}
-
 	function raise() {
-		if(empty($this->data) || isset($this->customer_id)) {
-			$invoice = array('Invoice'=>array('customer_id' => $this->customer_id));
-			$this->set('invoice',$invoice);
-			$this->set('generated_invoice_reference',$this->_generate_invoice_reference($this->customer_id));
+		if(empty($this->data) || !empty($this->data['Referrer'])) {
+			if(!empty($this->data['Referrer']['customer_id']))
+				$this->data['Invoice']['customer_id'] = $this->data['Referrer']['customer_id'];
+			$customer_id = $this->data['Invoice']['customer_id'];
+			$this->data['Invoice']['reference'] = $this->Invoice->generateReference($customer_id);
 			$service_list = $this->Invoice->Service->findAll(
-				array('Customer.id'=>$this->customer_id),
+				array('Customer.id'=>$customer_id),
 				null,
 				'Service.cancelled ASC'
 			);
-			$service_tmp = array();
+			$services = array();
 			foreach($service_list as $service_item) {
-				$service_tmp[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
+				$services[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
 			}
-			$this->set('services',$service_tmp);
+			$this->set('services',$services);
 			$this->set('vat_rates',$this->Invoice->getVatRates());
 		} else {
 			if($this->Invoice->save($this->data)) {
@@ -83,17 +72,17 @@ class InvoicesController extends AppController
 					null,
 					'Service.cancelled ASC'
 				);
+				$services = array();
 				foreach($service_list as $service_item) {
-					$service_tmp[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
+					$services[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
 				}
-				$this->set('services',$service_tmp);
+				$this->set('services',$services);
 				if(!empty($this->data['Invoice']['customer_id']))
 					$this->data['Referrer']['customer_id'] = $this->data['Invoice']['customer_id'];
 				if(!empty($this->data['Invoice']['website_id']))
 					$this->data['Referrer']['website_id'] = $this->data['Invoice']['website_id'];
 				if(!empty($this->data['Invoice']['service_id'])) {
 					$this->data['Referrer']['service_id'] = $this->data['Invoice']['service_id'];
-					//if()
 				}
 			}
 		}

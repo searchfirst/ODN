@@ -24,7 +24,12 @@ class User extends AppModel {
 	);
 		
 	function getCurrent($session_data) {
-		if(($user=$this->findById($session_data['User']['id'])) && (md5($user['User']['password']))==$session_data['User']['hash'])
+		$user = $this->find('first',array(
+			'conditions'=>array('User.id'=>$session_data['User']['id']),
+			'recursive'=>1
+		));
+//		if(($user=$this->findById($session_data['User']['id'])) && (md5($user['User']['password']))==$session_data['User']['hash'])
+	if($user && (md5($user['User']['password']))==$session_data['User']['hash'])
 			return $user;
 		else return null;
 	}

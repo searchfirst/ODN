@@ -7,8 +7,8 @@
 <?php echo $form->input('Website.ftp_username', array('size'=>'40','maxlength'=>'150','error'=>'Please enter the Username.'))?> 
 <?php echo $form->input('Website.ftp_password', array('size'=>'40','maxlength'=>'150','error'=>'Please enter the Password.'))?> 
 </fieldset>
-<?php if(!empty($website['Website']['customer_id'])):?>
-<?php echo $form->hidden('Website.customer_id',array('value'=>$website['Website']['customer_id']))?> 
+<?php if(!empty($this->data['Website']['customer_id'])):?>
+<?php echo $form->hidden('Website.customer_id')?> 
 <?php else:?>
 <fieldset>
 <legend>Customer</legend>

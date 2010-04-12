@@ -21,8 +21,7 @@ class Customer extends AppModel {
 		"Referral" => array(
 			"className" => "Customer",
 			"foreignKey" => "customer_id",
-			"order"=>"Referral.status ASC",
-			"group"=>"Referral.company_name",
+			"order"=>"Referral.company_name ASC",
 			"dependent" => true,
 		),
 		"Service" => array(
@@ -33,7 +32,12 @@ class Customer extends AppModel {
 		),
 		'Note' => array(
 			'order' => 'Note.created DESC'
-		)
+		),
+/*		'Agent'=>array(
+			'className' => 'User',
+			'foreignKey' => 'id',
+			'finderQuery' => 'SELECT DISTINCT Agent.id,Agent.name,Service.customer_id FROM services Service JOIN users Agent ON Service.user_id=Agent.id JOIN customers Customer ON Service.customer_id={$__cakeID__$} ORDER BY Agent.id'
+		)*/
 	);
 	var $belongsTo = array(
 		"Reseller" => array(

@@ -33,8 +33,8 @@ class TextAssistantHelper extends Helper {
 		return preg_replace('/\n{1}/',"<br$tag_end",$text);
 	}
 	
-	function link($title,$url) {
-		return $this->Html->link($this->sanitiseText($title,true,true),$url);
+	function link($title,$url,$options=array()) {
+		return $this->Html->link($this->sanitiseText($title,false,true),$url,$options);
 	}
 	
 	function htmlFormattedSnippet($text,$media=false,$model=null,$media_link_attributes=null) {
@@ -54,6 +54,7 @@ class TextAssistantHelper extends Helper {
 		if(!preg_match('/{\[markdown\]}/',$text)) {
 			$txtl = new Textile();
 			$text = SmartyPants($txtl->TextileThis($text),1);
+			$text = $txtl->TextileThis($text);
 		} else {
 			$text = str_replace('{[markdown]}','',$text);
 			$text = SmartyPants(Markdown($text),1);

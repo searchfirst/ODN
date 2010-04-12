@@ -1,4 +1,4 @@
-<h2>Add Customer</h2>
+<h2>New Customer</h2>
 <form action="<?php echo $html->url('/customers/add'); ?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 <fieldset> 
 <legend>Company Details</legend>
@@ -15,7 +15,7 @@
 </fieldset>
 <fieldset>
 <legend>Website</legend>
-<?php echo $form->input('Website.uri',array('size'=>'40','maxlength'=>'150','label'=>'Web Address','error'=>'Web Address.'))?> 
+<?php echo $form->input('Website.uri',array('size'=>'40','maxlength'=>'150','label'=>'Web Address','error'=>'Web Address needed.'))?> 
 </fieldset>
 <?php if(!empty($customer_list) && empty($customer['Referral']) && !empty($customer['Customer'])):?>
 <fieldset>
