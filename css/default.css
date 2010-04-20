@@ -428,8 +428,6 @@ padding: 0 10px;
 -moz-border-radius: 6px !important;
 -webkit-border-radius: 6px !important;
 border: solid 1px rgb(223,223,223);
-/*background-color: rgb(200,224,146);
-background-color: rgb(224,224,224);*/
 background-color: rgb(179, 227, 249);
 margin: 0 0 6px;
 clear: both;
@@ -443,21 +441,8 @@ background-color: rgb(255,227,81);
 background-color: rgb(255,216,22);
 }
 
-html > body div.note_list > ul.note_list > li[rel="highlight"] {
-/*background: rgb(160, 201, 67) !important;
-color: rgb(0,0,0) !important;
-background: rgb(185,185,185) !important;
-color: rgb(0,0,0) !important;*/
-}
-
-
 #content div.note_list ul.note_list li > h3 {
-/*background: rgb(99,185,11);
-background: -moz-linear-gradient(top,rgb(179,212,106),rgb(159,201,67));
-background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(179,212,106)), to(rgb(159,201,67)));*/
 background: rgb(19, 162, 225);
-/*background: -moz-linear-gradient(top,rgb(212,212,212),rgb(201,201,201));
-background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(212,212,212)), to(rgb(201,201,201)));*/
 color: rgb(31,31,31);
 margin: 0 -10px 6px;
 padding: 0 10px;
@@ -470,10 +455,6 @@ border: none;
 }
 
 html > body div.note_list > ul.note_list li[rel="highlight"] > h3 {
-/*background: rgb(160, 201, 67) !important;
-color: rgb(0,0,0) !important;
-background: rgb(185,185,185) !important;
-color: rgb(0,0,0) !important;*/
 background: rgb(19,162,225) url('/img/theme/star.png') no-repeat 99% 50% !important;
 }
 
@@ -707,10 +688,6 @@ display: none;
 
 *[class~=collapse][class~=initial_show] {
 display: block;
-}
-
-.collapse_hook:hover {
-background-color: rgba(245,245,245,0.5);
 }
 
 .collapse_hook:after {

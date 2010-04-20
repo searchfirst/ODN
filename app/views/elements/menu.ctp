@@ -20,7 +20,7 @@
 		<div>
 		<ul>
 			<li><a href="#">Quarterly Summary</a></li>
-			<li><a href="#">Invoice Summary</a></li>
+			<li><a href="/invoices">Invoice Summary</a></li>
 		</ul>
 		</div>
 	</li>

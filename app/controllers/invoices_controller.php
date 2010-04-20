@@ -42,7 +42,25 @@ class InvoicesController extends AppController
 		
 	}
 
-	function index() {}
+	function index() {
+		$open_invoices = $this->Invoice->find('all',array(
+			'conditions'=>array('Invoice.date_invoice_paid'=>null,'Invoice.due_date >'=>strftime('%Y-%m-%d')),
+			'order'=>'Invoice.due_date ASC'
+		));
+		$open_invoices_count = count($open_invoices);
+		$overdue_invoices = $this->Invoice->find('all',array(
+			'conditions'=>array('Invoice.date_invoice_paid'=>null,'Invoice.due_date <'=>strftime('%Y-%m-%d')),
+			'order'=>'Invoice.due_date ASC'
+		));
+		$overdue_invoices_count = count($overdue_invoices);
+		$recently_paid_invoices = array();
+		$recently_paid_invoices_count = 0;
+		$invoices = array('open'=>$open_invoices,'overdue'=>$overdue_invoices,'recently_paid'=>$recently_paid_invoices);
+		$this->set('open_invoices_count',$open_invoices_count);
+		$this->set('overdue_invoices_count',$overdue_invoices_count);
+		$this->set('recently_paid_invoices_count',$recently_paid_invoices_count);
+		$this->set('invoices',$invoices);
+	}
 
 	function raise() {
 		if(empty($this->data) || !empty($this->data['Referrer'])) {
@@ -139,8 +157,6 @@ class InvoicesController extends AppController
 		$extra_vars = $this->params['url'];
 		unset($extra_vars['url']);
 		if(!count($extra_vars)) $extra_vars = null;
-		//$conditions = am(array('Invoice.id'=>$id),$this->generateConditions($this->Invoice));
-		//if($this->permissionsStatus['admin'] || $this->permissionsStatus['owner']) {
 			if($invoice = $this->Invoice->find($conditions)) {
 				if(isset($this->params['alt_content']) && $this->params['alt_content']=='Pdf') {
 					$this->Invoice->cacheFDF($id,$extra_vars);
@@ -155,11 +171,6 @@ class InvoicesController extends AppController
 				$this->render('not_found');
 				return true;
 			}
-		/*} else {
-			$this->viewPath = 'errors';
-			$this->render('not_authorised');
-			return true;			
-		}*/
 	}
 
 	function paid_in_full($id) {
@@ -172,16 +183,16 @@ class InvoicesController extends AppController
 	}
 
 	function delete($id = null) {
-		if(!$id) {
-			$this->Session->setFlash('Invalid id for Product');
-			$this->redirect($this->referer('/customers/'));
-		}
-		if( ($this->data['Website']['id']==$id) && ($this->Website->del($id)) ) {
-			$this->Session->setFlash('Product deleted: id '.$id.'.');
+		if(!empty($this->data)) {
+			/*$this->Session->setFlash('Product deleted: id '.$id.'.');
 			$customer_id = $this->Website->Customer->findByProduct($id);
-			$this->redirect($this->referer('/customers/'));
+			$this->redirect($this->referer('/customers/'));*/
 		} else {
-			$this->set('id',$id);
+			if(!$id) {
+				$this->Session->setFlash('Invalid Invoice');
+				$this->redirect($this->referer('/'));
+			}
+			/*$this->set('id',$id);*/
 		}
 	}
 }

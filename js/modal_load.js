@@ -55,6 +55,7 @@ $('#simplemodal-container form').each(function(i) {
 		}
 		
 		var no_problems = true;
+		var elements_exist = false;
 		var note_description = $(this).find('#NoteDescription');
 		note_description.parent().css({
 			'background-color': 'transparent',
@@ -72,7 +73,7 @@ $('#simplemodal-container form').each(function(i) {
 			no_problems = no_problems && false;
 		}
 
-		var note_service_id = $(this).find('#NoteServiceId');
+		var note_service_id = $(this).find('#NoteServiceId[type!=hidden]');
 		note_service_id.parent().css({
 			'background-color': 'transparent',
 			'outline-color': 'transparent'
@@ -88,7 +89,8 @@ $('#simplemodal-container form').each(function(i) {
 			error_display_message = error_display_message + "<p>You must choose a service</p>";
 			no_problems = no_problems && false;
 		}
-		if(!no_problems) {
+		elements_exist = note_service_id.length || note_description.length;
+		if(elements_exist && !no_problems) {
 			$(this).prepend("<div id=\"ErrorDisplay\"" + error_display_message + "</div>");
 		}
 		return no_problems;
