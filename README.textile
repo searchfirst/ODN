@@ -1,3 +1,30 @@
 h2. Dux
 
 Dux is a customer database system intended for SMEs.
+
+h3. What Is Dux Really?
+
+The project arose from the need for one of my employers to have a simple system to check in details and lists of services. They had an existing system in place that separated customers and services so that it was difficult to determine who, what and where. This project is now a live piece of iterative development that recently switched over to Git for version control.
+
+As it has progressed, more emphasis has been placed on the user experience to speed up actions and reduce server load. More features have been enabled to allow simple issue tracking, invoice summaries and extensions for affiliates. Built on a PHP framework, it has allowed the long term development of the project to remain modular so that bespoke elements are always possible.
+
+h3. No Really, What Does It Do?
+
+In a nutshell:
+
+* It helps you organise your customers
+* It helps your staff plan and view customer information
+* Leave notes to help you track issues and stay informed about a customer's dealings with you
+* Organise and itemise services individually
+* Raise invoices (early stages!)
+
+h3. What Does the System Lack Right Now?
+
+A simple installation system for you guys to start testing it. A team of contributors (see the Wiki) to help me get 
+some clear goals sorted and some faster development.
+
+A plugin system to enhance pages. My initial idea is to have Cake plugins that can be easily inserted in a page that 
+may allow you to import externally sourced data (XML feeds perhaps) relevant to that particular customer.
+
+Also, I need to get cracking with the documentation and probably cracking with prepping it for a more structured 
+programming environment.
