@@ -4,6 +4,12 @@ class Customer extends AppModel {
 	var $order = 'Customer.company_name';
 	var $recursive = 2;
 
+	public static $status = array(
+		'Cancelled'=>2,
+		'Active'=>0,
+		'Pending'=>1
+	);
+
     var $validate = array(
 		'company_name'=>VALID_NOT_EMPTY,
 		'contact_name'=>VALID_NOT_EMPTY,
@@ -69,10 +75,12 @@ class Customer extends AppModel {
 	}
 	
 	function search($srch_string) {
-		$srch_string = mysql_escape_string($srch_string);
-		$srch_string = str_word_count($srch_string)==1?"*$srch_string*":$srch_string;
+		if(preg_match('/^\S{1,3}$/',$srch_string)) {
+			$query = $this->query("SELECT id FROM customers WHERE company_name LIKE \"%$srch_string%\" ORDER BY company_name ASC");
+		} else {
+			$query = $this->query("SELECT id, MATCH(company_name,contact_name,telephone,fax,email,address,town,county,post_code) AGAINST('$srch_string' IN BOOLEAN MODE) AS score FROM customers WHERE MATCH(company_name,contact_name,telephone,fax,email,address,town,county,post_code) AGAINST('$srch_string' IN BOOLEAN MODE) ORDER BY company_name ASC");
+		}
 		$results = array();
-		$query = $this->query("SELECT id, MATCH(company_name,contact_name,telephone,fax,email,address,town,county,post_code) AGAINST('$srch_string' IN BOOLEAN MODE) AS score FROM customers WHERE MATCH(company_name,contact_name,telephone,fax,email,address,town,county,post_code) AGAINST('$srch_string' IN BOOLEAN MODE) ORDER BY score DESC");
 		foreach($query as $result) $results[] = $this->find(array('Customer.id'=>$result['customers']['id']),null,null,-1);
 		return $results;
 	}
@@ -111,6 +119,16 @@ class Customer extends AppModel {
 			foreach($user['TechnicalCustomer'] as $technical_customer)
 				if($find_id==$technical_customer['id']) return array('Customer'=>$technical_customer);
 		} else return false;
+	}
+	
+	function getCustomerList() {
+		$customers = $this->find('list',array(
+			'fields' => array('Customer.id','Customer.company_name'),
+			'conditions' => array('Customer.customer_id'=>null,'Customer.status'=>self::$status['Active']),
+			'recursive'=>0,
+			'order'=>'Customer.company_name ASC'
+		));
+		return $customers;
 	}
 }
 ?>

@@ -1,7 +1,12 @@
 <h2 class="<?php
 echo Inflector::underscore($status->customerStatus($customer['Customer']['status']));
 //echo " highlight_customer_{$customer['Customer']['id']}";
-?>"><?php if(!empty($customer['Reseller']['id'])) echo $html->link($customer['Reseller']['company_name'],"/customers/view/{$customer['Reseller']['id']}").' - ' ?><?php echo $customer['Customer']['company_name']?></h2>
+?>"><?php echo $customer['Customer']['company_name']?>
+<?php if(!empty($customer['Reseller']['id'])):?>
+<span class="referrer">Reseller/Referrer: <?php echo $html->link($customer['Reseller']['company_name'],"/customers/view/{$customer['Reseller']['id']}"); ?></span>
+<?php endif; ?>
+</h2>
+
 <ul class="hook_menu">
 <li><?php echo $html->link("Edit Customer","/customers/edit/{$customer['Customer']['id']}",array('class'=>'edit modalAJAX'));?></li>
 <li><?php echo $html->link('Add Note',"/ajax/notes/add?customer_id={$customer['Customer']['id']}",array('class'=>'add modalAJAX')) ?></li>
@@ -25,7 +30,7 @@ echo "highlight_{$model}_{$model_id}";
 <h3><?php echo $note['User']['name']?> (<?php echo $time->niceShort($note['created'])?>)</h3>
 <?php
 $cud = $current_user['User']['id'];
-if($cud==$note['User']['id'] || $cud==$note['Service']['user_id']):?>
+if(!empty($note['Service']['user_id']) && ($cud==$note['User']['id'] || $cud==$note['Service']['user_id'])):?>
 <ul class="hook_menu">
 <?php if($note['flagged']):?>
 <li><?php echo $html->link("Unflag","/notes/unflag/{$note['id']}",array('class'=>'modalAJAX')) ?></li>
@@ -42,6 +47,7 @@ if($cud==$note['User']['id'] || $cud==$note['Service']['user_id']):?>
 
 <div class="customer_infoboxes">
 <?php echo $this->element('customers/infobox_details');?> 
+<?php echo $this->element('customers/infobox_customers'); ?> 
 <?php echo $this->element('customers/infobox_services');?> 
 <?php echo $this->element('customers/infobox_invoices');?>
 </div>

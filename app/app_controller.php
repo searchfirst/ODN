@@ -43,12 +43,11 @@ class AppController extends Controller {
 			$this->RequestHandler->renderAs($this,'rss');
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Xml')
 			$this->RequestHandler->renderAs($this,'xml');
-//		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Ajax')
-//			$this->RequestHandler->renderAs($this,'dajax');
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Pdf') {
 			$this->RequestHandler->respondAs('application/pdf');
 			$this->RequestHandler->renderAs($this,'pdf');
 		}
+		if($external_links = Configure::read('Dux.external_links')) $this->set('external_links',$external_links);
 		if(isset($this->primaryModel)) $this->set('primary_model',$this->primaryModel);
 		if($this->RequestHandler->isAjax()) $this->set('is_ajax',true);
 	}

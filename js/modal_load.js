@@ -99,3 +99,4 @@ $('#simplemodal-container form').each(function(i) {
 
 $('ul.tab_hooks').duxTab();
 $('ul.hook_ajax_pagination').hookPagination();
+$('input[type=number]').preventNonFloatCharacters();

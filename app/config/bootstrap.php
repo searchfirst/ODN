@@ -1,19 +1,22 @@
 <?php
+Configure::load('dux_configuration');
 setlocale(LC_ALL, 'en_GB.UTF-8');
 //setlocale(LC_MONETARY, 'en_GB.UTF-8');
 
 /*
  * DB Config
  */
-define('MOONLIGHT_DB_CONFIG','default');
+//define('MOONLIGHT_DB_CONFIG','default');
 
 /*
  * Miscellaneous Config & Section Titles
  */
+/*
 define('MOONLIGHT_WEBMASTER_EMAIL','webmaster@example.com');
 define('MOONLIGHT_WEBMASTER_NAME','Webmaster');
 define('MOONLIGHT_WEBSITE_NAME','Dux');
 define('MOONLIGHT_WEBSITE_DESCRIPTION','Moonlight Client description');
+*/
 
 define('MOONLIGHT_USE_HTML',true);
 define('MOONLIGHT_ALLOW_HTML_IN_DESCRIPTIONS',false);

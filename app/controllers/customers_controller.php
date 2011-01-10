@@ -1,4 +1,5 @@
 <?php
+App::import('Sanitize');
 class CustomersController extends AppController {
 
 	var $name = 'Customers';
@@ -14,90 +15,33 @@ class CustomersController extends AppController {
 		));
 	}
 
-	function beforeFilter() {
-		parent::beforeFilter();
-		$this->permissions = array(
-			"index"=>array(
-				'owner'=>null,
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array('User'),'conditions'=>array('Customer.customer_id'=>0,'User.id'=>$this->current_user['User']['id'])),
-				'other'=>array('group'=>array(),'conditions'=>null)
-			),
-			"view"=>array(
-				'owner'=>array('owner_conditions'=>array('Customer.id'=>(isset($this->params['pass'][0])?$this->params['pass'][0]:null),'User.id'=>$this->current_user['User']['id']),'conditions'=>array()),
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array(),'conditions'),
-				'other'=>array('group'=>array(),'conditions')
-			),
-			"edit"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"add"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"delete"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>null
-			)
-		);
-		
-	}
-
 	function index() {
 		$page = isset($this->params['page'])?strtoupper($this->params['page']):'all';
-		$conditions = $this->generateConditions();
 		if($page=='all') {
-			if($this->permissionsStatus['admin']) $customer = $this->Customer->findAll($conditions,null,null,null,null,0);
-			else $customer = $this->Customer->findAllWithService($conditions);
+			$customer = $this->Customer->find('all',array(
+				'recursive'=>0
+			));
 			$this->set('customers', $customer);
 			$this->pageTitle = 'Customer List';
-		}
-		else {
-			$conditions = am($conditions,array('Customer.company_name LIKE'=>$page.'%')); //REMOVED 'Customer.customer_id'=>0,
-			if($this->permissionsStatus['admin']) {
-				//$customers = $this->Customer->findAll($conditions,null,null,null,null,1);
-				$customers = $this->Customer->find('all',array(
-					'conditions'=>$conditions,
-					'recursive'=>1
-				));
-				
-			}
-			else {
-				$customers = $this->Customer->findAllWithService($conditions,null,null,null,null,1);
-			}
+		} else {
+			$customers = $this->Customer->find('all',array(
+				'conditions'=>array('Customer.company_name LIKE'=>$page.'%'),
+				'recursive'=>0
+			));
 			$this->set('customers', $customers);
+//			$this->set('title_for_layout',sprintf('Customer List - %s',$page));
 			$this->pageTitle = "Customer List - $page";
 		}
 	}
 
 	function view($id = null) {
-		if(!$id) {
-			$this->Session->setFlash('Invalid Customer.');
-			$this->redirect('/customers/');
-		}
-		$conditions = am(array('Customer.id'=>$id),$this->generateConditions($this->Customer,null,null,null,'findWithService'));
-		if($this->permissionsStatus['admin']) {
-			$customer = $this->Customer->findWithService($conditions);
-		} elseif($this->permissionsStatus['owner']) {
-			$customer = $this->Customer->findWithService($conditions);
-		} else {
-			$this->viewPath = 'errors';
-			$this->render('not_authorised');
-			return true;
-		}
+		$customer = $this->Customer->find('first',array(
+			'conditions' => array('Customer.id'=>$id)
+		));
 		if(!empty($customer)) {
 			$this->set('customer', $customer);
-			$this->pageTitle = "{$customer['Customer']['company_name']} | Customer";
-		}
-		else {
+			$this->pageTitle = sprintf('%s | Customer',$customer['Customer']['company_name']);
+		} else {
 			$this->viewPath = 'errors';
 			$this->render('not_found');
 			return true;
@@ -106,13 +50,7 @@ class CustomersController extends AppController {
 
 	function add() {
 		if(empty($this->data)) {
-			$customer_list = $this->Customer->find('all',array(
-				'fields' => array('Customer.customer_id','Customer.id','Customer.company_name'),
-				'conditions' => array('OR' => array('Customer.customer_id'=>'IS NULL','Customer.customer_id'=>0)),
-				'recursive'=>0,
-				'order'=>'Customer.company_name ASC'
-			));
-			$this->set('customer_list',Set::combine($customer_list,'{n}.Customer.id','{n}.Customer.company_name'));
+			$this->set('customer_list',$this->Customer->getCustomerList());
 			if(isset($this->data['Referrer']['customer_id']))
 				$this->set('customer',array('Customer'=>array('customer_id'=>$this->data['Referrer']['customer_id'])));
 			else
@@ -129,13 +67,7 @@ class CustomersController extends AppController {
 				$this->redirect("/customers/view/$newcustomer");
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
-				$customer_list = $this->Customer->find('all',array(
-					'fields' => array('Customer.customer_id','Customer.id','Customer.company_name'),
-					'conditions' => array('OR' => array('Customer.customer_id'=>'IS NULL','Customer.customer_id'=>0)),
-					'recursive'=>0,
-					'order'=>'Customer.company_name ASC'
-				));
-				$this->set('customer_list',Set::combine($customer_list,'{n}.Customer.id','{n}.Customer.company_name'));
+				$this->set('customer_list',$this->Customer->getCustomerList());
 			}
 		}
 	}
@@ -195,7 +127,7 @@ class CustomersController extends AppController {
 
 	function search() {
 		if(isset($this->params['url']['q'])) {
-			$q_string = $this->params['url']['q'];
+			$q_string = Sanitize::escape($this->params['url']['q'],'default');
 		}
 		$query = strtoupper($q_string);
 		$customers = $this->Customer->search($query);
@@ -204,6 +136,5 @@ class CustomersController extends AppController {
 			$this->redirect('/customers/view/'.$customers[0]['Customer']['id']);
 		}		
 	}
-
 }
 ?>

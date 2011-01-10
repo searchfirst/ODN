@@ -177,5 +177,77 @@ class ServicesController extends AppController
 			$this->set('id',$id);
 		}
 	}
+
+	function activity_monitor($filter=null,$date_range=null) {
+		if($filter!=null) {
+			if(!$date_range) {
+				$date_range = array(
+					'start' => strftime('%F %T',strtotime('6 months ago')),
+					'end' => strftime('%F %T',strtotime('tomorrow'))
+				);
+			} else {
+				$date_range_split = 'deal with this';
+			}
+			$dates = array();
+			$start_date_ts = strtotime(sprintf('%s01',substr($date_range['start'],0,8)));
+			$end_date_ts = strtotime(sprintf('%s01',substr($date_range['end'],0,8)));
+			$curr_date_ts = $start_date_ts;
+			while($curr_date_ts != $end_date_ts) {
+				$formatted_date = strftime('%b %Y',$curr_date_ts);
+				$dates[] = $formatted_date;
+				$curr_date_ts = strtotime('+1 month',$curr_date_ts);
+			}
+			if(false===($customers=Cache::read("activity_monitor_customerlist_$filter"))) {
+				$customers = $this->Service->find('all',array(
+					'conditions'=>array(
+						'Service.title LIKE ' => "%$filter%",
+						'NOT' => array('Service.status' => Service::$status['Cancelled'])
+					),
+					'fields'=>array(
+						'Customer.company_name',
+						'Customer.id',
+						"CONCAT(Customer.company_name,': ',Service.title) AS company_service_hash"
+					),
+					'order'=>'company_service_hash'
+				));
+				Cache::write("activity_monitor_customerlist_$filter", $customers);
+			}
+			if(false===($services=Cache::read("activity_monitor_notelist_$filter"))) {
+				$services = $this->Service->Note->find('all',array(
+					'conditions' => array(
+						'Service.title LIKE ' => "%$filter%",
+						'Note.created BETWEEN ? AND ?' => array($date_range['start'],$date_range['end']),
+						'NOT' => array('Service.status' => Service::$status['Cancelled'])
+					),
+					'fields' => array(
+						'Note.id',
+						'Note.description',
+						'User.name',
+						"DATE_FORMAT(Note.created,'%b %Y') AS month_created",
+						'Service.id',
+						'Service.title',
+						'Customer.company_name',
+						'Customer.id',
+						"CONCAT(Customer.company_name,': ',Service.title) AS company_service_hash"
+					),
+					'group'=>'Note.created',
+					'order'=>'Note.created ASC',
+					'recursive' => 0
+				));
+				Cache::write("activity_monitor_notelist_$filter", $services);
+			}
+			$customer_date_table = array();
+			foreach($services as $service) {
+				$csh = $service[0]['company_service_hash'];
+				$month = $service[0]['month_created'];
+				unset($service[0]);
+				$customer_date_table[$csh][$month][] = $service;
+			}
+			$this->set('dates',$dates);
+			$this->set('customers',$customers);
+			$this->set('customer_date_table',$customer_date_table);
+		} 
+	}
+
 }
 ?>

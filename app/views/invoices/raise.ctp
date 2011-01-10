@@ -5,8 +5,8 @@
 	'type'=>'textarea','cols'=>'30','rows'=>'5','error'=>'Please enter the Description.'))?> 
 <?php echo $form->input('Invoice.reference',array('error'=>'Please give a valid reference.'))?> 
 <?php echo $form->input('Invoice.your_reference',array('label'=>'Their Reference','error'=>'Please give a valid reference.'))?> 
-<?php echo $form->input('Invoice.amount',array('error'=>'Please give the total.'))?> 
-<?php echo $form->input('Invoice.vat_included',array('checked'=>'checked')) ?>
+<?php echo $form->input('Invoice.amount',array('label'=>'Amount','type'=>'number','error'=>'Please give the total.','min'=>0))?> 
+<?php echo $form->input('Invoice.vat_included',array());?> 
 <?php echo $form->input('Invoice.due_date',array('error'=>'Please give the due date.','div'=>array('class'=>'inline'),'selected'=>strftime('%Y-%m-%d',strtotime('+28 days'))))?> 
 <?php echo $form->input('Invoice.next_invoice_due',array('error'=>'Please give the due date.','div'=>array('class'=>'inline'),'empty'=>true))?> 
 <?php //echo $form->input('Service.schedule', array('options'=>$service_schedule))?>

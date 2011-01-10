@@ -9,5 +9,7 @@
 <?php echo $javascript->link('jquery/libs/menu_hook');?> 
 <?php echo $javascript->link('jquery/libs/dux_tabs');?> 
 <?php echo $javascript->link('jquery/libs/hook_pagination');?> 
+<?php echo $javascript->link('jquery/libs/form_entry_sanity');?> 
 <?php echo $javascript->link('modal_config');?> 
+<?php echo $javascript->link('filter_config');?> 
 <?php echo $javascript->link('load_config');?>

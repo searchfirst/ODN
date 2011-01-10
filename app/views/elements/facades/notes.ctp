@@ -1,7 +1,7 @@
 <h2>Notes</h2>
 <ul class="tab_hooks">
-<li>Your Notes [<b><?php echo $your_notes['count'] ?></b>]</li>
-<li>Flagged for You [<b><?php echo $your_flagged_notes['count'] ?></b>]</li>
+<li>Notes [<b><?php echo $your_notes['count'] ?></b>]</li>
+<li>Flagged [<b><?php echo $your_flagged_notes['count'] ?></b>]</li>
 <li>All Flagged [<b><?php echo $flagged_notes['count'] ?></b>]</li>
 <li>All Notes</li>
 </ul>
@@ -22,7 +22,7 @@
 <?php foreach($your_notes['items'] as $n=>$note):?>
 <li>
 <h3><?php echo $textAssistant->sanitiseText("{$note['User']['name']}")?> (<?php echo $time->relativeTime($note['Note']['created']) ?>)</h3>
-<p><b><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></b></p>
+<h4><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></h4>
 <?php echo $textAssistant->htmlFormatted($note['Note']['description'])?>
 </li>
 <?php endforeach;?>
@@ -46,7 +46,7 @@
 <?php foreach($your_flagged_notes['items'] as $n=>$note):?>
 <li class="flagged">
 <h3><?php echo $textAssistant->sanitiseText("{$note['User']['name']}")?> (<?php echo $time->relativeTime($note['Note']['created']) ?>)</h3>
-<p><b><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></b></p>
+<h4><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></h4>
 <?php echo $textAssistant->htmlFormatted($note['Note']['description'])?>
 </li>
 <?php endforeach;?>
@@ -70,7 +70,7 @@
 <?php foreach($flagged_notes['items'] as $n=>$note):?>
 <li class="flagged">
 <h3><?php echo $textAssistant->sanitiseText("{$note['User']['name']}")?> (<?php echo $time->relativeTime($note['Note']['created']) ?>)</h3>
-<p><b><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></b></p>
+<h4><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></h4>
 <?php echo $textAssistant->htmlFormatted($note['Note']['description'])?>
 </li>
 <?php endforeach;?>
@@ -94,7 +94,7 @@
 <?php foreach($all_notes['items'] as $n=>$note):?>
 <li>
 <h3><?php echo $textAssistant->sanitiseText("{$note['User']['name']}")?> (<?php echo $time->relativeTime($note['Note']['created']) ?>)</h3>
-<p><b><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></b></p>
+<h4><?php echo $textAssistant->link("{$note['Customer']['company_name']} - {$note['Service']['title']}","/customers/view/{$note['Customer']['id']}")?></h4>
 <?php echo $textAssistant->htmlFormatted($note['Note']['description'])?>
 </li>
 <?php endforeach;?>

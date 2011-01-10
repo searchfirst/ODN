@@ -83,8 +83,8 @@ class Invoice extends AppModel {
 		$breakdown = explode("\n",$invoice['Invoice']['description']);
 		if(!empty($breakdown)) {
 			foreach($breakdown as $breakdown_item) {
-				if(preg_match('/,/',$breakdown_item)) {
-					list($service_list[],$service_prices[]) = explode(",",$breakdown_item);
+				if(preg_match('/\|/',$breakdown_item)) {
+					list($service_list[],$service_prices[]) = explode("|",$breakdown_item);
 				} else {
 					$service_list[] = $breakdown_item;
 					$service_prices[] = '';

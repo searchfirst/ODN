@@ -10,7 +10,7 @@
 </head>
 <body><div id="main">
 <div id="header">
-<h1><?php echo $textAssistant->sanitiseText(MOONLIGHT_WEBSITE_NAME) ?></h1>
+<h1>Dux</h1>
 </div>
 
 <?php echo $this->renderElement('search/search')?> 

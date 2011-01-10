@@ -1,41 +1,38 @@
 <div id="d_menu">
 <ul>
-	<li><?php echo $html->link('Dashboard','/',array('class'=>'dashboard','title'=>'Dashboard'))?></li>
-	<li class="customers"><span>Customers</span>
-		<div>		
-		<ul class="cloud">
-		<?php for($num=0;$num<10;$num++):?>
-			<li><?php echo $html->link(strtolower($num),'/customers/'.$num)?></li>
-		<?php endfor;?>
-		<?php for($chr=65,$letter=chr($chr); $chr<91; $chr++,$letter=chr($chr)):?>
-			<li><?php echo $html->link($letter,'/customers/'.strtolower($letter))?></li>
-		<?php endfor;?>
-		</ul>
-		<p><?php echo $html->link('Resellers','/customers/resellers') ?></p>
-		</div>		
-	</li>
-	<li><?php echo $html->link('New Customer',"/customers/add",array('class'=>'new_customer modalAJAX','title'=>'New Customer'))?></li>
-	<li><?php echo $html->link('Notes',array('controller'=>'notes','action'=>'index'),array('class'=>'notes','title'=>'Notes'))?></li>
-	<li class="wizards"><span>Wizards</span>
-		<div>
-		<ul>
-			<li><a href="#">Quarterly Summary</a></li>
-			<li><a href="/invoices">Invoice Summary</a></li>
-		</ul>
-		</div>
-	</li>
-	<?php if(isset($current_user)):?>
-	<li class="tools"><span>Tools</span>
-		<div>
-		<ul>
-			<li><a href="https://login.fasthosts.co.uk/">Fasthosts</a></li>
-			<li><a href="http://whiteboard.searchfirst.co.uk">Whiteboard</a></li>
-			<li><a href="http://hit-me.co.uk/cgi-bin/x-t.cgi?NAVG=SignUp">HitMe [New Tracker]</a></li>
-			<li><a href="http://hit-me.co.uk/cgi-bin/admin/admin.cgi">HitMe [Admin]</a></li>
-			<li><a href="http://hit-me.co.uk/cgi-bin/admin/admin.cgi?NAVG=AM">HitMe [Accounts Manager]</a></li>
-		</ul>
-		</div>
-	</li>
-	<?php endif;?>
+<li><?php echo $html->link('Dashboard','/',array('class'=>'dashboard','title'=>'Dashboard'))?></li>
+<li class="customers">Customers
+<div>		
+<p><?php echo $html->link('New Customer',"/customers/add",array('class'=>'new_customer modalAJAX','title'=>'New Customer'))?></p>
+<ul class="cloud">
+<?php for($num=0;$num<10;$num++):?>
+<li><?php echo $html->link(strtolower($num),'/customers/'.$num)?></li>
+<?php endfor;?>
+<?php for($chr=65,$letter=chr($chr); $chr<91; $chr++,$letter=chr($chr)):?>
+<li><?php echo $html->link($letter,'/customers/'.strtolower($letter))?></li>
+<?php endfor;?>
+<li><?php echo $html->link('Resellers','/customers/resellers') ?></li>
+</ul>
+</div>		
+</li>
+<li class="wizards">Invoices
+<div>
+<ul>
+<li><a href="/invoices">Invoice Summary</a></li>
+<li><a href="/invoices/wizard">Invoice Report Wizard</a></li>
+</ul>
+</div>
+</li>
+<?php if(isset($current_user) && !empty($external_links)):?>
+<li class="tools">External Tools
+<div>
+<ul>
+<?php foreach($external_links as $title=>$url):?>
+<li><?php echo $html->link($title,$url);?></li>
+<?php endforeach;?>
+</ul>
+</div>
+</li>
+<?php endif;?>
 </ul>
 </div>

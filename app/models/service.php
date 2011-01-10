@@ -4,6 +4,13 @@ class Service extends AppModel {
 	var $order = 'Service.modified';
 	var $recursive = 1;
 
+	public static $status = array(
+		'Cancelled'=>0,
+		'Pending'=>1,
+		'Active'=>2,
+		'Complete'=>3
+	);
+
 	var $validate = array(
 		'title'=>array(
 			'rule'=>'notEmpty',

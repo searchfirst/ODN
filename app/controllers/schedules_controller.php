@@ -7,39 +7,6 @@ class InvoicesController extends AppController
 
 	function beforeFilter() {
 		parent::beforeFilter();
-		$this->permissions = array(
-			"index"=>array(
-				'owner'=>null,
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array('User'),'conditions'=>array()),
-				'other'=>array('group'=>array(),'conditions'=>null)
-			),
-			"view"=>array(
-				'owner'=>array('owner_conditions'=>array('OR'=>array('Invoice.user_id'=>$this->current_user['User']['id'])),'conditions'=>array()),
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array(),'conditions'),
-				'other'=>array('group'=>array(),'conditions')
-			),
-			"edit"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"add"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"delete"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>null
-			)
-		);
-		
 	}
 
 	function index() {
@@ -195,34 +162,5 @@ class InvoicesController extends AppController
 			/*$this->set('id',$id);*/
 		}
 	}
-	
-	
-	function wizard() {
-		if(!empty($this->data['Invoice']['types'])) {
-			$type = $this->data['Invoice']['types'];
-			if(!empty($this->data['Invoice']['date'])) {
-				$month = $this->data['Invoice']['date']['month'];
-				$year = $this->data['Invoice']['date']['year'];
-				$invoices = $this->Invoice->find('all',array(
-					'conditions' => array("MONTH(Invoice.$type)"=>$month,"YEAR(Invoice.$type)"=>$year),
-					'order' => "Invoice.$type DESC",
-					'recursive' => 1
-				));
-				$this->set('invoices',$invoices);
-			} elseif(!( empty($this->data['Invoice']['start_date']) || empty($this->data['Invoice']['end_date']) )) {
-				$type = $this->data['Invoice']['types'];
-				$start_date = $this->data['Invoice']['start_date'];
-				$start_date = sprintf('%s-%s-%s 00:00:00',$start_date['year'],$start_date['month'],$start_date['day']);
-				$end_date = $this->data['Invoice']['end_date'];
-				$end_date = sprintf('%s-%s-%s 23:59:59',$end_date['year'],$end_date['month'],$end_date['day']);
-				$invoices = $this->Invoice->find('all',array(
-					'conditions' => array("Invoice.$type BETWEEN ? and ?" => array($start_date,$end_date)),
-					'order' => "Invoice.$type DESC",
-					'recursive' => 1
-				));
-				$this->set('invoices',$invoices);
-			}
-		}
-		$this->set('types',array('created'=>'Created','date_invoice_paid'=>'Paid'));
-	}
 }
+?>

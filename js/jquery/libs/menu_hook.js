@@ -1,7 +1,7 @@
 jQuery.fn.hookMenu = function(settings) {
 	settings = jQuery.extend({
 		'growUp':false,
-		'fixed':false		
+		'position':'absolute'		
 	},settings);
 	var hook_menu = new Array();
 	var hook_menu_x = new Array();
@@ -29,7 +29,7 @@ jQuery.fn.hookMenu = function(settings) {
 				});
 			}
 			hook_menu[i].css({
-				'position': 'absolute',
+				'position': settings.position,
 				'display': 'none',
 				'left': hook_menu_xy[i].left,
 				'width': hook_menu_xy[i].width,

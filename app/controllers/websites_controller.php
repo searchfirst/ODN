@@ -72,7 +72,7 @@ class WebsitesController extends AppController
 		if( (isset($this->data['Website']['submit'])) || (empty($this->data)) ) {
 			if(!$id) {
 				$this->Session->setFlash('Invalid Website');
-				$this->redirect('/customers/');
+				$this->redirect($this->referer('/customers/'));
 			}
 			$this->data = $this->Website->read(null, $id);
 			$this->set('website',$this->data);
@@ -80,7 +80,7 @@ class WebsitesController extends AppController
 		} else {
 			if($this->Website->save($this->data)) {
 				$this->Session->setFlash("Website saved successfully.");
-				$this->redirect("/".strtolower($this->name)."/view/$id");
+				$this->redirect($this->referer('/customers/'));
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
 				$this->set('product',$this->data);
