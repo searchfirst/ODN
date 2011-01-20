@@ -16,7 +16,7 @@ class Note extends AppModel {
 		return true;
 	}
 	
-	function findAllCurrentUser($options=array()) {
+	function findForUser($cuid,$options=array()) {
 
 		if(!empty($options['conditions']))
 			$conditions = array(" AND {$options['conditions']}"," WHERE {$options['conditions']}");
@@ -37,8 +37,6 @@ class Note extends AppModel {
 			$order = $options['order'];
 		else
 			$order = 'Note.created DESC';
-		global $current_user;
-		$cuid = $current_user['User']['id'];
 
 		$query = <<<EOQ
 SELECT * FROM (

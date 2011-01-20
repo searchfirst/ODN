@@ -8,7 +8,7 @@ Configure::write('Session.timeout', '300000000');
 Configure::write('Session.start', true);
 Configure::write('Session.checkAgent', true);
 Configure::write('Security.level', 'low');
-Configure::write('Security.salt', 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
+Configure::write('Security.salt', 'DYhG93b0qyJfI9981CNCoUubWwvniR2G0FgaC9mi');
 Configure::write('Acl.classname', 'DbAcl');
 Configure::write('Acl.database', 'default');
 Cache::config('default', array('engine' => 'File'));

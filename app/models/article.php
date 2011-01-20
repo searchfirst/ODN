@@ -4,8 +4,6 @@ class Article extends AppModel {
 	var $recursive = 1;
 
     var $validate = array(
-		'title'			=>	VALID_NOT_EMPTY,
-		'description'	=>	VALID_NOT_EMPTY
 	);
 	
 	function beforeSave() {

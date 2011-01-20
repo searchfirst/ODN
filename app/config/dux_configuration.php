@@ -12,7 +12,8 @@ $config = array(
 			'HitMe [New Tracker]'=>'http://hit-me.co.uk/cgi-bin/x-t.cgi?NAVG=SignUp',
 			'HitMe [Admin]'=>'http://hit-me.co.uk/cgi-bin/admin/admin.cgi',
 			'HitMe [Accounts Manager]'=>'http://hit-me.co.uk/cgi-bin/admin/admin.cgi?NAVG=AM'
-		)
+		),
+		'theme' => 'sf'
 	)
 );
 ?>

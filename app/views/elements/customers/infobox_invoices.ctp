@@ -16,9 +16,14 @@
 <li><?php echo $html->link('Generate Paid Invoice [PDF]',"/pdf/invoices/view/{$invoice['id']}?AdditionalInformation=Paid%20In%20Full",array('class'=>'i_pdf')) ?></li>
 <?php else:?>
 <li><?php echo $html->link('Invoice Paid',"/invoices/paid_in_full/{$invoice['id']}?width=600&amp;height=150",array('class'=>'modalAJAX')) ?></li>
+<li><?php echo $html->link('Cancel',"/invoices/cancel/{$invoice['id']}?width=600&amp;height=150",array('class'=>'modalAJAX')) ?></li>
 <?php endif;?>
 </ul>
-<p><?php
+<p>
+<span class="flags">
+<?php if($invoice['cancelled']) echo "<span class=\"cancelled\">Cancelled</span>" ?>
+</span>
+<?php
 if($invoice['date_invoice_paid']) {
 	echo "Payment made for ".money_format('%n',$invoice['amount']).". Issued on ".substr($time->niceShort($invoice['created']),0,-7)." and paid on ".substr($time->niceShort($invoice['date_invoice_paid']),0,-7);
 } elseif(strtotime($invoice['due_date']) < time()) {

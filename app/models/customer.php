@@ -11,11 +11,7 @@ class Customer extends AppModel {
 	);
 
     var $validate = array(
-		'company_name'=>VALID_NOT_EMPTY,
-		'contact_name'=>VALID_NOT_EMPTY,
-		/*'email'=>VALID_EMAIL,*/
-		'telephone'=>VALID_NOT_EMPTY
-	);
+		);
     var $hasMany = array(	
 		"Website" => array(
 			"dependent" => true,

@@ -9,7 +9,7 @@ class Invoice extends AppModel {
 	var $hasMany = array('Note'=>array());
 	var $belongsTo = array('Service','Customer');
 	
-	var $invoiceTemplate = '/home/searchfirst/sfd.dux.me.uk/user/htdocs/media/invoice_template.pdf';
+	var $invoiceTemplate = '/home/searchfirst/dux.searchfirst.co.uk/user/htdocs/app/webroot/media/invoice_template.pdf';
 	
 	function cacheFDF($id,$extra_vars=array()) {
 		$modified = $this->field('modified',array('Invoice.id'=>$id));
@@ -26,7 +26,7 @@ class Invoice extends AppModel {
 		$template = $this->invoiceTemplate;
 		$pdfcontent = false;
 		ob_start();
-		passthru('pdftk '.$template.' fill_form '.$fdf_filename.' output - flatten');
+		passthru('/usr/bin/pdftk '.$template.' fill_form '.$fdf_filename.' output - flatten');
 		$pdfcontent = ob_get_contents();
 		ob_end_clean();
 		return $pdfcontent;

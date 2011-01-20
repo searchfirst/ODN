@@ -2,12 +2,21 @@
 class User extends AppModel {
 	var $name = 'User';
 	var $order = 'User.name';
-	//var $actsAs = array('Authenticate'=>array());
+	var $displayField = 'username';
+	var $actsAs = array(
+		'Acl'=>array(
+			'type'=>'requester'
+		)
+	);
 	var $recursive = 1;
 
 	var $validate = array(
-		'title'			=> VALID_NOT_EMPTY,
-		'description'	=> VALID_NOT_EMPTY
+		'username' => array(
+			'notEmpty' => array(
+				'rule' => 'notEmpty',
+				'message' => 'You must provide a username'
+			)
+		)
 	);
 	var $hasMany = array(	
 		"Customer" => array(
@@ -17,21 +26,25 @@ class User extends AppModel {
 			'order' => 'Service.modified DESC'
 		)
 	);
+	var $belongsTo = array(
+		'Group'
+	);
 	var $hasAndBelongsToMany = array(
 		"TechnicalCustomer"=>array('with'=>'Service','className'=>'Customer','order'=>'TechnicalCustomer.status ASC'),
 		'Website'=>array('with'=>'Service','className'=>'Website'),
-		"Group"=>array()
 	);
 		
-	function getCurrent($session_data) {
-		$user = $this->find('first',array(
-			'conditions'=>array('User.id'=>$session_data['User']['id']),
-			'recursive'=>1
-		));
-//		if(($user=$this->findById($session_data['User']['id'])) && (md5($user['User']['password']))==$session_data['User']['hash'])
-	if($user && (md5($user['User']['password']))==$session_data['User']['hash'])
-			return $user;
-		else return null;
+	function getCurrent() {
+		if(!empty($this->currentUser) ){
+			return $this->currentUser;
+		} else {
+			return false;
+		}
+	}
+
+	function setCurrent($user) {
+		$this->currentUser = $user;
+		return true;
 	}
 
 	function authenticate($user_data) {
@@ -52,5 +65,24 @@ class User extends AppModel {
 				if($group['name']==$group_name) return true;
 		return false;
 	}
+
+	function parentNode() {
+		if (!$this->id && empty($this->data)) {
+			return null;
+		}
+		if (isset($this->data['User']['group_id'])) {
+			$groupId = $this->data['User']['group_id'];
+		} else {
+			$groupId = $this->field('group_id');
+		}
+		if (!$groupId) {
+			return null;
+		} else {
+			return array('Group' => array('id' => $groupId));
+		}
+	}
+
+	function bindNode($user) {
+		return array('model' => 'Group', 'foreign_key' => $user['User']['group_id']);
+	}
 }
-?>

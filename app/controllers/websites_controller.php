@@ -90,19 +90,13 @@ class WebsitesController extends AppController
 	}
 
 	function view($id) {
-		$conditions = am(array('Website.id'=>$id),$this->generateConditions($this->Website,null,null,null,'findWithService'));
-		if($this->permissionsStatus['admin'] || $this->permissionsStatus['owner']) {
-			if($website = $this->Website->findWithService($conditions))
-				$this->set('website',$website);
-			else {
-				$this->viewPath = 'errors';
-				$this->render('not_found');
-				return true;
-			}
+		$this->Website->id = $id;
+		if($website = $this->Website->read()) {
+			$this->set('website',$website);
 		} else {
 			$this->viewPath = 'errors';
-			$this->render('not_authorised');
-			return true;			
+			$this->render('not_found');
+			return true;
 		}
 	}
 
@@ -121,3 +115,4 @@ class WebsitesController extends AppController
 	}
 }
 ?>
+

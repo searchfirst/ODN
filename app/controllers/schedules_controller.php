@@ -1,8 +1,8 @@
 <?php
-class InvoicesController extends AppController
+class SchedulesController extends AppController
 {
-	var $name = 'Invoices';
-	var $primaryModel = 'Invoice';
+	var $name = 'Schedules';
+	var $primaryModel = 'Schedule';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 
 	function beforeFilter() {

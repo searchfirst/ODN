@@ -5,43 +5,6 @@ class InvoicesController extends AppController
 	var $primaryModel = 'Invoice';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
 
-	function beforeFilter() {
-		parent::beforeFilter();
-		$this->permissions = array(
-			"index"=>array(
-				'owner'=>null,
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array('User'),'conditions'=>array()),
-				'other'=>array('group'=>array(),'conditions'=>null)
-			),
-			"view"=>array(
-				'owner'=>array('owner_conditions'=>array('OR'=>array('Invoice.user_id'=>$this->current_user['User']['id'])),'conditions'=>array()),
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array(),'conditions'),
-				'other'=>array('group'=>array(),'conditions')
-			),
-			"edit"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"add"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"delete"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>null
-			)
-		);
-		
-	}
-
 	function index() {
 		$open_invoices = $this->Invoice->find('all',array(
 			'conditions'=>array('Invoice.date_invoice_paid'=>null,'Invoice.due_date >'=>strftime('%Y-%m-%d')),
@@ -179,6 +142,20 @@ class InvoicesController extends AppController
 		} else {
 			$this->Session-setFlash('Invalid Invoice');
 			$this->redirect($this->referer());
+		}
+	}
+
+	function cancel($id=null) {
+		if($id) {
+			if(empty($this->data)) {
+				$this->Invoice->id = $id;
+				$invoice = $this->Invoice->read();
+				$this->data = $invoice;
+			} else {
+
+			}
+		} else {
+			//Add error handling here
 		}
 	}
 

@@ -10,20 +10,21 @@ class FacadesController extends AppController
 
 	function index() {
 		$this->pageTitle = 'Dashboard';
-		global $current_user;
+		$current_user = $this->User->getCurrent();
+		$this->log($current_user);
 		if($current_user) {
 			$active_projects = $this->Service->find('all',array(
-				'conditions'=>array('Service.user_id'=>$current_user['User']['id'],'Service.status'=>SERVICE_STATUS_ACTIVE),
+				'conditions'=>array('User.id'=>$current_user['User']['id'],'Service.status'=>SERVICE_STATUS_ACTIVE),
 				'order'=>'Customer.company_name ASC',
 				'recursive'=>1,
 			));
 			$cancelled_projects = $this->Service->find('all',array(
-				'conditions'=>array('Service.user_id'=>$current_user['User']['id'],'Service.status'=>SERVICE_STATUS_CANCELLED),
+				'conditions'=>array('User.id'=>$current_user['User']['id'],'Service.status'=>SERVICE_STATUS_CANCELLED),
 				'order'=>'Customer.company_name ASC',
 				'recursive'=>1,
 			));
 			$other_projects = $this->Service->find('all',array(
-				'conditions'=>array('Service.user_id'=>$current_user['User']['id'],'NOT'=>array('Service.status'=>array(SERVICE_STATUS_ACTIVE,SERVICE_STATUS_CANCELLED))),
+				'conditions'=>array('User.id'=>$current_user['User']['id'],'NOT'=>array('Service.status'=>array(SERVICE_STATUS_ACTIVE,SERVICE_STATUS_CANCELLED))),
 				'order'=>'Customer.company_name ASC',
 				'recursive'=>1,
 			));
@@ -44,8 +45,8 @@ class FacadesController extends AppController
 			);
 			$flagged_notes['pages'] = ceil($flagged_notes['count']/10);
 			$this->set('flagged_notes',$flagged_notes);
-			$this->set('your_notes',$this->Note->findAllCurrentUser(array('limit'=>10)));
-			$this->set('your_flagged_notes',$this->Note->findAllCurrentUser(array('limit'=>10,'conditions'=>'Note.flagged > 0')));
+			$this->set('your_notes',$this->Note->findForUser($current_user['User']['id'],array('limit'=>10)));
+			$this->set('your_flagged_notes',$this->Note->findForUser($current_user['User']['id'],array('limit'=>10,'conditions'=>'Note.flagged > 0')));
 		}
 	}
 }

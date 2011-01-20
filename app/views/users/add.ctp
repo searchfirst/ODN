@@ -1,29 +1,13 @@
-<h2>Add Customer</h2>
-<form action="<?php echo $html->url('/customers/add'); ?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
-<fieldset> 
-<legend>Company Details</legend>
-<?php echo $form->hidden('Customer.id')?> 
-<?php echo $form->input('Customer.company_name',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.contact_name',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.email',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.telephone',array('size'=>'20','maxlength'=>'20','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.fax',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.address',array('cols'=>40,'rows'=>3,'error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.town',array('size'=>'30','maxlength'=>'50','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.county',array('size'=>'30','maxlength'=>'50','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.post_code',array('size'=>'10','maxlength'=>'10','error'=>'Please enter the Company Name.'))?> 
+<h1>Users</h1>
+<?php echo $this->Form->create('User');?>
+<fieldset><legend><?php __('Add User'); ?></legend>
+<?php
+echo $this->Form->input('email');
+echo $this->Form->input('password');
+echo $this->Form->input('group_id',array('options'=>$group_ids));
+?>
 </fieldset>
-<fieldset>
-<legend>Website</legend>
-<?php echo $form->input('Website.title',array('size'=>'40','maxlength'=>'150','label'=>'Website Title','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Website.uri',array('size'=>'40','maxlength'=>'150','label'=>'Web Address','error'=>'Please enter the Company Name.'))?> 
-</fieldset>
-<?php if(!empty($customer_list) && empty($customer['Referral']) && !empty($customer['Customer'])):?>
-<fieldset>
-<legend>Reseller</legend>
-<?php echo $form->input('Customer.customer_id',array('options'=>$customer_list,'empty'=>true,'selected'=>$customer['Customer']['customer_id'],'label'=>'Customer Of','error'=>"Your customer can't be a customer of itself."))?> 
-</fieldset>
-<?php endif;?>
-<?php echo $form->submit('Add',array('div'=>false));?> 
-</fieldset>
-</form>
+<?php echo $this->Form->end(__('Submit', true));?>
+<ul>
+<li><?php echo $this->Html->link(__('List Users', true), array('action' => 'index'));?></li>
+</ul>

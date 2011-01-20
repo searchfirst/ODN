@@ -1196,3 +1196,21 @@ background-color: rgba(255,255,255,0.3);
 .formcolumns form:first-child {
 /*padding-left: 0;*/
 }
+
+.flags .cancelled {
+	display: inline-block;
+	padding: .25em;
+	color: rgb(255,255,255);
+	text-shadow: none;
+	border-radius: .25em;
+  background-color: #f24966;
+  background-image: -moz-linear-gradient(top, #f24966, #e91a3e);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #f24966),color-stop(1, #e91a3e));
+  background-image: linear-gradient(top, #f24966, #e91a3e);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f24966', EndColorStr='#e91a3e');
+	box-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+	-webkit-box-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+	-moz-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+	-o-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+	
+}

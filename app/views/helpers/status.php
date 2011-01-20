@@ -55,12 +55,15 @@ class StatusHelper extends Helper {
 		$now = time();
 		$date_due = $invoice['Invoice']['due_date'];
 		$date_paid = $invoice['Invoice']['date_invoice_paid'];
-		if($date_paid) {
-			return "Paid";
-		} elseif(strtotime($date_due) < $now) {
-			return "Overdue";
-		} else {
-			return "Pending";
+		$is_cancelled = $invoice['Invoice']['cancelled'];
+		if(!$is_cancelled) {
+			if($date_paid) {
+				return "Paid";
+			} elseif(strtotime($date_due) < $now) {
+				return "Overdue";
+			} else {
+				return "Pending";
+			}
 		}
 	}
 	

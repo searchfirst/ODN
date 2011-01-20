@@ -2,18 +2,26 @@
 class Group extends AppModel {
 	var $name = 'Group';
 	var $order = 'Group.name';
-	//var $actsAs = array('Authenticate'=>array());
+	var $actsAs = array(
+		'Acl'=>array(
+			'type'=>'requester'
+		)
+	);
 	var $recursive = 2;
 
 	var $validate = array(
-		'name'=>VALID_NOT_EMPTY
+		'name' => array(
+			'notEmpty' => array(
+				'rule' => 'notEmpty',
+				'message' => 'You must provide a username'
+			)
+		)
 	);
-	var $hasMany = array();
-	var $hasAndBelongsToMany = array(
-		'User'=>array('conditions'=>array('User.status'=>USER_STATUS_EMPLOYED))
-	);
+	var $hasMany = array('User');
 
-	function beforeSave() {return true;}
+	function parentNode() {
+		return null;
+	}
 	
 	function getCurrent($session_data) {
 		if(($user=$this->findById($session_data['User']['id'])) && (md5($user['User']['password']))==$session_data['User']['hash'])

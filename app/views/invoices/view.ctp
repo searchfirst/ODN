@@ -1,6 +1,6 @@
 <?php setlocale(LC_MONETARY, 'en_GB.UTF-8'); ?>
 <div class="options">
-<?php // echo $this->renderElement('website/edit',array('id'=>$website['Website']['id'],'title'=>$website['Website']['uri']))?> 
+<?php // echo $this->element('website/edit',array('id'=>$website['Website']['id'],'title'=>$website['Website']['uri']))?> 
 </div>
 <h2>Invoice no. <?php echo $invoice['Invoice']['reference']?></h2>
 
