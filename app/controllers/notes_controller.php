@@ -23,11 +23,10 @@ class NotesController extends AppController
 	function add() {
 		if(isset($this->params['url']['customer_id'])) $this->data['Referrer']['customer_id'] = $this->params['url']['customer_id'];
 		if(empty($this->data) || isset($this->data['Referrer']['customer_id'])) {
-			$service_list = $this->Note->Customer->Service->findAll(
-				array('Customer.id'=>$this->data['Referrer']['customer_id']),
-				null,
-				'Service.cancelled'
-			);
+			$service_list = $this->Note->Customer->Service->find('all',array(
+				'conditions' => array('Customer.id' => $this->data['Referrer']['customer_id']),
+				'order' => 'Service.cancelled'
+			));
 			$service_tmp = array();
 			foreach($service_list as $service_item) {
 				$service_tmp[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
@@ -42,11 +41,10 @@ class NotesController extends AppController
 				$this->Session->setFlash('Please correct the errors below');
 				$this->data['Referrer']['customer_id'] = $this->data['Note']['customer_id'];
 				$this->data['Referrer']['service_id'] = $this->data['Note']['service_id'];
-				$service_list = $this->Note->Customer->Service->findAll(
-					array('Customer.id'=>$this->data['Referrer']['customer_id']),
-					null,
-					'Service.cancelled'
-				);
+				$service_list = $this->Note->Customer->Service->find('all',array(
+					'conditions' => $this->data['Referrer']['customer_id'],
+					'order' => 'Service.cancelled'
+				));
 				$service_tmp = array();
 				foreach($service_list as $service_item) {
 					$service_tmp[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
@@ -82,7 +80,7 @@ class NotesController extends AppController
 	
 	function your_notes($page=null) {
 		if($page) {
-			$your_notes = $this->Note->findAllCurrentUser(array('limit'=>10,'page'=>$page));
+			$your_notes = $this->Note->findForUser(User::getCurrent('id'),array('limit'=>10,'page'=>$page));
 			$this->set('your_notes',$your_notes);
 		} else {
 			
@@ -91,7 +89,7 @@ class NotesController extends AppController
 
 	function your_flagged_notes($page=null) {
 		if($page) {
-			$your_flagged_notes = $this->Note->findAllCurrentUser(array('conditions'=>'Note.flagged = 1','limit'=>10,'page'=>$page));
+			$your_flagged_notes = $this->Note->findForUser(User::getCurrent('id'),array('conditions'=>'Note.flagged = 1','limit'=>10,'page'=>$page));
 			$this->set('your_flagged_notes',$your_flagged_notes);
 		} else {
 			
