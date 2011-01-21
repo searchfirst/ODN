@@ -22,7 +22,6 @@ class AppController extends Controller {
 		if($external_links = Configure::read('Dux.external_links')) $this->set('external_links',$external_links);
 		if(isset($this->primaryModel)) $this->set('primary_model',$this->primaryModel);
 		if($this->RequestHandler->isAjax()) $this->set('is_ajax',true);
-		$this->log($this->Auth->user('role'));
 	}
 	
 	function beforeFilter() {
@@ -32,7 +31,7 @@ class AppController extends Controller {
 		$this->Auth->actionPath = 'controllers/';
 		$this->Auth->authorize = 'actions';
 		$this->setTheme();
-		$this->User->setCurrent($this->Auth->user());
+		User::setCurrent($this->Auth->user());
 		$this->set('current_user',$this->Auth->user());
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Ajax') {
 			$this->ajaxGetToPost();

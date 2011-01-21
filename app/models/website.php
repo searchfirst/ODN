@@ -1,7 +1,7 @@
 <?php
 class Website extends AppModel {
-    var $name = 'Website';
-    var $validate = array(
+		//var $name = 'Website';
+		var $validate = array(
 		'uri'=>array(
 			'rule'=>'url',
 			'allowEmpty'=>false

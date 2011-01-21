@@ -1,6 +1,6 @@
 <?php
 class Group extends AppModel {
-	var $name = 'Group';
+	//var $name = 'Group';
 	var $order = 'Group.name';
 	var $actsAs = array(
 		'Acl'=>array(
@@ -13,7 +13,7 @@ class Group extends AppModel {
 		'name' => array(
 			'notEmpty' => array(
 				'rule' => 'notEmpty',
-				'message' => 'You must provide a username'
+				'message' => 'You must provide a group name'
 			)
 		)
 	);
@@ -22,18 +22,4 @@ class Group extends AppModel {
 	function parentNode() {
 		return null;
 	}
-	
-	function getCurrent($session_data) {
-		if(($user=$this->findById($session_data['User']['id'])) && (md5($user['User']['password']))==$session_data['User']['hash'])
-			return $user;
-		else return null;
-	}
-
-	function authenticate($user_data) {
-		if(isset($user_data['User']) && !empty($user_data['User']['email']) && ($user=$this->findByEmail($user_data['User']['email']))) {
-			if($user_data['User']['password']==$user['User']['password']) return $user;
-			else return false;
-		} else return false;
-	}
 }
-?>

@@ -1,7 +1,8 @@
 <?php
 class Service extends AppModel {
-	var $name = 'Service';
+	//var $name = 'Service';
 	var $order = 'Service.modified';
+	var $actsAs = array('Joined');
 	var $recursive = 1;
 
 	public static $status = array(
@@ -33,15 +34,15 @@ class Service extends AppModel {
 		)
 	);
 
-	var $hasMany = array('Note'=>array());
-	var $belongsTo = array('Website','Customer','User');
+	var $hasMany = array(
+		'Note'
+	);
+	var $belongsTo = array(
+		'Website',
+		'Customer',
+		'User'
+	);
 
-	function beforeSave() {
-		if(empty($this->id) && empty($this->data[$this->name]['joined']))
-			$this->data[$this->name]['joined'] = strftime('%Y-%m-%d %T');
-		return true;
-	}
-	
 	function cancel() {
 		if(!empty($this->data[$this->name]['id']) && !empty($this->data[$this->name]['cancelled'])) {
 			$this->data[$this->name]['status'] = 2;
@@ -50,6 +51,4 @@ class Service extends AppModel {
 			return false;
 		}
 	}
-
 }
-?>

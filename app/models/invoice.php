@@ -1,7 +1,7 @@
 <?php
 App::import('Vendor','forge_fdf');
 class Invoice extends AppModel {
-	var $name = 'Invoice';
+	//var $name = 'Invoice';
 	var $validate = array();
 	var $order = 'Invoice.created';
 	var $recursive = 1;
@@ -131,4 +131,3 @@ class Invoice extends AppModel {
 
 
 }
-?>

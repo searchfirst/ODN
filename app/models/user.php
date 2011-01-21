@@ -3,6 +3,7 @@ class User extends AppModel {
 	var $name = 'User';
 	var $order = 'User.name';
 	var $displayField = 'username';
+	public static $currentUser = array();
 	var $actsAs = array(
 		'Acl'=>array(
 			'type'=>'requester'
@@ -34,26 +35,25 @@ class User extends AppModel {
 		'Website'=>array('with'=>'Service','className'=>'Website'),
 	);
 		
-	function getCurrent() {
-		if(!empty($this->currentUser) ){
-			return $this->currentUser;
+	public static function getCurrent($key=null) {
+		if(!empty(self::$currentUser) ){
+			if(!$key) {
+			return self::$currentUser;
+			} elseif(!empty(self::$currentUser['User'][$key])) {
+				return self::$currentUser['User'][$key];
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
 	}
 
-	function setCurrent($user) {
-		$this->currentUser = $user;
+	public static function setCurrent($user) {
+		self::$currentUser = $user;
 		return true;
 	}
 
-	function authenticate($user_data) {
-		if(isset($user_data['User']) && !empty($user_data['User']['email']) && ($user=$this->findByEmail($user_data['User']['email']))) {
-			if($user_data['User']['password']==$user['User']['password']) return $user;
-			else return false;
-		} else return false;
-	}
-	
 	function inGroup($group_name,$user=null) {
 		if(!$user) {
 			global $current_user;

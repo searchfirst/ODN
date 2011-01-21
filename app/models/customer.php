@@ -1,7 +1,8 @@
 <?php
 class Customer extends AppModel {
-    var $name = 'Customer';
+	//var $name = 'Customer';
 	var $order = 'Customer.company_name';
+	var $actsAs = array('Joined');
 	var $recursive = 2;
 
 	public static $status = array(
@@ -10,9 +11,9 @@ class Customer extends AppModel {
 		'Pending'=>1
 	);
 
-    var $validate = array(
-		);
-    var $hasMany = array(	
+	var $validate = array();
+
+	var $hasMany = array(	
 		"Website" => array(
 			"dependent" => true,
 		),
@@ -52,18 +53,10 @@ class Customer extends AppModel {
 		'TechnicalUser'=>array('with'=>'Service','className'=>'User')
 	);
 
-	function beforeSave() {
-	//	if(!isset($this->data[$this->name]['customer']))
-	//		$this->data[$this->name]['customer'] = $this->field('customer_id','Customer.id = '.$this->id);
-		if(empty($this->id) && empty($this->data[$this->name]['joined']))
-			$this->data[$this->name]['joined'] = strftime('%Y-%m-%d %T');
-		return true;
-	}
-	
 	function cancel($customer_data=false) {
 		if(!$customer_data) $customer_data = &$this->data;
 		if(!empty($customer_data['Customer']['id']) && !empty($customer_data['Customer']['cancelled'])) {
-			$customer_data['Customer']['status'] = 2;
+			$customer_data['Customer']['status'] = self::$status['Cancelled'];
 			$this->save($customer_data);
 		} else {
 			return false;
