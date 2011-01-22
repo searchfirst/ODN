@@ -9,9 +9,8 @@ class FacadesController extends AppController
 	var $uses = array('Service','Note');
 
 	function index() {
-		$this->pageTitle = 'Dashboard';
+		$this->set('title_for_layout','Dashboard');
 		$current_user = $this->User->getCurrent();
-		$this->log($current_user);
 		if($current_user) {
 			$active_projects = $this->Service->find('all',array(
 				'conditions'=>array('User.id'=>$current_user['User']['id'],'Service.status'=>SERVICE_STATUS_ACTIVE),
