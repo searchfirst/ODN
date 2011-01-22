@@ -1,6 +1,5 @@
 <?php
 class Group extends AppModel {
-	//var $name = 'Group';
 	var $order = 'Group.name';
 	var $actsAs = array(
 		'Acl'=>array(

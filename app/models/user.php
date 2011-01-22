@@ -1,6 +1,5 @@
 <?php
 class User extends AppModel {
-	var $name = 'User';
 	var $order = 'User.name';
 	var $displayField = 'username';
 	public static $currentUser = array();

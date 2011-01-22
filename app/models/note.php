@@ -1,6 +1,5 @@
 <?php
 class Note extends AppModel {
-	//var $name = 'Note';
 	var $validate = array();
 	var $order = 'Note.modified DESC';
 	var $recursive = 1;

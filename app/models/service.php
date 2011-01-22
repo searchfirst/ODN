@@ -1,6 +1,5 @@
 <?php
 class Service extends AppModel {
-	//var $name = 'Service';
 	var $order = 'Service.modified';
 	var $actsAs = array('Joined');
 	var $recursive = 1;

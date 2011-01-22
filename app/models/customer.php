@@ -1,6 +1,5 @@
 <?php
 class Customer extends AppModel {
-	//var $name = 'Customer';
 	var $order = 'Customer.company_name';
 	var $actsAs = array('Joined');
 	var $recursive = 2;
