@@ -1,3 +1,9 @@
 [submodule "cake"]
 	path = cake
 	url = http://github.com/cakephp/cakephp.git
+[submodule "app/plugins/acls"]
+	path = app/plugins/acls
+	url = git://github.com/connrs/cakephp_acl_menu_component.git
+[submodule "app/plugins/acl_menu"]
+	path = app/plugins/acl_menu
+	url = git://github.com/connrs/cakephp_acl_menu_component.git

@@ -9,7 +9,7 @@ class AppController extends Controller {
 		'Dux',
 		'RequestHandler',
 		'Session',
-		'AclMenu.Menu'
+		'AclMenu.AclMenu'
 	);
 	var $view = 'Theme';
 	
