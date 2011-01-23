@@ -1,7 +1,6 @@
 <?php 
 class AppController extends Controller {
 	var $uses = array('User');
-	var $menuOptions = array('controllerButton'=>false);
 	var $helpers = array('Status','Html','Form','Time','TextAssistant','Javascript','Session');
 	var $components = array(
 		'Acl',
