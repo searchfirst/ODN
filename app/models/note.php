@@ -3,6 +3,7 @@ class Note extends AppModel {
 	var $validate = array();
 	var $order = 'Note.modified DESC';
 	var $recursive = 1;
+	var $actsAs = array('Searchable.Searchable');
 
 	var $hasMany = array();
 	var $belongsTo = array('Website','Customer','User','Service');

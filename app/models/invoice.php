@@ -4,6 +4,7 @@ class Invoice extends AppModel {
 	var $validate = array();
 	var $order = 'Invoice.created';
 	var $recursive = 1;
+	var $actsAs = array('Searchable.Searchable');
 
 	var $hasMany = array('Note'=>array());
 	var $belongsTo = array('Service','Customer');

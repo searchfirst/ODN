@@ -1,8 +1,8 @@
 <?php
 class Customer extends AppModel {
 	var $order = 'Customer.company_name';
-	var $actsAs = array('Joined');
 	var $recursive = 2;
+	var $actsAs = array('Joined','Searchable.Searchable');
 
 	public static $status = array(
 		'Cancelled'=>2,

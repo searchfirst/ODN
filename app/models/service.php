@@ -1,7 +1,7 @@
 <?php
 class Service extends AppModel {
 	var $order = 'Service.modified';
-	var $actsAs = array('Joined');
+	var $actsAs = array('Joined','Searchable.Searchable');
 	var $recursive = 1;
 
 	public static $status = array(

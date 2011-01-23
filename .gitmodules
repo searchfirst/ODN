@@ -7,3 +7,6 @@
 [submodule "app/plugins/acl_menu"]
 	path = app/plugins/acl_menu
 	url = git://github.com/connrs/cakephp_acl_menu_component.git
+[submodule "app/plugins/searchable"]
+	path = app/plugins/searchable
+	url = git://github.com/connrs/Searchable-Behaviour-for-CakePHP.git

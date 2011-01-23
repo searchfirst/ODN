@@ -1,6 +1,6 @@
 <?php
 class Website extends AppModel {
-		var $validate = array(
+	var $validate = array(
 		'uri'=>array(
 			'rule'=>'url',
 			'allowEmpty'=>false
@@ -9,6 +9,7 @@ class Website extends AppModel {
 	var $belongsTo = array("Customer");
 	var $hasMany = array("Service");
 	var $recursive = 2;
+	var $actsAs = array('Searchable.Searchable');
 
 	function beforeSave() {
 		parent::beforeSave();
