@@ -4,6 +4,7 @@ class InvoicesController extends AppController
 	var $name = 'Invoices';
 	var $primaryModel = 'Invoice';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant','Invoice');
+	var $uses = array("Invoice");
 
 	function index() {
 		$open_invoices = $this->Invoice->find('all',array(

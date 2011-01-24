@@ -4,6 +4,7 @@ class NotesController extends AppController
 	var $name = 'Notes';
 	var $primaryModel = 'Note';
 	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
+	var $uses = array("Note");
 
 	function beforeFilter() {
 		if(!isset($this->params['alt_content']) || $this->params['alt_content']!='Rss')

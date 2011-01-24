@@ -3,7 +3,6 @@ class UsersController extends AppController {
 
 	var $name = 'Users';
 	var $primaryModel = 'User';
-	var $helpers = array('TextAssistant','MediaAssistant');
 
 	function beforeFilter() {
 		parent::beforeFilter();
