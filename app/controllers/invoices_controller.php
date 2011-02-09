@@ -6,37 +6,16 @@ class InvoicesController extends AppController
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant','Invoice');
 	var $uses = array("Invoice");
 
-	function index() {
-		$open_invoices = $this->Invoice->find('all',array(
-			'conditions'=>array('Invoice.date_invoice_paid'=>null,'Invoice.due_date >'=>strftime('%Y-%m-%d')),
-			'order'=>'Invoice.due_date ASC'
-		));
-		$open_invoices_count = count($open_invoices);
-		$overdue_invoices = $this->Invoice->find('all',array(
-			'conditions'=>array('Invoice.date_invoice_paid'=>null,'Invoice.due_date <'=>strftime('%Y-%m-%d')),
-			'order'=>'Invoice.due_date ASC'
-		));
-		$overdue_invoices_count = count($overdue_invoices);
-		$recently_paid_invoices = array();
-		$recently_paid_invoices_count = 0;
-		$invoices = array('open'=>$open_invoices,'overdue'=>$overdue_invoices,'recently_paid'=>$recently_paid_invoices);
-		$this->set('open_invoices_count',$open_invoices_count);
-		$this->set('overdue_invoices_count',$overdue_invoices_count);
-		$this->set('recently_paid_invoices_count',$recently_paid_invoices_count);
-		$this->set('invoices',$invoices);
-	}
-
 	function raise() {
 		if(empty($this->data) || !empty($this->data['Referrer'])) {
 			if(!empty($this->data['Referrer']['customer_id']))
 				$this->data['Invoice']['customer_id'] = $this->data['Referrer']['customer_id'];
 			$customer_id = $this->data['Invoice']['customer_id'];
 			$this->data['Invoice']['reference'] = $this->Invoice->generateReference($customer_id);
-			$service_list = $this->Invoice->Service->findAll(
-				array('Customer.id'=>$customer_id),
-				null,
-				'Service.cancelled ASC'
-			);
+			$service_list = $this->Invoice->Service->find('all',array(
+				'conditions' => array('Customer.id'=>$customer_id),
+				'order' => 'Service.cancelled ASC'
+			));
 			$services = array();
 			foreach($service_list as $service_item) {
 				$services[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
@@ -175,32 +154,42 @@ class InvoicesController extends AppController
 	}
 	
 	
-	function wizard() {
+	function index() {
+		$title = __('Invoices',true);
 		if(!empty($this->data['Invoice']['types'])) {
 			$type = $this->data['Invoice']['types'];
-			if(!empty($this->data['Invoice']['date'])) {
+			if (!empty($this->data['Invoice']['date'])) {
 				$month = $this->data['Invoice']['date']['month'];
 				$year = $this->data['Invoice']['date']['year'];
+				$title = __('Invoices: ',true).sprintf(' %s - %s/%s',Inflector::humanize($type),$month,$year);
 				$invoices = $this->Invoice->find('all',array(
 					'conditions' => array("MONTH(Invoice.$type)"=>$month,"YEAR(Invoice.$type)"=>$year),
 					'order' => "Invoice.$type DESC",
 					'recursive' => 1
 				));
-				$this->set('invoices',$invoices);
-			} elseif(!( empty($this->data['Invoice']['start_date']) || empty($this->data['Invoice']['end_date']) )) {
-				$type = $this->data['Invoice']['types'];
+			} elseif (!( empty($this->data['Invoice']['start_date']) || empty($this->data['Invoice']['end_date']) )) {
 				$start_date = $this->data['Invoice']['start_date'];
 				$start_date = sprintf('%s-%s-%s 00:00:00',$start_date['year'],$start_date['month'],$start_date['day']);
 				$end_date = $this->data['Invoice']['end_date'];
 				$end_date = sprintf('%s-%s-%s 23:59:59',$end_date['year'],$end_date['month'],$end_date['day']);
+				$title = __('Invoices: '.Inflector::humanize($type),true).sprintf(' %s - %s',substr($start_date,0,10),substr($end_date,0,10));
 				$invoices = $this->Invoice->find('all',array(
 					'conditions' => array("Invoice.$type BETWEEN ? and ?" => array($start_date,$end_date)),
 					'order' => "Invoice.$type DESC",
 					'recursive' => 1
 				));
-				$this->set('invoices',$invoices);
+			} elseif (!empty($this->data['Invoice']['type'])) {
+				if($this->data['Invoice']['type'] == 'overdue') {
+					$invoices = $this->Invoice->find('overdue');
+					$title = __('Invoices: All Overdue',true);
+				} elseif ($this->data['Invoice']['type'] == 'notoverdue') {
+					$invoices = $this->Invoice->find('notOverdue');
+					$title = __('Invoices: All Due',true);
+				}
 			}
+			$this->set('invoices', $invoices);
+			$this->set('title_for_layout', $title);
 		}
-		$this->set('types',array('created'=>'Created','date_invoice_paid'=>'Paid'));
+		$this->set('types',array('created'=>'Raised','date_invoice_paid'=>'Paid'));
 	}
 }

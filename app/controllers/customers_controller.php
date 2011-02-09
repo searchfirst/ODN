@@ -4,7 +4,7 @@ class CustomersController extends AppController {
 
 	var $name = 'Customers';
 	var $primaryModel = 'Customer';
-	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
+	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','T','Customer','Service','Note','Invoice');
 
 	function beforeRender() {
 		parent::beforeRender();
@@ -29,14 +29,19 @@ class CustomersController extends AppController {
 				'recursive'=>0
 			));
 			$this->set('customers', $customers);
-//			$this->set('title_for_layout',sprintf('Customer List - %s',$page));
-			$this->pageTitle = "Customer List - $page";
+			$this->set('title_for_layout',sprintf('Customer List - %s',$page));
 		}
 	}
 
 	function view($id = null) {
+		$this->Customer->unbindModel(array('hasMany'=>array('Note')));
+		$this->Customer->bindModel(array('hasMany'=>array('Note'=>array(
+			'limit'=>10,
+			'order'=>'Note.created DESC'
+		))));
 		$customer = $this->Customer->find('first',array(
-			'conditions' => array('Customer.id'=>$id)
+			'conditions' => array('Customer.id'=>$id),
+			'recursive' => 2
 		));
 		if(!empty($customer)) {
 			$this->set('customer', $customer);
