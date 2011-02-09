@@ -1,5 +1,5 @@
 <?php
-Configure::write('debug', 1);
+Configure::write('debug', 0);
 Configure::write('App.encoding', 'UTF-8');
 define('LOG_ERROR', 2);
 Configure::write('Session.save', 'cake');
@@ -11,5 +11,6 @@ Configure::write('Security.level', 'low');
 Configure::write('Security.salt', 'DYhG93b0qyJfI9981CNCoUubWwvniR2G0FgaC9mi');
 Configure::write('Acl.classname', 'DbAcl');
 Configure::write('Acl.database', 'default');
+Configure::write('Cache.check', true);
 Cache::config('default', array('engine' => 'File'));
 ?>

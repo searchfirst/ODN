@@ -1,13 +1,14 @@
 <?php 
 class AppController extends Controller {
 	var $uses = array('User');
-	var $helpers = array('Status','Html','Form','Time','TextAssistant','Javascript','Session');
+	var $helpers = array('Status','Html','Form','Time','TextAssistant','Javascript','Session','Minify.Minify');
 	var $components = array(
 		'Acl',
 		'Auth',
 		'Dux',
 		'RequestHandler',
 		'Session',
+		'Minify.Minify',
 //		'AclMenu.AclMenu'
 	);
 	var $view = 'Theme';
