@@ -1,8 +1,4 @@
-<div class="container">
-<div class="primary">
+<div class="cwrap_2">
 <?php echo $this->element('facades/projects')?> 
-</div>
-<div class="ancillary">
-<?php echo $this->element('facades/notes')?> 
-</div>
+<div><?php echo $this->element('facades/notes')?></div> 
 </div>

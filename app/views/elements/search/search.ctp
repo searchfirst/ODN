@@ -1,9 +1,5 @@
-<div id="search">
-
-<div id="search_customer">
-<form method="get" action="<?php echo $html->url('/customers/search')?>" accept-type="UTF-8">
-<input type="search" name="q" autosave="co.uk.searchfirst.dux" results="10" placeholder="Customer Search" id="SearchCustomerQ" />
-</form>
-</div>
-
-</div>
+<section role="search">
+<?php echo $this->Form->create(false,array("type"=>"get","inputDefaults"=>array("div"=>false,"label"=>false),"url"=>array("controller"=>"customers","action"=>"search"))) ?> 
+<?php echo $this->Form->input("q",array("label"=>"Search","autosave"=>"co.uk.searchfirst.dux","results"=>10,"type"=>"search")) ?> 
+<?php echo $this->Form->end(array("div"=>false,"label"=>"Go")) ?> 
+</section>

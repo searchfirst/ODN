@@ -878,8 +878,9 @@ class FormHelper extends AppHelper {
 			case 'range':
 			case 'number':
 			case 'website':
+			case 'search':
 			case 'tel':
-				$input = $this->text($fieldname, array_merge($options,array('type'=>$type)));
+				$input = $this->text($fieldName, array_merge($options,array('type'=>$type)));
 			break;
 			case 'text':
 			case 'password':

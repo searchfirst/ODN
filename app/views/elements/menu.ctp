@@ -1,4 +1,4 @@
-<div id="d_menu">
+<nav id="menu">
 <ul>
 <li><?php echo $html->link('Dashboard','/',array('class'=>'dashboard','title'=>'Dashboard'))?></li>
 <li class="customers">Customers
@@ -15,14 +15,7 @@
 </ul>
 </div>		
 </li>
-<li class="wizards">Invoices
-<div>
-<ul>
-<li><a href="/invoices">Invoice Summary</a></li>
-<li><a href="/invoices/wizard">Invoice Report Wizard</a></li>
-</ul>
-</div>
-</li>
+<li class="wizards"><a href="/invoices">Invoices</a></li>
 <?php if(isset($current_user) && !empty($external_links)):?>
 <li class="tools">External Tools
 <div>
@@ -35,4 +28,4 @@
 </li>
 <?php endif;?>
 </ul>
-</div>
+</nav>

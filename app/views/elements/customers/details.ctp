@@ -1,14 +1,7 @@
-<div class="customer_info infobox">
-<h3 class="collapse_hook">Details</h3>
+<section class="customer detail list">
+<h1 class="collapse_hook">Details</h1>
 <div class="collapse">
 <dl>
-<?php if(empty($customer['Customer']['cancelled']) || $customer['Customer']['cancelled']=='0000-00-00 00:00:00'):?>
-<dt>Joined:</dt>
-<dd><?php echo str_replace(', 00:00','',$time->niceShort($customer['Customer']['joined']))?></dd>
-<?php else:?>
-<dt>Cancelled:</dt>
-<dd><?php echo $time->niceShort($customer['Customer']['cancelled'])?></dd>
-<?php endif;?>
 <dt>Contact Name</dt>
 <dd><?php echo $customer['Customer']['contact_name'];?></dd>
 <dt>Telephone:</dt>
@@ -34,4 +27,4 @@ echo implode('<br />',$email_list);
 </dd>
 </dl>
 </div>
-</div>
+</section>
