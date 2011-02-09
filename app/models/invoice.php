@@ -4,6 +4,7 @@ class Invoice extends AppModel {
 	var $validate = array();
 	var $order = 'Invoice.created';
 	var $recursive = 1;
+	var $_findMethods = array('overdue' => true,'notOverdue' => true);
 
 	var $hasMany = array('Note'=>array());
 	var $belongsTo = array('Service','Customer');
@@ -24,8 +25,9 @@ class Invoice extends AppModel {
 		$fdf_filename = $this->getCacheFilename($id,$extra_vars);
 		$template = $this->invoiceTemplate;
 		$pdfcontent = false;
+		$passthru = "/usr/local/bin/pdftk $template fill_form $fdf_filename output - flatten";
 		ob_start();
-		passthru('/usr/bin/pdftk '.$template.' fill_form '.$fdf_filename.' output - flatten');
+		passthru($passthru,$err);
 		$pdfcontent = ob_get_contents();
 		ob_end_clean();
 		return $pdfcontent;
@@ -118,7 +120,7 @@ class Invoice extends AppModel {
 
 	function generateReference($customer_id) {
 		$invoice_string = '';
-		$num_inv_this_cmr = $this->findCount(array('Customer.id'=>$customer_id));
+		$num_inv_this_cmr = $this->find('count',array('conditions'=>array('Customer.id'=>$customer_id)));
 
 		$cur_date_str = strftime('%y%m%d');
 		$unique_inv_count_str = str_pad(((string)$num_inv_this_cmr+1),3,'0',STR_PAD_LEFT);
@@ -128,5 +130,33 @@ class Invoice extends AppModel {
 		return $invoice_string;
 	}
 
+	function _findOverdue($state, $query, $results=array()) {
+		if ($state == 'before') {
+			if (!isset($query['order'])) {
+				$query['order'] = 'Invoice.due_date DESC';
+			}
+			$conditions = array(
+				'Invoice.due_date <' => date('Y-m-d'),
+				'Invoice.cancelled' => false,
+				'Invoice.date_invoice_paid' => null
+			);
+			$query['conditions'] = empty($query['conditions']) ? $conditions : array_merge($conditions, $query['conditions']);
+			return $query;
+		} elseif ($state == 'after') { return $results; }
+	}
 
+	function _findNotOverdue($state, $query, $results=array()) {
+		if ($state == 'before') {
+			if (!isset($query['order'])) {
+				$query['order'] = 'Invoice.created DESC';
+			}
+			$conditions = array(
+				'Invoice.due_date >' => date('Y-m-d'),
+				'Invoice.cancelled' => false,
+				'Invoice.date_invoice_paid' => null
+			);
+			$query['conditions'] = empty($query['conditions']) ? $conditions : array_merge($conditions, $query['conditions']);
+			return $query;
+		} elseif ($state == 'after') { return $results; }
+	}
 }

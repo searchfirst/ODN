@@ -3,6 +3,7 @@ class Service extends AppModel {
 	var $order = 'Service.modified';
 	var $actsAs = array('Joined','Searchable.Searchable');
 	var $recursive = 1;
+	var $_findMethods = array('customers' => true);
 
 	public static $status = array(
 		'Cancelled'=>0,
@@ -48,6 +49,29 @@ class Service extends AppModel {
 			$this->save($this->data);
 		} else {
 			return false;
+		}
+	}
+
+	function _findCustomers($state, $query, $results = array()) {
+		if ($state == "before") {
+			$query['order'] = 'Customer.company_name ASC';
+			return $query;
+		} elseif ($state == "after") {
+			$newResults = array();
+			$i = -1;
+			$p = '';
+			foreach ($results as $result) {
+				if ($result['Customer']['id'] != $p) {
+					$i++;
+					$p = $result['Customer']['id'];
+					$newResults[$i] = array(
+						'Customer'=>$result['Customer'],
+						'Service'=>array()
+					);
+				}
+				$newResults[$i]['Service'][] = $result['Service'];
+			}
+			return $newResults;
 		}
 	}
 }

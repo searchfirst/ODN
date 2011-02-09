@@ -1,11 +1,12 @@
 <?php
 class OwnedBehavior extends ModelBehavior {
-	function beforeSave(&$model) {
-		$this->setOwner($model);
+	function beforeSave(&$Model) {
+		$this->setOwner($Model);
+		return true;
 	}
-	private function setOwner(&$model) {
-		if (empty($this->data[$model->alias]['id']) && empty($this->data[$model->alias]['user_id'])) {
-			$this->data[$model->alias]['user_id'] = User::getCurrent();
+	private function setOwner(&$Model) {
+		if (empty($Model->data[$Model->alias]['id']) && empty($Model->data[$Model->alias]['user_id'])) {
+			$Model->data[$Model->alias]['user_id'] = User::getCurrent('id');
 		}
 	}
 }

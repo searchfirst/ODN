@@ -1,7 +1,7 @@
 <?php
 class Customer extends AppModel {
 	var $order = 'Customer.company_name';
-	var $recursive = 2;
+	var $recursive = 1;
 	var $actsAs = array('Joined','Searchable.Searchable');
 
 	public static $status = array(
@@ -35,11 +35,6 @@ class Customer extends AppModel {
 		'Note' => array(
 			'order' => 'Note.created DESC'
 		),
-/*		'Agent'=>array(
-			'className' => 'User',
-			'foreignKey' => 'id',
-			'finderQuery' => 'SELECT DISTINCT Agent.id,Agent.name,Service.customer_id FROM services Service JOIN users Agent ON Service.user_id=Agent.id JOIN customers Customer ON Service.customer_id={$__cakeID__$} ORDER BY Agent.id'
-		)*/
 	);
 	var $belongsTo = array(
 		"Reseller" => array(
@@ -48,9 +43,9 @@ class Customer extends AppModel {
 		),
 		'User'
 	);
-	var $hasAndBelongsToMany = array(
-		'TechnicalUser'=>array('with'=>'Service','className'=>'User')
-	);
+//	var $hasAndBelongsToMany = array(
+//		'TechnicalUser'=>array('with'=>'Service','className'=>'User')
+//	);
 
 	function cancel($customer_data=false) {
 		if(!$customer_data) $customer_data = &$this->data;
@@ -72,6 +67,51 @@ class Customer extends AppModel {
 		foreach($query as $result) $results[] = $this->find(array('Customer.id'=>$result['customers']['id']),null,null,-1);
 		return $results;
 	}
+
+	function afterFind($results, $primary) {
+		if ($primary) {
+			$this->setStatus($results);
+			$this->setInactiveLocations($results);
+		}
+		return $results;
+	}
+
+	private function setStatus(&$results) {
+		foreach ($results as $x => $result) {
+			$active = false;
+			$pending = false;
+			if (!empty($result['Service'])) {
+				foreach ($result['Service'] as $service) {
+					$active = $active || ($service['status'] == 2); //Switch 2 and 1 once the changeover happens and 2 is pending 1 active
+					$pending = $pending || ($service['status'] == 1);
+				}
+				if ($active) {
+					$pending = false;
+				}
+			}
+			$results[$x]['Customer']['text_status'] = $active ? __('Active',true) : ($pending ? __('Pending',true) : __('Inactive',true));
+			$results[$x]['Customer']['status'] = $active ? 1 : ($pending ? 2 : 0);
+		}
+	}
+
+	private function setInactiveLocations(&$results) {
+		foreach ($results as $x => $result) {
+			if (!empty($result['Service']) && !empty($result['Website'])) {
+				$inactive_locations = array();
+				foreach ($result['Website'] as $y => $website) {
+					$active = false;
+					foreach ($result['Service'] as $service) {
+						$active = $active || ($service['website_id'] == $website['id']);
+					}
+					if (!$active) {
+						$inactive_locations[] = $website;
+						unset($results[$x]['Website'][$y]);
+					}
+				}
+				$results[$x]['InactiveLocation'] = $inactive_locations;
+			}
+		}
+	}
 	
 	function findResellers() {
 		$results = array();
@@ -80,34 +120,34 @@ class Customer extends AppModel {
 		return $results;
 	}
 	
-	function findAllWithService($conditions=null,$fields=null,$order=null,$limit=null,$page=null,$recursive=null,$user=null) {
-		if(!$user) {
-			global $current_user;
-			$user = &$current_user;
-		}
-		$standard_find = $this->findAll($conditions,$fields,$order,$limit,$page,$recursive);
-		$id_filter = array();
-		foreach($standard_find as $standard_find_item)
-			$id_filter[] = $standard_find_item['Customer']['id'];
-		foreach($user['TechnicalCustomer'] as $technical_customer_item)
-			if(!in_array($technical_customer_item['id'],$id_filter))
-				$standard_find[]['Customer'] = $technical_customer_item;
-		return $standard_find;			
-	}
-	
-	function findWithService($conditions=null,$fields=null,$order=null,$limit=null,$page=null,$recursive=null,$user=null) {
-		if(!$user) {
-			global $current_user;
-			$user = &$current_user;
-		}
-		if($standard_find = $this->find($conditions,$fields,$order,$limit,$page,$recursive)) {
-			return $standard_find;
-		} elseif(!empty($conditions['Customer.id'])) {
-			$find_id = $conditions['Customer.id'];
-			foreach($user['TechnicalCustomer'] as $technical_customer)
-				if($find_id==$technical_customer['id']) return array('Customer'=>$technical_customer);
-		} else return false;
-	}
+//	function findAllWithService($conditions=null,$fields=null,$order=null,$limit=null,$page=null,$recursive=null,$user=null) {
+//		if(!$user) {
+//			global $current_user;
+//			$user = &$current_user;
+//		}
+//		$standard_find = $this->findAll($conditions,$fields,$order,$limit,$page,$recursive);
+//		$id_filter = array();
+//		foreach($standard_find as $standard_find_item)
+//			$id_filter[] = $standard_find_item['Customer']['id'];
+//		foreach($user['TechnicalCustomer'] as $technical_customer_item)
+//			if(!in_array($technical_customer_item['id'],$id_filter))
+//				$standard_find[]['Customer'] = $technical_customer_item;
+//		return $standard_find;			
+//	}
+//	
+//	function findWithService($conditions=null,$fields=null,$order=null,$limit=null,$page=null,$recursive=null,$user=null) {
+//		if(!$user) {
+//			global $current_user;
+//			$user = &$current_user;
+//		}
+//		if($standard_find = $this->find($conditions,$fields,$order,$limit,$page,$recursive)) {
+//			return $standard_find;
+//		} elseif(!empty($conditions['Customer.id'])) {
+//			$find_id = $conditions['Customer.id'];
+//			foreach($user['TechnicalCustomer'] as $technical_customer)
+//				if($find_id==$technical_customer['id']) return array('Customer'=>$technical_customer);
+//		} else return false;
+//	}
 	
 	function getCustomerList() {
 		$customers = $this->find('list',array(
@@ -119,4 +159,3 @@ class Customer extends AppModel {
 		return $customers;
 	}
 }
-?>

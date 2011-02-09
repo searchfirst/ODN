@@ -1,11 +1,12 @@
 <?php
 class JoinedBehavior extends ModelBehavior {
-	function beforeSave(&$model) {
-		$this->appendJoinedDate($model);
+	function beforeSave(&$Model) {
+		$this->appendJoinedDate($Model);
+		return true;
 	}
-	private function appendJoinedDate(&$model) {
-		if (empty($this->data[$model->alias]['id'])) {
-			$this->data[$model->alias]['joined'] = DboSource::expression('NOW()');
+	private function appendJoinedDate(&$Model) {
+		if (empty($Model->data[$Model->alias]['id'])) {
+			$Model->data[$Model->alias]['joined'] = DboSource::expression('NOW()');
 		}
 	}
 }
