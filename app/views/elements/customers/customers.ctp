@@ -9,7 +9,7 @@
 <ul class="tab_hooks">
 <li><a href="#active_customers">Active</a></li><li><a href="#cancelled_customers">Cancelled</a></li>
 </ul>
-<div class="tab_page">
+<article class="tab_page">
 <ul class="mini list">
 <?php foreach($customer['Referral'] as $rcustomer):?>
 <?php if($rcustomer['status']!=Customer::$status['Cancelled']):?>
@@ -17,8 +17,8 @@
 <?php endif;?>
 <?php endforeach;?>
 </ul>
-</div>
-<div class="tab_page">
+</article>
+<article class="tab_page">
 <ul class="mini list">
 <?php foreach($customer['Referral'] as $rcustomer):?>
 <?php if($status->getStatusString('Customer',$rcustomer['status']) == 'Cancelled'):?>
@@ -26,7 +26,7 @@
 <?php endif;?>
 <?php endforeach;?>
 </ul>
-</div>
+</article>
 
 </div>
 </section>

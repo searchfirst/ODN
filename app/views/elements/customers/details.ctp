@@ -1,4 +1,4 @@
-<section class="customer detail list">
+<section class="contact detail list">
 <h1 class="collapse_hook">Details</h1>
 <div class="collapse">
 <dl>

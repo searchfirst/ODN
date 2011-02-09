@@ -15,9 +15,9 @@
 <div class="cwrap_2">
 <div>
 <?php echo $this->element('customers/details') ?> 
-<?php echo $this->element('customers/customers') ?> 
 <?php echo $this->element('customers/services') ?> 
 <?php echo $this->element('customers/invoices') ?> 
+<?php echo $this->element('customers/customers') ?> 
 </div>
 <div>
 <?php echo $this->element('customers/notes') ?> 

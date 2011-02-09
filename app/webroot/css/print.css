@@ -13,7 +13,7 @@ margin: 0;
 display: none;
 }
 
-.detail.list.note {
+.detail.list.note, .customer.detail.list {
 page-break-before: always;
 }
 
