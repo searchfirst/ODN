@@ -1,8 +1,22 @@
+@media print {
+a, a:link, a:visited {
+text-decoration: none;
+color: #444;
+}
+
 body {
 padding: 10mm;
 margin: 0;
 }
 
-#menu, #header, #search, #user_details {
+#menu, header[role=banner], section[role=search], #user_details {
 display: none;
+}
+
+.detail.list.note {
+page-break-before: always;
+}
+
+thead {display: table-header-group;}
+tr {page-break-inside: avoid;}
 }

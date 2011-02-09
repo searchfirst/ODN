@@ -1,0 +1,58 @@
+.js ul.hook_menu {
+font-size: 75%;
+width: 16em;
+margin: 0;
+border: 1px solid rgb(104,104,104);
+list-style: none inside;
+background-color: rgb(255,255,255);
+color: rgb(102,102,102);
+border: solid 1px rgb(204,204,204);
+background-color: rgb(238,238,238);
+-o-border-radius: 0.125em;
+-moz-border-radius: 0.125em;
+-webkit-border-radius: 0.125em;
+border-radius: 0.125em;
+z-index: 9;
+}
+
+.js ul.hook_menu li {
+line-height: 1.6;
+display: block;
+}
+
+.js ul.hook_menu a {
+padding: 3px 6px;
+display: block;
+text-decoration: none;
+text-shadow: none;
+color: rgb(102,102,102);
+}
+
+.js ul.hook_menu li a:hover, .js ul.hook_menu li a:focus {
+background-color: rgb(51,130,245);
+background: -moz-linear-gradient(top,rgb(136,136,136),rgb(102,102,102));
+background: linear-gradient(top,rgb(136,136,136),rgb(102,102,102));
+background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(136,136,136)), to(rgb(102,102,102)));
+color: rgb(255,255,255);
+}
+
+.hook_menu_x:focus {outline: none;}
+
+.hook_menu_x {
+display: inline-block;
+cursor: pointer;
+text-indent: -10000px;
+background: url('/img/hook-menu.svg') no-repeat center center;
+background-size: 2em 1em;
+margin-left: .375em;
+height: 100%;
+width: 2em;
+}
+
+html.no-svg .hook_menu_x {
+background-image: url('/img/hook-menu.svg.png');
+}
+
+@media print {
+.hook_menu_x {display: none !important}
+}

@@ -1,0 +1,24 @@
+@media screen and (min-width:64em) {
+	.cwrap_2 {
+		display: table;
+		width: 100%;
+		border-spacing: .125em 0;
+		margin: 0 -.125em;
+		overflow: hidden;
+	}
+
+	.cwrap_2 > article, .cwrap_2 > section, .cwrap_2 > div {
+		display: table-cell;
+		width: 50%;
+	}
+
+	.cwrap_3 {
+		display: table;
+		width: 100%;
+	}
+
+	.cwrap_3 > div, .cwrap_3 > section, .cwrap_3 > article {
+		display: table-cell;
+		width: 33%
+	}
+}

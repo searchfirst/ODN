@@ -1,0 +1,8 @@
+a, a *{cursor:pointer;}
+a img{border:none;}
+html,body{margin:0;padding:0;min-height:100%;}
+h1,h2,h3,h4,h5,h6,p,ol,ul,dd,dt,pre,input,label,textarea,select{font-size:1em;margin:0;padding:0;line-height:1;font-style:normal;font-weight:normal;list-style: none inside;}
+blockquote{margin:0;padding:0;}
+pre code{display:block;overflow:auto;}
+section,article,header,footer,aside,hgroup{display:block;}
+::selection {background-color: rgba(0,0,0,0.5);text-shadow: none;font-weight:normal;}

@@ -1,0 +1,26 @@
+@media screen and (min-width:40em) {
+section[role="search"] {
+position: absolute;
+top: 0;
+right: 0;
+}
+
+#user_details {
+padding: 0;
+margin-bottom: 0
+}
+
+#user_details p {
+position: absolute;
+top: 3em;
+right: 0;
+padding: 2px .5em 0;
+line-height: 1.5;
+vertical-align: middle;
+}
+
+#user_details p a {
+color: #fff;
+text-decoration: none;
+}
+}

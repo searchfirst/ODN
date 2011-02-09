@@ -1,0 +1,25 @@
+form div {
+margin-bottom: .5em;
+}
+
+form p {
+margin-bottom: .5em;
+}
+
+label {
+display: block;
+margin-bottom: .25em;
+}
+
+.wizard > div {
+padding: .5em;
+background-color: #47b1d5;
+}
+
+.wizard > div:nth-child(2n+2) {
+background-color: #9ad4e8;
+}
+
+@media print {
+	.wizard {display: none;}
+}

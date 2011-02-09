@@ -1,0 +1,25 @@
+.js #modalDarkOverlay {
+position: fixed;
+display: none;
+height: 100%;
+width: 100%;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+background-color: hsla(0,0%,0%,0.5);
+}
+
+.js #modalDarkOverlay.visible {
+display: table;
+}
+
+.js #modalDarkOverlay div {
+display: table-cell;
+height: 100%;
+text-align: center;
+vertical-align: middle;
+}
+
+.js #modalDarkOverlay img {
+}

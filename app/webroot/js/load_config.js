@@ -12,15 +12,10 @@ $(document).ready(function() {
 	$("#ServiceTitle").change(function() {
 		var desiredName = $(this).attr('name');
 		if($(this).val()=='other') {
-			$(this).parent().next("input").attr('name',desiredName).fadeIn('fast');
-			$(this).parent().next("input").select();
-		} else {
 			$(this).parent().next("input").removeAttr('name').fadeOut('fast');
 		}
 	});
 
-	$('.customer_menu').addClass('jd_menu').jdMenu();
-	
 	$('ul.note_list li,.infobox div[class*=highlight]').bind('mouseover',function(e){
 		var currClass = $(this).attr('class');
 		var match = /highlight_/i;
@@ -52,33 +47,17 @@ $(document).ready(function() {
 		$(this).toggleClass('hidemore');
 	});
 	
-	$('#d_menu li').filter(function(index){ return $('div',this).length==1; }).bind({
+	$('#menu li').filter(function(index){ return $('div',this).length==1; }).bind({
 		mouseenter: function(e){
-/*			var isChild = $(e.currentTarget).has($(e.relatedTarget)).length;
-			var divIsNotHidden = $(this).children('div').css('display') != 'none';
-			if(!(isChild && divIsNotHidden)) {*/
 				var leftpoint = $(this).position().left + 'px';
-				$(this).children('div').css('left',leftpoint).fadeIn(100);
-//				e.stopPropagation();
-//			}
+				$(this).children('div').css({position:'absolute',left:leftpoint }).fadeIn(100);
 		},
 		mouseleave: function(e){
-/*			var isChild = $(e.currentTarget).has($(e.relatedTarget)).length;
-			if(!(isChild)) {
 				$(this).children('div').fadeOut('fast');
-			} else {
-				e.stopPropagation();
-			}*/
-//			if(e.currentTarget === this) {
-				$(this).children('div').fadeOut('fast');
-//			} else {
-//				console.log('erk');
-//			}
 		}
 	});
 
-	$('#content > h2, .infobox > h3, .infobox h4, .infobox h5, div.note_list ul.note_list h3').hookMenu();
-	$('#user_details > p').hookMenu({'position':'fixed'});
+	$('h1, h2, #user_details > p').hookMenu();
 	$('ul.tab_hooks').duxTab();
 	$('ul.hook_ajax_pagination').hookPagination();
 
