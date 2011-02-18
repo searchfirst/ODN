@@ -1,42 +1,17 @@
 function setup_modal_dialogs() {
-
-	prepare_overlay();
-
-	if($('#flashMessage').is('div.message')) {
-		$('#flashMessage').modal({minHeight:75});
-	}	
-
-	$('a.modalAJAX').bind('click',function(event){
-		var modal_url = $(this).attr('href');
-		popupBoxAjax(modal_url);
-		return false;
-	});
-
-}
-
-function prepare_overlay() {
-	$('body').append('<div id="modalDarkOverlay"><div><img src="/img/theme/loading_animation.gif"></div></div>')
-}
-
-function toggle_overlay() {
-	$('#modalDarkOverlay').toggleClass('visible');
-}
-
-function popupBoxAjax(pba_url) {
-	toggle_overlay();
-	var error = '<h2>Error Retrieving Content</h2><p>There was a problem opening this page.</p>';
-	var max_modal_height = $(window).height() - 44;
-	$.ajax({
-		url: pba_url,
-		dataType: 'html',
-		success: function(data,textStatus,XMLHttpRequest) {
-			$.modal(data,{minHeight:75,maxHeight:max_modal_height,autoResize:false});
-			$.ajax({url:'/js/modal_load.js',dataType:'script'});
-			toggle_overlay();
-		},
-		error: function(XMLHttpRequest,textStatus,errorThrown) {
-			$.modal(error);
-			toggle_overlay();
+	$('a.modalAJAX').live('click',function(e) {
+		e.preventDefault();
+		var uri = $(this).attr('href'),
+			dialog_title = $(this).attr('title'),
+			dialog;
+		if(!$('div#ajax-modal-dialog').length) {
+			dialog = $('<div id="ajax-modal-dialog"></div>').appendTo('body');
+		} else {
+			dialog = $('div#ajax-modal-dialog');
+			dialog.html('');
 		}
+		dialog.load(uri,{},function(r,s,xHR){
+			dialog.dialog({modal:true,minHeight:0,position:'right',title:dialog_title});
+		});
 	});
 }

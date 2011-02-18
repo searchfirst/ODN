@@ -1,0 +1,60 @@
+<section class="project mini list">
+<h1>Customers</h1>
+<ul class="tab_hooks">
+<li><a href="#active_prj">Active</a></li><li><a href="#cancelled_prj">Cancelled</a></li><li><a href="#other_prj">Other</a></li>
+</ul>
+<section id="active_prj" class="tab_page">
+<h1>Active Projects</h1>
+{{#active}}
+<article>
+{{#Customer}}
+<h1><a href="/customers/view/{{id}}">{{company_name}}</a></h1>
+{{/Customer}}
+<ul>
+{{#Service}}
+<li>{{title}}</li>
+{{/Service}}
+</ul>
+</article>
+{{/active}}
+{{^active}}
+<article><h1>No Projects</h1></article>
+{{/active}}
+</section>
+<section id="cancelled_prj" class="tab_page">
+<h1>Cancelled Projects</h1>
+{{#cancelled}}
+<article>
+{{#Customer}}
+<h1><a href="/customers/view/{{id}}">{{company_name}}</a></h1>
+{{/Customer}}
+<ul>
+{{#Service}}
+<li>{{title}}</li>
+{{/Service}}
+</ul>
+</article>
+{{/cancelled}}
+{{^cancelled}}
+<article><h1>No Projects</h1></article>
+{{/cancelled}}
+</section>
+<section id="other_prj" class="tab_page">
+<h1>Other Projects</h1>
+{{#other}}
+<article>
+{{#Customer}}
+<h1><a href="/customers/view/{{id}}">{{company_name}}</a></h1>
+{{/Customer}}
+<ul>
+{{#Service}}
+<li>{{title}}</li>
+{{/Service}}
+</ul>
+</article>
+{{/other}}
+{{^other}}
+<article><h1>No Projects</h1></article>
+{{/other}}
+</section>
+</section>
