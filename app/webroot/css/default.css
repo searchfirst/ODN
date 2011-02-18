@@ -7,7 +7,6 @@ font-family: 'Helvetica Neue',HelveticaNeue,Helvetica-Neue,Helvetica,Arial,sans-
 }
 
 body .bw {
-position: relative;
 }
 
 h1 {
@@ -160,6 +159,10 @@ padding: .5em;
 
 section[role="main"] table {
 width: 100%;
+}
+
+section[role="main"] h1 .referrer {
+float: right;
 }
 
 #user_details {
