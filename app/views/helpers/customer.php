@@ -1,34 +1,34 @@
 <?php
 class CustomerHelper extends AppHelper {
 
-	var $status = array();
+	var $statuses = array();
 
 	function __construct($options = null) {
 		parent::__construct($options);
-		$this->status[0] = __('Inactive',true);
-		$this->status[1] = __('Active',true);
-		$this->status[2] = __('Pending',true);
+		$this->statuses[0] = __('Inactive',true);
+		$this->statuses[1] = __('Active',true);
+		$this->statuses[2] = __('Pending',true);
 	}
 
-	function status($status_num, $inflector = false) {
-		$status = $this->status[$status_num];
+	function status(&$customer, $inflector = false) {
+		$status = $this->statuses[$customer['status']];
 		if ($inflector) {
 			$status = Inflector::$inflector($status);
 		}
 		return $status;
 	}
 
-	function isActive($status_num) {
-		return ($status_num == 1);
+	function isActive(&$customer) {
+		return ($customer['status'] == 1);
 	}
 
-	function isInactive($status_num) {
-		return ($status_num == 0);
+	function isInactive(&$customer) {
+		return ($customer['status'] == 0);
 	}
 
-	function flagTag($status_num, $tag = 'span') {
-		$class = 'flag '.$this->status($status_num,'underscore');
-		$status = $this->status($status_num);
+	function flagTag(&$customer, $tag = 'span') {
+		$class = 'flag '.$this->status($customer['status'],'underscore');
+		$status = $this->status($customer['status']);
 		return sprintf('<%s class="%s">%s</%s>',$tag,$class,$status,$tag);
 	}
 }

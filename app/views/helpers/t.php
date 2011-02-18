@@ -70,14 +70,14 @@ class THelper extends Helper {
 			$model = $options['model'];
 			$media_options = $options['media_options'];
 			$text = $options['text'];
-			$text = $this->sanitise($text,false);
 			if(!preg_match('/{\[markdown\]}/',$text)) {
-				$txtl = new Textile();
-				$text = SmartyPants($txtl->TextileThis($text),1);
+				$txtl = new Textile;
+				$text = $txtl->TextileThis($text);
 			} else {
 				$text = str_replace('{[markdown]}','',$text);
 				$text = SmartyPants(Markdown($text),1);
 			}
+			$text = $this->sanitise($text,false);
 			return $text;
 		}
 	}

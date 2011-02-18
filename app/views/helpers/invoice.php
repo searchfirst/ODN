@@ -4,7 +4,7 @@ class InvoiceHelper extends Helper {
 
 	function __construct($options = null) {
 		parent::__construct($options);
-		$this->status = array(
+		$this->statuses = array(
 			'due' => __('Due',true),
 			'overdue' => __('Overdue',true),
 			'cancelled' => __('Cancelled',true),
@@ -17,7 +17,7 @@ class InvoiceHelper extends Helper {
 	}
 
 	function isDue(&$invoice) {
-		return (bool) $invoice['date_invoice_paid'];
+		return ($invoice['date_invoice_paid'] == null);
 	}
 
 	function isPaid(&$invoice) {
@@ -28,22 +28,22 @@ class InvoiceHelper extends Helper {
 		if ($this->isCancelled($invoice) && !$this->isPaid($invoice)) {
 			return false;
 		} else {
-			return strtotime($invoice['due_date']) - time() > 0;
+			return strtotime($invoice['due_date']) - time() < 0;
 		}
 	}
 
 	function flagTag(&$invoice, $tag = 'span') {
 		if ($this->isCancelled($invoice)) {
-			$status = $this->status['cancelled'];
+			$status = $this->statuses['cancelled'];
 			$class = 'cancelled';
 		} elseif ($this->isPaid($invoice)) {
-			$status = $this->status['paid'];
+			$status = $this->statuses['paid'];
 			$class = 'paid';
 		} elseif ($this->isOverdue($invoice)) {
-			$status = $this->status['overdue'];
+			$status = $this->statuses['overdue'];
 			$class = 'overdue';
 		} elseif ($this->isDue($invoice)) {
-			$status = $this->status['due'];
+			$status = $this->statuses['due'];
 			$class = 'due';
 		}
 		return sprintf('<%s class="flag %s">%s</%s>',$tag,$class,$status,$tag);
@@ -52,13 +52,13 @@ class InvoiceHelper extends Helper {
 	function invoiceSummary(&$invoice) {
 		$flagTag = $this->flagTag($invoice);
 		$amount = money_format('%n',$invoice['amount']);
-		$issued = $this->Time->niceShort($invoice['created']);
+		$issued = $this->Time->format('d/m/Y',$invoice['created']);
 		$summary = sprintf('%s %s. %s: %s & ',$flagTag,$amount,__('Issued',true),$issued);
 		if ($this->isPaid($invoice)) {
-			$paid = $this->Time->niceShort($invoice['date_invoice_paid']);
+			$paid = $this->Time->format('d/m/Y',$invoice['date_invoice_paid']);
 			$summary .= sprintf('%s: %s',__('Paid',true),$paid);
 		} else {
-			$due = $this->Time->niceShort($invoice['due_date']);
+			$due = $this->Time->format('d/m/Y',$invoice['due_date']);
 			$summary .= sprintf('%s: %s',__('Due',true),$due);
 		}
 		return $summary;

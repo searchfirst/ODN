@@ -5,11 +5,11 @@ class NoteHelper extends AppHelper {
 		parent::__construct($options);
 	}
 
-	function flagTag($note, $tag = 'span') {
+	function flagTag($note, $tag = 'span', $newLines) {
 		if($note['flagged']) {
 			$class='flag flagged';
 			$status = __('Flagged',true);
-			return sprintf('<%s class="%s">%s</%s>',$tag,$class,$status,$tag);
+			return ($newLines ? "\n\n" : '').sprintf('<%s class="%s">%s</%s>',$tag,$class,$status,$tag);
 		} else {
 			return '';
 		}
