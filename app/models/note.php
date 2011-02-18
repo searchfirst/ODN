@@ -7,7 +7,14 @@ class Note extends AppModel {
 	var $_findMethods = array('owned'=>true,'countOwned'=>true);
 
 	var $hasMany = array();
-	var $belongsTo = array('Website','Customer','User','Service');
+	var $belongsTo = array(
+		'Website',
+		'Customer',
+		'User' => array(
+			'fields' => array('name','id')
+		),
+		'Service'
+	);
 
 	function beforeSave() {
 		if(empty($this->data['Note']['id']))

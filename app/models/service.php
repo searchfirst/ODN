@@ -12,6 +12,11 @@ class Service extends AppModel {
 		'Complete'=>3
 	);
 
+	public static $statuses = array(
+		'num' => array('Cancelled','Pending','Active','Complete'),
+		'alpha' => array('Cancelled'=>0,'Pending'=>1,'Active'=>2,'Complete'=>3)
+	);
+
 	var $validate = array(
 		'title'=>array(
 			'rule'=>'notEmpty',
@@ -40,7 +45,9 @@ class Service extends AppModel {
 	var $belongsTo = array(
 		'Website',
 		'Customer',
-		'User'
+		'User' => array(
+			'fields' => array('name','id')
+		)
 	);
 
 	function cancel() {
@@ -72,6 +79,44 @@ class Service extends AppModel {
 				$newResults[$i]['Service'][] = $result['Service'];
 			}
 			return $newResults;
+		}
+	}
+
+	function afterFind($results, $primary) {
+		$this->setStatus($results,$primary);
+		return $results;
+	}
+
+	private function __isAssoc($array) {
+		return (is_array($array) && (count($array)==0 || 0 !== count(array_diff_key($array, array_keys(array_keys($array))) )));
+	}
+
+	private function setStatus(&$results,$primary) {
+		if ($primary) {
+			foreach ($results as $x => $result) {
+				$results[$x]['Service']['text_status'] = self::$statuses['num'][$result['Service']['status']];
+			}
+		} else {
+			if (!empty($results['status'])) {
+				$results['text_status'] = self::$statuses['num'][$results['status']];
+			} elseif (!empty($results)) {
+				if (!$this->__isAssoc($results)) {
+					foreach ($results as $x => $result) {
+						if ($this->__isAssoc($result['Service'])) {
+							if (!empty($result['Service']) && isset($result['Service']['status'])) {
+								$results[$x]['Service']['text_status'] = self::$statuses['num'][$result['Service']['status']];
+							}
+						} else {
+							foreach($result['Service'] as $y => $res) {
+								if (!empty($res['status'])) {
+									$results[$x]['Service'][$y]['text_status'] = self::$statuses['num'][$res['status']];
+								}
+							}
+						}
+					}
+				}
+			}
+			$this->log($results);
 		}
 	}
 }
