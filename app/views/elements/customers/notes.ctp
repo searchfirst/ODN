@@ -1,5 +1,8 @@
 <section class="note detail list">
 <h1>Notes</h1>
+<ul class="hook_menu">
+<li><?php echo $this->Html->link('Add Note',"/ajax/notes/add?customer_id={$customer['Customer']['id']}",array('class'=>'add modalAJAX')) ?></li>
+</ul>
 <?php foreach($customer['Note'] as $note): ?>
 <article class="<?php
 if($note['flagged']) echo "flagged ";
@@ -18,7 +21,7 @@ echo "highlight_{$model}_{$model_id}";
 </ul>
 <?php endif ?>
 <?php echo $this->T->format(array(
-	'text' => $this->Note->flagTag($note)."\n".$note['description']
+	'text' => $this->Note->flagTag($note,'span',true).$note['description']
 )) ?> 
 </article>
 <?php endforeach ?>

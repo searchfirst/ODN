@@ -1,7 +1,7 @@
 <section class="project mini list">
 <h1>Customers</h1>
 <ul class="tab_hooks">
-<?php foreach ($projects as $key=>$p): ?><li><a href="<?php echo $key ?>_prj"><?php echo Inflector::humanize($key) ?></a></li><?php endforeach ?>
+<?php foreach ($projects as $key=>$p): ?><li><a href="#<?php echo $key ?>_prj"><?php echo Inflector::humanize($key) ?></a></li><?php endforeach ?>
 </ul>
 <?php foreach ($projects as $key=>$prjs): ?>
 <section id="<?php echo $key ?>_prj" class="tab_page">

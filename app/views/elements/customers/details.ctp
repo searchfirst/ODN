@@ -1,30 +1,21 @@
 <section class="contact detail list">
-<h1 class="collapse_hook">Details</h1>
-<div class="collapse">
-<dl>
-<dt>Contact Name</dt>
-<dd><?php echo $customer['Customer']['contact_name'];?></dd>
-<dt>Telephone:</dt>
-<dd><?php
-echo implode('<br />',explode(';',$customer['Customer']['telephone']));
-?></dd>
-<?php if(!empty($customer['Customer']['fax'])):?>
-<dt>Fax:</dt>
-<dd><?php echo $customer['Customer']['fax']?></dd>
-<?php endif;?>
-<?php if(!empty($customer['Customer']['email'])):?>
-<dt>Email:</dt>
-<dd><?php
-$email_list = explode(';',$customer['Customer']['email']);
-foreach($email_list as $i=>$email_item)
-$email_list[$i] = $html->link($email_item,'mailto:'.$email_item);
-echo implode('<br />',$email_list);
-?></dd>
-<?php endif;?>
-<dt>Address:</dt>
-<dd>
-<?php echo nl2br(trim(preg_replace('/\n+/',"\n","{$customer['Customer']['address']}\n{$customer['Customer']['town']}\n{$customer['Customer']['county']}\n{$customer['Customer']['post_code']}\n{$customer['Customer']['country']}")));?>
-</dd>
-</dl>
-</div>
+<h1>Details</h1>
+<ul class="hook_menu">
+<li><?php echo $this->Html->link(
+	'Add Contact',
+	array('controller'=>'contacts','action'=>'add','?'=>array('data[Customer][id]'=>$customer['Customer']['id'])),
+	array('class'=>'modalAJAX')
+) ?></li>
+</ul>
+<?php foreach ($customer['Contact'] as $contact): ?>
+<article>
+<h1><?php echo $contact['name'].(!empty($contact['role']) ? " - {$contact['role']}" : '') ?></h1>
+<ul class="hook_menu">
+<li><?php echo $this->Html->link('Edit Contact', array('controller'=>'contacts','action'=>'edit',$contact['id']),array('class'=>'modalAJAX')) ?></li>
+<li><?php echo $this->Html->link('Delete Contact',array('controller'=>'contacts','action'=>'delete',$contact['id']),array('class'=>'modalAJAX')) ?></li>
+</ul>
+<?php echo $this->T->format(array('text'=>$this->Contact->fullSummary($contact))) ?> 
+</article>
+<?php endforeach ?>
 </section>
+
