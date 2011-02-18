@@ -4,16 +4,11 @@ class CustomersController extends AppController {
 
 	var $name = 'Customers';
 	var $primaryModel = 'Customer';
-	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','T','Customer','Service','Note','Invoice');
-
-	function beforeRender() {
-		parent::beforeRender();
-		$this->set('customer_status_numbers',array(
-			CUSTOMER_STATUS_CANCELLED => 'Cancelled',
-			CUSTOMER_STATUS_PENDING => 'Pending',
-			CUSTOMER_STATUS_ACTIVE => 'Active'
-		));
-	}
+	var $helpers = array(
+		'Status','Javascript','Html','Form','Time',
+		'TextAssistant','T','Customer','Service','Note',
+		'Invoice','Contact'
+	);
 
 	function index() {
 		$page = isset($this->params['page'])?strtoupper($this->params['page']):'all';
@@ -39,9 +34,34 @@ class CustomersController extends AppController {
 			'limit'=>10,
 			'order'=>'Note.created DESC'
 		))));
+		$this->Customer->Service->unbindModel(array(
+			'hasMany'=>array('Note'),
+			'belongsTo'=>array('Customer','Website')
+		));
+		$this->Customer->Invoice->unbindModel(array(
+			'hasMany'=>array('Note'),
+			'belongsTo'=>array('Service','Customer')
+		));
+		$this->Customer->Website->unbindModel(array(
+			'belongsTo'=>array('Customer')
+		));
+		$this->Customer->Note->unbindModel(array(
+			'belongsTo'=>array('Website','Customer','Service')
+		));
+		$this->Customer->User->unbindModel(array(
+			'hasMany'=>array('Service','Customer','Note'),
+			'belongsTo'=>array('Group'),
+			'hasAndBelongsToMany'=>array('TechnicalCustomer','Website')
+		));
+		$this->Customer->Referral->unbindModel(array(
+			'hasMany'=>array('Referral','Invoice','Note'),
+			'belongsTo'=>array('Reseller','User'),
+			'hasAndBelongsToMany'=>array('Contact')
+		));
+		
 		$customer = $this->Customer->find('first',array(
 			'conditions' => array('Customer.id'=>$id),
-			'recursive' => 2
+			'recursive' => 3
 		));
 		if(!empty($customer)) {
 			$this->set('customer', $customer);

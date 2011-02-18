@@ -11,7 +11,6 @@ class FacadesController extends AppController
 		$this->set('title_for_layout','Dashboard');
 		$current_user = User::getCurrent();
 		$cuid = User::getCurrent("id");
-		$this->log($this->Note->find('countOwned',array('user'=>$cuid)));
 		if($current_user) {
 			$projects = array(
 				'active' => $this->Service->find('customers',array(
@@ -48,6 +47,14 @@ class FacadesController extends AppController
 			$your_notes['pages'] = ceil($your_notes['count']/10);
 			$this->set('your_notes',$your_notes);
 			$this->set('your_flagged_notes',$this->Note->findForUser($current_user['User']['id'],array('limit'=>10,'conditions'=>'Note.flagged > 0')));
+			if ($this->RequestHandler->isAjax()) {
+				$this->Dux->renderAjax(array(
+					'projects' => $projects,
+					'notes' => array(
+						'all'=>$all_notes,'flagged'=>$flagged_notes,'your_notes'=>$your_notes
+					)
+				));
+			}
 		}
 	}
 }

@@ -11,7 +11,7 @@ class SearchController extends AppController {
 			$this->SearchIndex->searchModels(array("Customer","Service","Website","Note","Schedule"));
 			$this->paginate = array(
 				"limit" => 10,
-				"conditions" => "MATCH(SearchIndex.data) AGAINST('$query' IN BOOLEAN MODE)",
+				"conditions" => "MATCH(SearchIndex.data) AGAINST('$query' IN NATURAL LANGUAGE MODE)",
 				"page"=>$page
 			);
 			$this->set("results",$this->paginate("SearchIndex"));
