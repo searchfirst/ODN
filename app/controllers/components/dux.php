@@ -70,6 +70,7 @@ class DuxComponent extends Object {
 				'js/libs/modernizr.js','jly'=>'js/libs/yepnope.min.js'
 			),
 			'foot' => array(
+				'jll'=>'js/libs/linen.min.js',
 				'js/jquery/jquery-ui-1.8.9.custom.js','js/jquery/libs/hook_menu.js','js/jquery/libs/dux_tabs.js',
 				'js/jquery/libs/hook_pagination.js','js/load_config.js','js/libs/underscore.js','js/libs/backbone.js',
 				'js/libs/backbone-ps.js','js/libs/paginatedcollection.backbone.js','jlh'=>'js/libs/handlebars.min.js'
