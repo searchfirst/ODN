@@ -1,7 +1,7 @@
 <section class="invoice detail list">
 <h1>Invoices</h1>
 <ul class="hook_menu">
-<li><?php echo $this->Html->link('Raise Invoice',"/invoices/raise?customer_id={$customer['Customer']['id']}",array('class'=>'add modalAJAX'));?></li>
+<li><a href="/invoices/raise?data[Customer][id]={{#Customer}}{{id}}{{/Customer}}">Raise Invoice</a></li>
 </ul>
 {{#Invoice}}
 <article>
@@ -15,7 +15,7 @@
 <li><a href="/invoices/cancel/{{id}}">Cancel Invoice</a></li>
 {{/date_invoice_paid}}
 </ul>
-<p>{{{statusTag text_status}}} {{moneyFormat amount}}.</p>
+<p>{{{statusTag text_status}}} {{moneyFormat amount}}. Issued {{dateFormat created}} &amp; {{#date_invoice_paid}}Paid {{dateFormat .}}{{/date_invoice_paid}}{{^date_invoice_paid}}Due {{dateFormat ../due_date}}{{/date_invoice_paid}}</p>
 </article>
 {{/Invoice}}
 </section>

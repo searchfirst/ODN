@@ -63,6 +63,12 @@ Handlebars.registerHelper('moneyFormat', function(n) {
 	return curr + amount;
 });
 
+Handlebars.registerHelper('txtlFlag', function(f,t) {
+	if(f == '1') { t = '<span class="flag flagged">Flagged</span> ' + t; }
+	t = t.replace(/\r/g,'');
+	return linen(t);
+});
+
 $(function() {
 	var $templatesInHtml = $('script[type="text/x-js-template"]');
 	$templatesInHtml.each(function(i,obj) {
