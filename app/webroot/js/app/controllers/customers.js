@@ -13,7 +13,6 @@ var CustomersController = Backbone.Controller.extend({
 	view: function(id) {
 		this.customers.model.bind('fetched', this.view.render);
 		this.customers.model.set({id: id*1});
-		console.log(new Date);
 		this.customers.model.fetch();
 	}
 });

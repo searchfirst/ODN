@@ -8,7 +8,6 @@ var CustomersView = Backbone.View.extend({
 		var renderTemplate = this.templates.compile('customersView'),
 				customer = this.collection.model.toJSON(),
 				$thisel = $(this.el);
-		console.log(new Date);
 		$thisel
 			.html(renderTemplate(customer))
 			.find('ul.tab_hooks').duxTab();
