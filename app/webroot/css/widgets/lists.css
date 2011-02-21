@@ -10,7 +10,6 @@ margin-bottom: .25em;
 /* Mini List */
 
 .list.mini article, .list.mini > li {
-/*padding: .25em .125em;*/
 padding: 0 .25em;
 line-height: 1.8;
 }

@@ -93,6 +93,7 @@ class DuxComponent extends Object {
 					'customersViewInvoices' => 'js/app/templates/customers/view/invoices.mustache',
 					'customersViewNotes' => 'js/app/templates/customers/view/notes.mustache',
 					'customersViewServices' => 'js/app/templates/customers/view/services.mustache',
+					'customersViewCustomers' => 'js/app/templates/customers/view/customers.mustache'
 				),
 				'variable' => 'hb_partials',
 				'post_commands' => '_(hb_partials).each(function(value,key){CnrsTemplates.addPartial(key,value)});'
