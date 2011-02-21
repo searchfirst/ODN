@@ -22,7 +22,7 @@ class Customer extends AppModel {
 			'order' => 'Invoice.created DESC'
 		),
 		'Referral' => array(
-			'fields' => array('id','company_name'),
+			'fields' => array('id','company_name','status'),
 			'className' => 'Customer',
 			'foreignKey' => 'customer_id',
 			'order'=>'Referral.company_name ASC',
@@ -74,29 +74,40 @@ class Customer extends AppModel {
 	}
 
 	function afterFind($results, $primary) {
+		$this->setStatus($results, $primary);
 		if ($primary) {
-			$this->setStatus($results);
 			$this->setInactiveLocations($results);
 		}
 		return $results;
 	}
 
-	private function setStatus(&$results) {
-		foreach ($results as $x => $result) {
-			$active = false;
-			$pending = false;
-			if (!empty($result['Service'])) {
-				foreach ($result['Service'] as $service) {
-					$active = $active || ($service['status'] == 2); //Switch 2 and 1 once the changeover happens and 2 is pending 1 active
-					$pending = $pending || ($service['status'] == 1);
-				}
-				if ($active) {
-					$pending = false;
-				}
+	private function setStatus(&$results, $primary) {
+		if ($primary) {
+			foreach ($results as $x => $result) {
+				extract($this->getStatusWithService($result['Service']));
+				$results[$x]['Customer']['text_status'] = $active ? __('Active',true) : ($pending ? __('Pending',true) : __('Inactive',true));
+				$results[$x]['Customer']['status'] = $active ? 1 : ($pending ? 2 : 0);
 			}
-			$results[$x]['Customer']['text_status'] = $active ? __('Active',true) : ($pending ? __('Pending',true) : __('Inactive',true));
-			$results[$x]['Customer']['status'] = $active ? 1 : ($pending ? 2 : 0);
 		}
+	}
+
+	private function __isAssoc($array) {
+		return (is_array($array) && (count($array)==0 || 0 !== count(array_diff_key($array, array_keys(array_keys($array))) )));
+	}
+	
+	private function getStatusWithService($services) {
+		$active = false;
+		$pending = false;
+		if (!empty($services)) {
+			foreach ($services as $service) {
+				$active = $active || ($service['status'] == 2); //Switch 2 and 1 once the changeover happens and 2 is pending 1 active
+				$pending = $pending || ($service['status'] == 1);
+			}
+			if ($active) {
+				$pending = false;
+			}
+		}
+		return array('active'=>$active,'pending'=>$pending);
 	}
 
 	private function setInactiveLocations(&$results) {
