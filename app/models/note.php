@@ -3,7 +3,7 @@ class Note extends AppModel {
 	var $validate = array();
 	var $order = 'Note.modified DESC';
 	var $recursive = 1;
-	var $actsAs = array('Searchable.Searchable');
+	var $actsAs = array('Owned','Searchable.Searchable','Detextiliser'=>array('fields'=>array('description')));
 	var $_findMethods = array('owned'=>true,'countOwned'=>true);
 
 	var $hasMany = array();

@@ -1,0 +1,11 @@
+<form id="ContactAddForm" method="post" action="/contacts/add">
+<div><label for="ContactName">Name</label><input name="name" type="text" maxlength="150" id="ContactName"></div> 
+<div><label for="ContactRole">Role</label><input name="role" type="text" maxlength="50" id="ContactRole"></div> 
+<div><label for="ContactAddress">Address</label><textarea name="address" cols="30" rows="6" id="ContactAddress"></textarea></div> 
+<div><label for="ContactEmail">Email</label><input name="email" type="email" id="ContactEmail"></div> 
+<div><label for="ContactTelephone">Telephone</label><input name="telephone" type="tel" id="ContactTelephone"></div> 
+<div><label for="ContactMobile">Mobile</label><input name="mobile" type="tel" id="ContactMobile"></div> 
+<div><label for="ContactFax">Fax</label><input name="fax" type="tel" id="ContactFax"></div> 
+<input type="hidden" name="id" id="CustomerId" value="{{customer_id}}"> 
+<div><input type="submit" value="Add Contact"></div>
+</form> 

@@ -20,6 +20,18 @@ class AppModel extends Model {
 			$this->data['title'] = trim(strip_tags($this->data['title']));
 		}
 	}
+
+	function readRoot() {
+		$model = $this->read();
+		if (!empty($model)) {
+			foreach ($model[$this->alias] as $k => $v) {
+				$model[$k] = $v;
+				unset($model[$this->alias][$k]);
+			}
+			unset($model[$this->alias]);
+		}
+		return $model;
+	}
 		
 	function swapFieldData($rowId1,$rowId2,$fieldname) {
 		if( ($field1data = $this->field($fieldname,"{$this->name}.id=$rowId1")) &&
@@ -31,5 +43,5 @@ class AppModel extends Model {
 					return false;
 		else return false;
 	}
+
 }
-?>

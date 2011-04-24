@@ -1,50 +1,33 @@
 <?php
-class WebsitesController extends AppController
-{
-	var $name = 'Websites';
+class WebsitesController extends AppController {
 	var $primaryModel = 'Website';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
-
-	function beforeFilter() {
-		parent::beforeFilter();
-		$this->permissions = array(
-			"index"=>array(
-				'owner'=>null,
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array('User'),'conditions'=>array('Customer.customer_id'=>0)),
-				'other'=>array('group'=>array(),'conditions'=>null)
-			),
-			"view"=>array(
-				'owner'=>array('owner_conditions'=>array('OR'=>array('Customer.user_id'=>$this->current_user['User']['id'])),'conditions'=>array()),
-				'admin'=>array('group'=>array('Admin'),'conditions'=>array()),
-				'group'=>array('group'=>array(),'conditions'),
-				'other'=>array('group'=>array(),'conditions')
-			),
-			"edit"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"add"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>array('group','conditions')
-			),
-			"delete"=>array(
-				'owner'=>array('owner_conditions','conditions'),
-				'admin'=>array('group'=>array('Admin'),'conditions'),
-				'group'=>array('group','conditions'),
-				'other'=>null
-			)
-		);
-		
-	}
+	var $uses = array('Website');
+	var $paginate = array(
+		'limit' => 10,
+		'order' => array('Website.uri' => 'ASC'),
+		'recursive' => -1
+	);
 
 	function index() {
-		$this->Website->recursive = 0;
-		$this->set('websites', $this->Websites->findAll());
+		$paginationOptions = array();
+		$doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
+		if (!empty($this->params['url']['service_id'])) {
+			$paginationOptions['Website.service_id'] = $this->params['url']['service_id'];
+		}
+		if (!empty($this->params['url']['customer_id'])) {
+			$paginationOptions['Website.customer_id'] = $this->params['url']['customer_id'];
+		}
+		if ($doPaginate) {
+			$websites = $this->paginate('Website',$paginationOptions);
+		} else {
+			$websites = $this->Website->find('all',array(
+				'conditions' => $paginationOptions,
+				'recursive' => -1
+			));
+		}
+		$this->set('doPaginate',$doPaginate);
+		$this->set('websites',$websites);
 	}
 
 	function add() {
@@ -68,23 +51,30 @@ class WebsitesController extends AppController
 		}
 	}
 
-	function edit($id) {
-		if( (isset($this->data['Website']['submit'])) || (empty($this->data)) ) {
-			if(!$id) {
-				$this->Session->setFlash('Invalid Website');
-				$this->redirect($this->referer('/customers/'));
-			}
-			$this->data = $this->Website->read(null, $id);
-			$this->set('website',$this->data);
-			$this->set('customers',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+	function edit($id = null) {
+		extract($this->Dux->commonRequestInfo());
+		if(!$id) {
+			$this->cakeError('missingId',array('model'=>'Website'));
+		}
+		$this->Website->id = $id;
+		$this->Website->recursive = -1;
+
+		if (!($isPost || $isPut)) {
+			$this->data = $this->Website->read();
 		} else {
-			if($this->Website->save($this->data)) {
-				$this->Session->setFlash("Website saved successfully.");
-				$this->redirect($this->referer('/customers/'));
+			if (!isAjax) {
+				if($this->Website->save($this->data)) {
+					$this->Session->setFlash("Website saved successfully.");
+					$this->redirect(array('action'=>'view',$id));
+				} else {
+					$this->Session->setFlash('Please correct errors below.');
+				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('product',$this->data);
-				$this->set('customers',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+				if ($this->Website->save(array('Website' => $this->data['Website']))) {
+					$this->set('model',$this->Website->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
 			}
 		}
 	}
@@ -115,4 +105,3 @@ class WebsitesController extends AppController
 	}
 }
 ?>
-

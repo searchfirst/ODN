@@ -1,0 +1,30 @@
+<form action="/services/add" method="post" accept-charset="UTF-8"> 
+<div><label for="ServiceTitle">Service Type</label><input type="text" name="title"></div>
+<div class="input textarea"><label for="ServiceDescription">Details</label><textarea name="description" rows="7" id="ServiceDescription" ></textarea></div> 
+<div><label for="ServiceUserId">Employee</label><select name="user_id" id="ServiceUserId"> 
+<option value=""></option>
+{{#users}}
+<option value="{{id}}">{{name}}</option>
+{{/users}}
+</select></div> 
+<div><label for="ServiceWebsiteId">Website</label><select name="website_id" id="ServiceWebsiteId"> 
+<option value=""></option> 
+{{#websites}}
+<option value="{{id}}">{{uri}}</option>
+{{/websites}}
+</select></div> 
+<div><label for="ServiceStatus">Status</label><select name="status" id="ServiceStatus"> 
+<option value="1">Pending</option> 
+<option value="2" selected="selected">Active</option> 
+<option value="3">Complete</option> 
+<option value="0">Cancelled</option> 
+</select></div>
+<div><label for="ServiceSchedule">Schedule</label><select name="schedule" id="ServiceSchedule"> 
+<option value="0">Monthly</option> 
+<option value="1">Quarterly</option> 
+<option value="2">Annual</option> 
+<option value="3">Manual</option> 
+</select></div>
+<input type="hidden" name="customer_id" id="ServiceCustomerId">
+<div><input type="submit" value="Add" ></div> 
+</form> 

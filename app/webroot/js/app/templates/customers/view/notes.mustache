@@ -1,22 +1,10 @@
 <section class="note detail list">
 <h1>Notes</h1>
-<ul class="hook_menu">
-<li><a href="/notes/add?data[Customer][id]={{#Customer}}{{id}}{{/Customer}}">Add Note</a></li>
-</ul>
-{{#Note}}
-<article>
-<h1>{{#User}}{{name}}{{/User}} ({{dateFormat created}})</h1>
-{{#flaggable}}
-<ul class="hook_menu">
-{{#flagged}}
-<li><a href="/notes/unflag/{{../id}}">Unflag</a></li>
-{{/flagged}}
-{{^flagged}}
-<li><a href="/notes/flag/{{../id}}">Flag</a></li>
-{{/flagged}}
-</ul>
-{{/flaggable}}
-{{{txtlFlag flagged description}}}
-</article>
-{{/Note}}
+<form method="post" action="/notes/add" class="simple">
+<div><label for="NoteDescription">Content</label>
+<textarea name="description" id="NoteDescription" placeholder="Enter content for the note" rows="5"></textarea></div>
+<input type="hidden" name="customer_id" value="{{id}}">
+<input type="submit" value="Add Note">
+</form>
+<div class="ajax loading">Loading</div>
 </section>

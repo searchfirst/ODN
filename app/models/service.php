@@ -1,8 +1,16 @@
 <?php
 class Service extends AppModel {
 	var $order = 'Service.modified';
-	var $actsAs = array('Joined','Searchable.Searchable');
+	var $actsAs = array(
+		'Joined',
+		'Searchable.Searchable',
+		'Detextiliser'=>array('fields'=>array('description')),
+		'IntCaster'=>array('cacheConfig'=>'lenore')
+	);
 	var $recursive = 1;
+	var $virtualFields = array(
+		'text_status' => '(SELECT CASE Service.status WHEN 0 THEN "Cancelled" WHEN 1 THEN "Pending" WHEN 2 THEN "Active" WHEN 3 THEN "Complete" END)'
+	);
 	var $_findMethods = array('customers' => true);
 
 	public static $status = array(
@@ -83,8 +91,26 @@ class Service extends AppModel {
 	}
 
 	function afterFind($results, $primary) {
-		$this->setStatus($results,$primary);
+		//$this->setStatus($results,$primary);
 		return $results;
+	}
+
+	function afterSave($created) {
+		$this->reassessCustomerStatus();
+	}
+
+	function reassessCustomerStatus() {
+		$this->Customer->id = $this->read('customer_id');
+		$this->Customer->recursive = 1;
+		if ($this->Customer->id && $customer = $this->Customer->read()) {
+			$service_status = false;
+			if (!empty($customer['Service'])) {
+				foreach ($customer['Service'] as $service) {
+					$service_status = $service_status || $service['status'] > 0;
+				}
+			}
+			$this->Customer->saveField('status', (integer) $service_status);
+		}
 	}
 
 	private function __isAssoc($array) {
@@ -116,7 +142,6 @@ class Service extends AppModel {
 					}
 				}
 			}
-			$this->log($results);
 		}
 	}
 }

@@ -3,6 +3,11 @@ class UsersController extends AppController {
 
 	var $name = 'Users';
 	var $primaryModel = 'User';
+	var $paginate = array(
+		'limit' => 50,
+		'order' => array('User.name' => 'ASC'),
+		'recursive' => 0
+	);
 
 	function beforeFilter() {
 		parent::beforeFilter();
@@ -11,7 +16,18 @@ class UsersController extends AppController {
 	}
 	
 	function index() {
-		$this->set('users', $this->User->find('all'));
+		$paginationOptions = array();
+		$doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
+		if ($this->RequestHandler->isAjax()) { $this->paginate['limit'] = 10; }
+		if ($doPaginate) {
+			$users = $this->paginate('User');
+		} else {
+			$this->User->recursive = 0;
+			$User = $this->User->find('all');
+		}
+		$this->set('doPaginate',$doPaginate);
+		$this->set('users', $users);
+		$this->set('title_for_layout','Users');
 	}
 
 	function view($id = null) {
@@ -27,42 +43,55 @@ class UsersController extends AppController {
 	}
 
 	function add() {
-		if(empty($this->data)) {
-		} else {
-			if($this->Customer->save($this->data)) {
-				$newcustomer = $this->Customer->getLastInsertId();
-				if(!empty($this->data['Website']['uri'])) {
-					$this->data['Website']['title'] = empty($this->data['Website']['title'])?$this->data['Customer']['company_name']:$this->data['Website']['title'];
-					$this->data['Website']['customer_id'] = $newcustomer;
-					$websitedata['Website'] = $this->data['Website'];
-					$this->Customer->Website->save($websitedata);
+		extract($this->Dux->commonRequestInfo());
+		if ($isPost) {
+			if (!$isAjax) {
+				if ($this->User->saveAll($this->data)) {
+					$this->Session->setFlash(__("User created successfully.",true));
+					$this->redirect(array('controller'=>'users','action'=>'view',$this->id));
+				} else {
+					$this->Session->setFlash(__("Please correct errors below.",true));
 				}
-				$this->Session->setFlash("Customer created successfully.");
-				$this->redirect("/".Inflector::underscore($this->name)."/view/$newcustomer");
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				//$this->set('resellers', $this->Customer->Reseller->generateList());
-				$this->set('customer_list',
-					$this->Customer->generateList(array("OR"=>array('Customer.customer_id'=>'IS NULL','Customer.customer_id'=>0)),null,null,'{n}.Customer.id','{n}.Customer.company_name'));
+				if ($this->User->save(array('User'=>$this->data['User']))) {
+					$this->set('model', $this->User->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
+			}
+		} else {
+			if (!empty($this->passedArgs['customer_id'])) {
+				$this->data['User']['customer_id'] = $this->passedArgs['customer_id'];
+			} else {
+				$this->cakeError('missingId',array('model'=>'Customer'));
 			}
 		}
 	}
 
 	function edit($id = null) {
-		if( (isset($this->data['User']['submit'])) || (empty($this->data)) ) {
-			if(!$id) {
-				$this->Session->setFlash('Invalid User');
-				$this->redirect('/');
-			}
-			$this->data = $this->User->find(array('User.id'=>$id),null,'User.id ASC');
-			$this->set('user', $this->data);
-			$this->set('groups', $this->User->Group->find('list'));
+		extract($this->Dux->commonRequestInfo());
+		if(!$id) {
+			$this->cakeError('missingId',array('model'=>'User'));
+		}
+		$this->User->id = $id;
+		$this->User->recursive = -1;
+
+		if (!($isPost || $isPut)) {
+			$this->data = $this->User->read();
 		} else {
-			if($this->User->saveAll($this->data)) {
-				$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
-				$this->redirect("/".strtolower($this->name)."/view/$id");
+			if (!isAjax) {
+				if($this->User->save($this->data)) {
+					$this->Session->setFlash("User saved successfully.");
+					$this->redirect(array('action'=>'view',$id));
+				} else {
+					$this->Session->setFlash('Please correct errors below.');
+				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
+				if ($this->User->save(array('User' => $this->data['User']))) {
+					$this->set('model',$this->User->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
 			}
 		}
 	}

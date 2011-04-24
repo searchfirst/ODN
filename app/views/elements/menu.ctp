@@ -1,7 +1,8 @@
 <nav id="menu">
 <ul>
-<li><?php echo $html->link('Dashboard','/',array('class'=>'dashboard','title'=>'Dashboard'))?></li>
-<li class="customers">Customers
+<li><?php echo $html->link('Dashboard',array('controller'=>'facades','action'=>'index'))?></li>
+<li><?php echo $this->Html->link('Customers',array('controller'=>'customers','action'=>'index')) ?></li>
+<?php /* Old Stuff that I may reuse
 <div>		
 <p><?php echo $html->link('New Customer',"/customers/add",array('class'=>'new_customer modalAJAX','title'=>'New Customer'))?></p>
 <ul class="cloud">
@@ -14,8 +15,8 @@
 <li><?php echo $html->link('Resellers','/customers/resellers') ?></li>
 </ul>
 </div>		
-</li>
-<li class="wizards"><a href="/invoices">Invoices</a></li>
+ */ ?>
+ <li><?php echo $this->Html->link('Invoices',array('controller'=>'invoices')) ?></li>
 <?php if(isset($current_user) && !empty($external_links)):?>
 <li class="tools">External Tools
 <div>

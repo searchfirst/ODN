@@ -3,11 +3,17 @@ var CnrsCache = function(window,document,$,undefined) {
 	return {
 		store: function(key,value) {
 			loaded[key] = value;
+			if (window.sessionStorage) {
+				window.sessionStorage.setItem(key,value);
+			}
 			return this;
 		},
 		load: function(key) {
 			if (key in loaded) {
 				return loaded[key];
+			} else if (window.sessionStorage) {
+				var sKey = window.sessionStorage.getItem(key);
+				return sKey ? sKey : false;
 			} else {
 				return false;
 			}

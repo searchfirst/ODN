@@ -1,0 +1,30 @@
+<h1>New Customer</h1>
+<form id="CustomerAddForm" method="post" action="/customers/add" accept-charset="utf-8">
+<fieldset><legend>Company Details</legend>
+<div class="input text"><label for="CustomerCompanyName">Company Name</label><input name="data[Customer][company_name]" type="text" maxlength="150" id="CustomerCompanyName" ></div> 
+{{#Customer}}
+{{#customer_id}}
+<input type="hidden" name="data[Customer][customer_id]" value="{{.}}">
+{{/customer_id}}
+{{^}}
+<div class="input select"><label for="CustomerCustomerId">Customer Of</label><select name="data[Customer][customer_id]" id="CustomerCustomerId">
+<option value=""></option>
+{{#../customers}}
+<option value="{{Customer/id}}">{{Customer/company_name}}</option>
+{{/../customers}}
+</select></div> 
+{{/Customer}}
+</fieldset>
+<fieldset><legend>Contact Info</legend>
+<div class="input text"><label for="Contact0Name">Name</label><input name="data[Contact][0][name]" type="text" maxlength="150" id="Contact0Name" ></div> 
+<div class="input text"><label for="Contact0Role">Role</label><input name="data[Contact][0][role]" type="text" placeholder="Primary Contact" maxlength="50" id="Contact0Role" ></div> 
+<div class="input text"><label for="Contact0Email">Email</label><input name="data[Contact][0][email]" type="text" maxlength="150" id="Contact0Email" ></div> 
+<div class="input text"><label for="Contact0Telephone">Telephone</label><input name="data[Contact][0][telephone]" type="text" maxlength="25" id="Contact0Telephone" ></div> 
+<div class="input text"><label for="Contact0Fax">Fax</label><input name="data[Contact][0][fax]" type="text" maxlength="25" id="Contact0Fax" ></div> 
+<div class="input textarea"><label for="Contact0Address">Address</label><textarea name="data[Contact][0][address]" cols="30" rows="6" id="Contact0Address" ></textarea></div> 
+</fieldset>
+<fieldset><legend>Website</legend>
+<div class="input text required"><label for="Website0Uri">Web Address</label><input name="data[Website][0][uri]" type="text" maxlength="255" id="Website0Uri" placeholder="www.example.com"></div> 
+</fieldset>
+<div class="submit"><input type="submit" value="Add Customer" ></div>
+</form>

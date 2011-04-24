@@ -41,4 +41,12 @@ define('SERVICE_STATUS_CANCELLED',0);
 define('GROUP_TYPE_SYSTEM',0);
 define('GROUP_TYPE_USER',1);
 define('GROUP_TYPE_AUTO',2);
+
+if (!Cache::isInitialized('lenore')) {
+	Cache::config('lenore',array(
+		'engine' => 'File',
+		'path' => CACHE . 'lenore' . DS,
+		'duration' => '+365 days'
+	));
+}
 ?>

@@ -1,0 +1,10 @@
+<form action="/customers/add/customer_id:{{customer_id}}">
+<div>
+<label for="CustomerCompanyName">Company Name</label>
+<input type="text" name="company_name" id="CustomerCompanyName">
+{{#customer_id}}
+<input type="hidden" name="customer_id" value="{{.}}">
+{{/customer_id}}
+</div>
+<input type="submit" value="Add Customer">
+</form>

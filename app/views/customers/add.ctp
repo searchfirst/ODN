@@ -1,28 +1,22 @@
-<h2>New Customer</h2>
-<form action="<?php echo $html->url('/customers/add'); ?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
-<fieldset> 
-<legend>Company Details</legend>
-<?php echo $form->hidden('Customer.id')?> 
-<?php echo $form->input('Customer.company_name',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.contact_name',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.email',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.telephone',array('size'=>'20','maxlength'=>'20','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.fax',array('size'=>'30','maxlength'=>'150','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.address',array('cols'=>40,'rows'=>3,'error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.town',array('size'=>'30','maxlength'=>'50','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.county',array('size'=>'30','maxlength'=>'50','error'=>'Please enter the Company Name.'))?> 
-<?php echo $form->input('Customer.post_code',array('size'=>'10','maxlength'=>'10','error'=>'Please enter the Company Name.'))?> 
+<h1>New Customer</h1>
+<?php echo $this->Form->create('Customer') ?> 
+<fieldset><legend>Company Details</legend>
+<?php echo $this->Form->input('company_name') ?> 
+<?php if (!empty($this->data['Customer']['customer_id'])): ?>
+<?php echo $this->Form->hidden('customer_id') ?> 
+<?php else: ?>
+<?php echo $this->Form->input('customer_id',array('label'=>__('Customer Of',true),'empty'=>true)) ?> 
+<?php endif ?>
 </fieldset>
-<fieldset>
-<legend>Website</legend>
-<?php echo $form->input('Website.uri',array('size'=>'40','maxlength'=>'150','label'=>'Web Address','error'=>'Web Address needed.'))?> 
+<fieldset><legend>Contact Info</legend>
+<?php echo $this->Form->input('Contact.0.name') ?> 
+<?php echo $this->Form->input('Contact.0.role',array('value'=>'Primary Contact')) ?> 
+<?php echo $this->Form->input('Contact.0.email') ?> 
+<?php echo $this->Form->input('Contact.0.telephone') ?> 
+<?php echo $this->Form->input('Contact.0.fax') ?> 
+<?php echo $this->Form->input('Contact.0.address') ?> 
 </fieldset>
-<?php if(!empty($customer_list) && empty($customer['Referral']) && !empty($customer['Customer'])):?>
-<fieldset>
-<legend>Reseller</legend>
-<?php echo $form->input('Customer.customer_id',array('options'=>$customer_list,'empty'=>true,'selected'=>$customer['Customer']['customer_id'],'label'=>'Customer Of','error'=>"Your customer can't be a customer of itself."))?> 
+<fieldset><legend>Website</legend>
+<?php echo $this->Form->input('Website.0.uri',array('label'=>'Web Address'))?> 
 </fieldset>
-<?php endif;?>
-<?php echo $form->submit('Add',array('div'=>false));?> 
-</fieldset>
-</form>
+<?php echo $this->Form->end('Add Customer') ?> 

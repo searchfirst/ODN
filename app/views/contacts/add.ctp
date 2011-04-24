@@ -2,6 +2,7 @@
 <?php echo $this->Form->create('Contact') ?> 
 <fieldset><legend>Contact Details</legend>
 <?php echo $this->Form->input('name') ?> 
+<?php echo $this->Form->input('role') ?> 
 <?php echo $this->Form->input('email',array('type'=>'email')) ?> 
 <?php echo $this->Form->input('telephone',array('type'=>'tel')) ?> 
 <?php echo $this->Form->input('mobile',array('type'=>'tel')) ?> 

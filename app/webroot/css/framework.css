@@ -1,24 +1,57 @@
-@media screen and (min-width:64em) {
-	.cwrap_2 {
-		display: table;
-		width: 100%;
-		border-spacing: .125em 0;
-		margin: 0 -.125em;
-		overflow: hidden;
-	}
-
-	.cwrap_2 > article, .cwrap_2 > section, .cwrap_2 > div {
-		display: table-cell;
-		width: 50%;
-	}
-
-	.cwrap_3 {
-		display: table;
-		width: 100%;
-	}
-
-	.cwrap_3 > div, .cwrap_3 > section, .cwrap_3 > article {
-		display: table-cell;
-		width: 33%
-	}
+.fwrap.p { margin: 0 -.5em; }
+.fwrap.p > div, .fwrap.p > section, .fwrap.p > article, .fwrap.p > aside {
+padding: 0 .5em;
+margin-bottom: .5em;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
 }
+.c2.fwrap > :nth-child(2n) { clear: right; }
+.c2.fwrap > :nth-child(2n+1) { clear: left; }
+.c3.fwrap > :nth-child(3n) { clear: right; }
+.c3.fwrap > :nth-child(3n+1) { clear: left; }
+.c4.fwrap > :nth-child(4n) { clear: right; }
+.c4.fwrap > :nth-child(4n+1) { clear: left; }
+
+@media screen and (min-width:40em) {
+	.c2.fwrap { overflow: hidden; zoom: 1; }
+	.c2.fwrap > article, .c2.fwrap > section, .c2.fwrap > div { float: left; width: 50%; }
+	.c3.fwrap { overflow: hidden; zoom: 1; }
+	.c3.fwrap > div, .c3.fwrap > section, .c3.fwrap > article { float: left; width: 33.333%; }
+	.c3.fwrap > div.f32, .c3.fwrap > section.f32, .c3.fwrap > article.f32 { width: 66.667%; }
+	.c4.fwrap { overflow: hidden; zoom: 1; }
+	.c4.fwrap > div, .c4.fwrap > section, .c4.fwrap > article { float: left; width: 25%; }
+	.c4.fwrap > div.f42, .c4.fwrap > section.f42, .c4.fwrap > article.f42 { width: 50%; }
+	.c4.fwrap > div.f43, .c4.fwrap > section.f43, .c4.fwrap > article.f43 { width: 75%; }
+	.c3.fwrap.pp > :nth-child(2n), .c4.fwrap.pp > :nth-child(2n), .c4.fwrap.pp > :nth-child(3n) { padding-left: .5em; padding-right: .5em; }
+	.c2.fwrap.pp > :nth-child(2n-1), .c3.fwrap.pp > :nth-child(3n-2), .c4.fwrap.pp > :nth-child(4n-3) { padding-left: 0; padding-right: .5em; }
+	.c2.fwrap.pp > :nth-child(2n), .c3.fwrap.pp > :nth-child(3n), .c4.fwrap.pp > :nth-child(4n) { padding-left: .5em; padding-right: 0; }
+	.ie7 .c2.fwrap > article, .ie7 .c2.fwrap > section, .ie7 .c2.fwrap > div { width: 47.5% !important; }
+	.ie7 .c3.fwrap > article, .ie7 .c3.fwrap > section, .ie7 .c3.fwrap > div { width: 31.5% !important; }
+}
+
+.c3.lwrap > div, .c3.lwrap > section, .c3.lwrap > article, .c3.lwrap > aside {
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+}
+@media screen and (min-width: 64em) {
+	.c3.lwrap { margin: 0 -.5em; overflow: hidden; zoom: 1; }
+	.c3.lwrap > div, .c3.lwrap > section, .c3.lwrap > article, .c3.lwrap > aside {
+	float: left;
+	width: 33.333%;
+	overflow: hidden;
+	padding: 0 .5em;
+	}
+	.c3.lwrap > div.l32, .c3.lwrap > section.l32, .c3.lwrap > article.l32, .c3.lwrap > aside.l32 { width: 66.667%; }
+	.ie7 .c3.lwrap > div, .ie7 .c3.lwrap > section, .ie7 .c3.lwrap > article, .ie7 .c3.lwrap > aside { width: 31.5%; }
+	.ie7 .c3.lwrap > div.l32, .ie7 .c3.lwrap > section.l32, .ie7 .c3.lwrap > article.l32, .ie7 .c3.lwrap > aside.l32 { width: 66.667%; }
+}
+
+.fwrap > * p:last-child,
+.fwrap > * ul:last-child,
+.fwrap > * ol:last-child,
+.fwrap > * ul:last-child,
+.fwrap > * li:last-child,
+.fwrap > * dd:last-child { margin-bottom: 0; }
+

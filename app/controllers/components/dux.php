@@ -4,7 +4,16 @@ class DuxComponent extends Object {
 		$this->controller =& $controller;
 		$this->settings = $settings;
 		$this->authInit();
-		$this->minifyInit();
+		$this->commonRequestInfo = array(
+			'isPost' => $this->controller->RequestHandler->isAjax(),
+			'isPut' => $this->controller->RequestHandler->isPut(),
+			'isAjax' => $this->controller->RequestHandler->isAjax()
+		);
+		if ($this->controller->RequestHandler->isAjax() && $this->controller->name != 'CakeError') {
+			$this->getAjaxPutData();
+		} else {
+			$this->minifyInit();
+		}
 	}
 
 	function startup(&$controller) {
@@ -12,11 +21,32 @@ class DuxComponent extends Object {
 			$this->setTheme();
 			$this->modelInit();
 		}
-		$this->requestHandlerInit();
 	}
 
 	function beforeRender(&$controller) {
 		$this->mergeGetData();
+		$this->requestHandlerInit();
+	}
+
+	function getAjaxPutData() {
+		if ($this->controller->RequestHandler->isPost() || $this->controller->RequestHandler->isPut()) {
+			$modelClass = $this->controller->modelClass;
+			$data = json_decode(file_get_contents("php://input"),true);
+			if ($data && !array_key_exists($modelClass,$data)) {
+				$data[$modelClass] = array();
+				foreach ($data as $key => $val) {
+					if (!preg_match('/^[A-Z]{1}/',$key)) {
+						$data[$modelClass][$key] = $val;
+						unset($data[$key]);
+					}
+				}
+			}
+			$this->controller->data = $data;
+		}
+	}
+
+	function commonRequestInfo() {
+		return $this->commonRequestInfo;
 	}
 
 	function renderAjax($json_object=array(),$controllerViewPath=false) {
@@ -67,20 +97,39 @@ class DuxComponent extends Object {
 	private function minifyInit() {
 		$js_list = array(
 			'head' => array(
-				'js/libs/modernizr.js','jly'=>'js/libs/yepnope.min.js'
+				'js/libs/modernizr.js','js/libs/yepnope.min.js'
 			),
 			'foot' => array(
-				'jll'=>'js/libs/linen.min.js',
-				'js/jquery/jquery-ui-1.8.9.custom.js','js/jquery/libs/hook_menu.js','js/jquery/libs/dux_tabs.js',
-				'js/jquery/libs/hook_pagination.js','js/load_config.js','js/libs/underscore.js','js/libs/backbone.js',
-				'js/libs/backbone-ps.js','js/libs/paginatedcollection.backbone.js','jlh'=>'js/libs/handlebars.min.js'
+				'js/jquery/libs/hook_menu.js','js/jquery/libs/dux_tabs.js','js/jquery/libs/editable.js','js/jquery/libs/collapse.js',
+				'js/libs/linen/linen.js','js/libs/underscore.js','js/libs/backbone.js',
+				'js/libs/backbone-ps.js','js/libs/paginatedcollection.backbone.js','js/libs/handlebars.min.js'
 			)
 		);
 		$template_list = array(
 			'core' => array(
 				'file_list' => array(
 					'facades_index' => 'js/app/templates/facades/index.mustache',
-					'customersView' => 'js/app/templates/customers/view.mustache'
+					'customersIndex' => 'js/app/templates/customers/index.mustache',
+					'customersView' => 'js/app/templates/customers/view.mustache',
+					'customersAdd' => 'js/app/templates/customers/add.mustache',
+					'customerItemView' => 'js/app/templates/customers/view_item.mustache',
+					'customerItemAdd' => 'js/app/templates/customers/add_item.mustache',
+					'customerButtons' => 'js/app/templates/customers/buttons.mustache',
+					'invoiceItemView' => 'js/app/templates/invoices/view_item.mustache',
+					'invoiceItemAdd' => 'js/app/templates/invoices/add_item.mustache',
+					'invoiceButtons' => 'js/app/templates/invoices/buttons.mustache',
+					'noteItemView' => 'js/app/templates/notes/view_item.mustache',
+					'contactItemView' => 'js/app/templates/contacts/view_item.mustache',
+					'contactItemAdd' => 'js/app/templates/contacts/add_item.mustache',
+					'contactButtons' => 'js/app/templates/contacts/buttons.mustache',
+					'serviceItemView' => 'js/app/templates/services/view_item.mustache',
+					'serviceItemAdd' => 'js/app/templates/services/add_item.mustache',
+					'serviceButtons' => 'js/app/templates/services/buttons.mustache',
+					'websiteItemView' => 'js/app/templates/websites/view_item.mustache',
+					'websiteItemAdd' => 'js/app/templates/websites/add_item.mustache',
+					'websiteButtons' => 'js/app/templates/websites/buttons.mustache',
+					'pagination' => 'js/app/templates/elements/pagination.mustache',
+					'emptyCollection' => 'js/app/templates/elements/empty_collection.mustache',
 				),
 				'variable' => 'hb_templates',
 				'post_commands' => '_(hb_templates).each(function(value,key){CnrsTemplates.add(key,value)});'
@@ -93,6 +142,7 @@ class DuxComponent extends Object {
 					'customersViewInvoices' => 'js/app/templates/customers/view/invoices.mustache',
 					'customersViewNotes' => 'js/app/templates/customers/view/notes.mustache',
 					'customersViewServices' => 'js/app/templates/customers/view/services.mustache',
+					'customersViewWebsites' => 'js/app/templates/customers/view/websites.mustache',
 					'customersViewCustomers' => 'js/app/templates/customers/view/customers.mustache'
 				),
 				'variable' => 'hb_partials',
@@ -102,7 +152,8 @@ class DuxComponent extends Object {
 		$css_list = array(
 			'css/reset.css','css/type.css','css/default.css','css/framework.css','css/tablets_netbooks.css','css/desktop.css',
 			'css/print.css','css/widgets/tabs.css','css/widgets/lists.css','css/widgets/modal.css','css/widgets/hook_menu.css',
-			'css/widgets/forms.css','css/widgets/flags.css','css/widgets/dialog.css'
+			'css/widgets/forms.css','css/widgets/flags.css','css/widgets/dialog.css','css/widgets/loading.css','css/widgets/pagination.css',
+			'css/widgets/editable.css','css/widgets/collapse.css'
 		);
 		if ($additional_js = Configure::read('Dux.additional_js')) {
 			$js_list['foot'] = array_merge($js_list['foot'], $additional_js);

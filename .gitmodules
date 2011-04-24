@@ -13,3 +13,6 @@
 [submodule "app/plugins/minify"]
 	path = app/plugins/minify
 	url = git://github.com/connrs/minify.git
+[submodule "app/webroot/js/libs/linen"]
+	path = app/webroot/js/libs/linen
+	url = git://github.com/connrs/linen.git

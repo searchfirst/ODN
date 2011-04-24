@@ -1,0 +1,15 @@
+<h1>Notes</h1>
+{{#customerId}}
+<ul class="hook_menu">
+<li><a href="/notes/add?data[Customer][id]={{.}}">Add Note</a>
+</ul>
+{{/customerId}}
+{{#notes}}
+<article>
+<h1>{{User/name}} ({{dateFormat Note/created}})</h1>
+{{{txtlFlag Note/flagged Note.description}}}
+</article>
+{{/notes}}
+{{#pageInfo}}
+{{{pageLinks . "Note"}}}
+{{/pageInfo}}

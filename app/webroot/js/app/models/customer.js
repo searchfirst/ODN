@@ -1,22 +1,14 @@
-var CustomerModel = Backbone.Model.extend({
-	url: function() { return '/customers/' + this.get('id') },
-	fetch: function(options) {
-		options || (options = {});
-		var self = this;
-		var success = options.success;
-		options.success = function(resp) {
-			if (success) { success(self, resp); }
-			self.trigger('fetched',self);
-		};
-		Backbone.Model.prototype.fetch.call(self, options);
-	},
-	initialize: function() {
-
+var Customer = DuxModel.extend({
+	name: 'Customer',
+	url: function(){
+		var id = this.get('id');
+		return '/customers' + (id ? '/' + id : '');
 	}
 }),
-Customer = new CustomerModel(),
-CustomersCollection = Backbone.Collection.extend({
+CustomersCollection = DuxCollection.extend({
+	name: 'customers',
 	model: Customer,
-	url: '/customers',
+	comparator: function(customer) {
+		return customer.get('company_name');
+	}
 });
-

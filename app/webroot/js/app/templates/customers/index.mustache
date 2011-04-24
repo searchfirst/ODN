@@ -1,0 +1,16 @@
+<h1>Customers</h1>
+<ul class="hook_menu">
+<li><a href="/customers/add?data[Customer][customer_id]={{customerId}}">Add Customer</a></li>
+</ul>
+<ul class="mini list">
+{{#customers}}
+{{#Customer}}
+<li><a href="/customers/view/{{id}}">{{company_name}}</a></li>
+{{/Customer}}
+{{^}}
+<li>No Customers</li>
+{{/customers}}
+</ul>
+{{#pageInfo}}
+{{{pageLinks . "Note"}}}
+{{/pageInfo}}

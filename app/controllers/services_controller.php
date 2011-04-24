@@ -4,6 +4,11 @@ class ServicesController extends AppController
 	var $name = 'Services';
 	var $primaryModel = 'Service';
 	var $helpers = array('Status','Javascript','Html','Form','Time','TextAssistant','MediaAssistant');
+	var $paginate = array(
+		'limit' => 10,
+		'order' => array('Service.created' => 'ASC'),
+		'recursive' => 0
+	);
 	var $service_titles = array(
 		'SEO Plan 1'=>'SEO Plan 1',
 		'SEO Plan 2'=>'SEO Plan 2',
@@ -33,10 +38,21 @@ class ServicesController extends AppController
 	);
 
 	function index() {
-//		$this->Service->recursive = 0;
-//		$this->set('services', $this->Services->find('all'));
-//		$this->Session->setFlash('');
-		$this->redirect('/');
+		$paginationOptions = array();
+		$doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
+		if (!empty($this->params['url']['customer_id'])) {
+			$paginationOptions['Service.customer_id'] = $this->params['url']['customer_id'];
+		}
+		if ($doPaginate) {
+			$services = $this->paginate('Service',$paginationOptions);
+		} else {
+			$this->Service->recursive = 0;
+			$services = $this->Service->find('all',array(
+				'conditions' => $paginationOptions
+			));
+		}
+		$this->set('doPaginate',$doPaginate);
+		$this->set('services',$services);
 	}
 	
 	function beforeRender() {
@@ -87,29 +103,29 @@ class ServicesController extends AppController
 	}
 
 	function edit($id) {
-//		if( (isset($this->data['Service']['submit'])) || (empty($this->data)) ) {
-		if( empty($this->data) ) {
-			if(!$id) {
-				$this->Session->setFlash('Invalid Service');
-				$this->redirect($this->referer('/'));
-			}
-			$this->data = $this->Service->findById($id);
-			//$this->set('service',$this->data);
-			$this->pageTitle = "Edit Service: {$this->data['Service']['title']}";
-			$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
-			$this->set('customers',
-				Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+		extract($this->Dux->commonRequestInfo());
+		if(!$id) {
+			$this->cakeError('missingId',array('model'=>'Website'));
+		}
+		$this->Service->id = $id;
+		$this->Service->recursive = -1;
+
+		if (!($isPost || $isPut)) {
+			$this->data = $this->Website->read();
 		} else {
-			//$this->set('service',$this->Service->find(array('Service.id'=>$id)));
-			if($this->Service->save($this->data)) {
-				$this->Session->setFlash("Website saved successfully.");
-				$this->redirect($this->referer("/customers/view/{$this->data['Service']['customer_id']}"));
+			if (!isAjax) {
+				if($this->Service->save($this->data)) {
+					$this->Session->setFlash("Service saved successfully.");
+					$this->redirect(array('controller'=>'customers','action'=>'view',$this->Service->field('customer_id')));
+				} else {
+					$this->Session->setFlash('Please correct errors below.');
+				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
-				$this->set('customers',
-					Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
-				$this->pageTitle = 'Edit Service: '.$this->data['Service']['title'];
+				if ($this->Service->save(array('Service' => $this->data['Service']))) {
+					$this->set('model',$this->Service->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
 			}
 		}
 	}

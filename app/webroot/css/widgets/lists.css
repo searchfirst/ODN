@@ -1,30 +1,68 @@
-.list p, .list ul {
-line-height: 1.6;
-margin-bottom: .25em;
+.list {
+border: 1px solid #ddd;
+margin-bottom: .5em;
 }
 
-.list h1 {
+.list .list {
+border: none;
+padding-bottom: 0;
+}
+
+.list p, ul.list {
+line-height: 1.6;
 margin-bottom: .25em;
+list-style: none inside;
+}
+
+.list > h1 {
+line-height: 2;
+padding: 0 .25em;
+margin-bottom: 0;
+color: #333;
+text-shadow: -1px -1px 0 rgba(255,255,255,.2);
+background-color: #ddd;
+background-image: -moz-linear-gradient(top, #eee, #e1e1e1); 
+background-image: -ms-linear-gradient(top, #eee, #e1e1e1); 
+background-image: -o-linear-gradient(top, #eee, #e1e1e1); 
+background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#e1e1e1)); 
+background-image: -webkit-linear-gradient(top, #eee, #e1e1e1); 
+background-image: linear-gradient(top, #eee, #e1e1e1);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#eee', EndColorStr='#e1e1e1'); 
+border-bottom: 1px solid #ddd;
+}
+
+.list > div {
+padding: .25em;
+}
+
+.list > article {
+border-bottom: 1px solid #ddd;
+padding: .25em;
+}
+
+.list > article:last-child, .list > article:last-of-type {
+border-bottom: none;
+}
+
+.list form, .list .p_form {
+padding: .25em;
+border-bottom: none;
 }
 
 /* Mini List */
 
 .list.mini article, .list.mini > li {
-padding: 0 .25em;
+padding-left: .25em;
+padding-right: .25em;
 line-height: 1.8;
 }
 
-.list.mini article:nth-child(2n+1), .list.mini > li:nth-child(2n+1) {
+.list.mini article:nth-child(2n), .list.mini > li:nth-child(2n) {
 background-color: #ddd;
 }
 
 .list.mini article h1, .list.mini article ul, .list.mini article li {
 display: inline;
-}
-
-.list.mini article h1 a, .list.mini > li > a {
-color: #5c8999;
-text-decoration: none
 }
 
 .list.mini article h1 a:hover {
@@ -35,10 +73,6 @@ text-decoration: underline;
 .list.mini article h1:after {
 content: ': ';
 margin-left: .125em;
-}
-
-.list.mini article ul a {
-color: #333;
 }
 
 .list.mini article ul li:after {
@@ -63,60 +97,47 @@ content: '';
 
 /* Summary List */
 
-.summary_list {
-background-color: hsl(195,100%,90%);
+.summary.list {
+background-color: hsl(195,50%,90%);
 color: hsl(195,60%,40%);
 border: 1px solid hsl(195,70%,70%);
-border-radius: .25em;
--webkit-border-radius: .25em;
--moz-border-radius: .25em;
--o-border-radius: .25em;
--ms-border-radius: .25em;
 margin-bottom: .5em;
+padding-bottom: 0;
 }
 
-.summary_list h1 {
-margin: 0 0 .125em;
-padding: 0 .5em;
-background-color: hsl(195,80%,80%);
-border-top: 1px solid hsla(0,0%,100%,0.5);
+.summary.list h1 {
 border-bottom: 1px solid hsla(0,0%,100%,0.5);
--webkit-border-top-left-radius: .25em;
--webkit-border-top-right-radius: .25em;
--moz-border-radius-topleft: .25em;
--moz-border-radius-topright: .25em;
-border-top-left-radius: .25em;
-border-top-right-radius: .25em;
-}
-
-.summary_list h1:after {
+background-color: #d8eaf0;
+background-image: -moz-linear-gradient(top, #d8eaf0, #b7d8e2); 
+background-image: -ms-linear-gradient(top, #d8eaf0, #b7d8e2); 
+background-image: -o-linear-gradient(top, #d8eaf0, #b7d8e2); 
+background-image: -webkit-gradient(linear, left top, left bottom, from(#d8eaf0), to(#b7d8e2)); 
+background-image: -webkit-linear-gradient(top, #d8eaf0, #b7d8e2); 
+background-image: linear-gradient(top, #d8eaf0, #b7d8e2);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#d8eaf0', EndColorStr='#b7d8e2'); 
 border-bottom: 1px solid hsla(195,70%,70%,0.5);
-margin: 0 -.5em;
-content: '';
+}
+
+.summary.list li {
 display: block;
 }
 
-.summary_list li {
-display: block;
-}
-
-.summary_list a {
-padding: 0 .5em;
+.summary.list a {
+padding: 0 .25em;
 color: hsl(195,60%,40%);
 text-decoration: none;
-line-height: 1.5;
+line-height: 1.8125;
 display: block;
 }
 
-.summary_list a:hover {
+.summary.list a:hover {
 background-color: hsla(0,0%,100%,0.5);
 }
 
-.summary_list .count {
+.summary.list .count {
 float: right;
 color: hsl(195,60%,20%);
 }
-
 
 .full_list {
 background-color: hsl(195,100%,90%);
@@ -130,16 +151,20 @@ border-radius: .25em;
 margin-bottom: .5em;
 }
 
-.detail.list > h1 {
-background-color: #444;
-color: #fff;
-padding: 0 .25em;
+.detail.list > article > h1, .detail.list > section > h1, .detail.list > div > h1 {
+}
+
+.card.list > article h1 {
+font-size: 1.3125em;
+line-height: 1;
 margin-bottom: .125em;
 }
 
-.detail.list > article > h1, .detail.list > section > h1, .detail.list > div > h1 {
-background-color: #ddd;
-color: #444;
-padding: 0 .25em;
-text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+.card.list > article .info {
+color: rgb(68,68,68);
+padding-left: 1em;
+}
+
+@media print {
+.p_form { display: none; }
 }

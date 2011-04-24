@@ -1,0 +1,13 @@
+<h1>Edit Customer</h1>
+<form id="CustomerAddForm" method="post" action="/customers/edit/{{customer/id}}" accept-charset="utf-8">
+<fieldset><legend>Company Details</legend>
+<div class="input text"><label for="CustomerCompanyName">Company Name</label><input name="data[Customer][company_name]" type="text" maxlength="150" id="CustomerCompanyName" value="{{customer/Customer/company_name}}"></div> 
+<div class="input select"><label for="CustomerCustomerId">Customer Of</label><select name="data[Customer][customer_id]" id="CustomerCustomerId">
+<option value=""></option>
+{{#customers}}
+<option value="{{id}}">{{company_name}}</option>
+{{/customers}}
+</select></div> 
+</fieldset>
+<div class="submit"><input type="submit" value="Save Changes" ></div>
+</form>

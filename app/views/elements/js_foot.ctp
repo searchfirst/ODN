@@ -1,3 +1,6 @@
+<?php echo $this->Minify->js_link($minify['js']['head']) ?>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>
 <script>
 yepnope([
 {test:Modernizr.localstorage,nope:['/js/libs/poly/storage.js']}
@@ -6,7 +9,9 @@ yepnope([
 <?php echo $this->Minify->js_link($minify['js']['foot']) ?> 
 <script src="/js/app/cache.js"></script>
 <script src="/js/app/templates.js"></script>
+<script src="/js/app/classes.js"></script>
 <script src="/js/app/models/customer.js"></script>
+<script src="/js/app/models/contact.js"></script>
 <script src="/js/app/models/service.js"></script>
 <script src="/js/app/models/website.js"></script>
 <script src="/js/app/models/user.js"></script>
@@ -15,6 +20,7 @@ yepnope([
 <script src="/js/app/models/facade.js"></script>
 <script src="/js/app/models/schedule.js"></script>
 <script src="/js/app/views/customers.js"></script>
+<script src="/js/app/views/contacts.js"></script>
 <script src="/js/app/views/services.js"></script>
 <script src="/js/app/views/websites.js"></script>
 <script src="/js/app/views/users.js"></script>
@@ -23,6 +29,7 @@ yepnope([
 <script src="/js/app/views/facades.js"></script>
 <script src="/js/app/views/schedules.js"></script>
 <script src="/js/app/controllers/customers.js"></script>
+<script src="/js/app/controllers/contacts.js"></script>
 <script src="/js/app/controllers/services.js"></script>
 <script src="/js/app/controllers/websites.js"></script>
 <script src="/js/app/controllers/users.js"></script>

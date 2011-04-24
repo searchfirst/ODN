@@ -1,0 +1,8 @@
+<form action="/websites/add/customer_id:{{customer_id}}">
+<div><label for="CustomerUri">URL</label><input type="text" name="uri" id="CustomerUri"></div>
+<div><label for="CustomerFtpHost">FTP Server</label><input type="text" name="ftp_host" id="CustomerFtpHost"></div>
+<div><label for="CustomerFtpUsername">FTP Username</label><input type="text" name="ftp_username" id="CustomerFtpUsername"></div>
+<div><label for="CustomerFtpPassword">FTP Password</label><input type="text" name="ftp_password" id="CustomerFtpPassword"></div>
+<input type="hidden" name="customer_id" value="{{customer_id}}">
+<input type="submit" value="Add Website">
+</form>

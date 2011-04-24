@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="405" height="20" viewBox="0 0 405 20">
+	<rect x="0" y="0" width="80" height="20" fill="#FFFFFF" >
+		<animate attributeType="CSS" attributeName="fill" from="#000000" to="#ffffff" dur="1s" begin="0s" repeatCount="indefinite" />
+	</rect>
+	<rect x="81" y="0" width="80" height="20" fill="#FFFFFF" >
+		<animate attributeType="CSS" attributeName="fill" from="#000000" to="#ffffff" dur="1s" begin="0.2s" repeatCount="indefinite" />
+	</rect>
+	<rect x="162" y="0" width="80" height="20" fill="#FFFFFF" >
+		<animate attributeType="CSS" attributeName="fill" from="#000000" to="#ffffff" dur="1s" begin="0.4s" repeatCount="indefinite" />
+	</rect> 
+	<rect x="243" y="0" width="80" height="20" fill="#FFFFFF" >
+		<animate attributeType="CSS" attributeName="fill" from="#000000" to="#ffffff" dur="1s" begin="0.6s" repeatCount="indefinite" />
+	</rect>
+	<rect x="324" y="0" width="80" height="20" fill="#FFFFFF" >
+		<animate attributeType="CSS" attributeName="fill" from="#000000" to="#ffffff" dur="1s" begin="0.8s" repeatCount="indefinite" />
+	</rect>
+</svg>

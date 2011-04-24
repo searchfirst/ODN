@@ -1,37 +1,4 @@
 <section class="service detail list">
 <h1>Services</h1>
-<ul class="hook_menu">
-{{#Customer}}
-<li><a href="/services/add?data[Customer][id]={{id}}">Add Service</a></li>
-<li><a href="/websites/add?data[Customer][id]={{id}}">Add Website</a></li>
-{{/Customer}}
-</ul>
-{{#Website}}
-<section>
-<h1><a href="/websites/view/{{id}}">{{uri}}</a></h1>
-<ul class="hook_menu">
-<li><a href="/websites/edit/{{id}}">Edit Website</a></li>
-</ul>
-{{#Service}}
-<article>
-<h1><a href="/services/view/{{id}}">{{title}}</a></h1>
-<ul class="hook_menu">
-<li><a href="/services/edit/{{id}}">Edit Service</a></li>
-<li><a href="/services/change_status/{{id}}">Change Status</a></li>
-</ul>
-<p>{{{statusTag text_status}}} service, assigned to {{#User}}<a href="/users/view/{{id}}">{{name}}</a>{{/User}}. 
-{{#cancelled}}Cancelled {{dateFormat this}}{{/cancelled}}{{^cancelled}}Joined {{dateFormat joined}}{{/cancelled}}</p>
-</article>
-{{/Service}}
-</section>
-{{/Website}}
-{{#InactiveLocation}}
-<section>
-<h1><a href="/websites/view/{{id}}">{{uri}}</a></h1>
-<ul class="hook_menu">
-<li><a href="/websites/edit/{{id}}">Edit Website</a></li>
-</ul>
-<div><p>No Services</p></div>
-</section>
-{{/InactiveLocation}}
+<div class="loading">Loading</div>
 </section>

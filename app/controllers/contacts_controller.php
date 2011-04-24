@@ -2,30 +2,30 @@
 class ContactsController extends AppController {
 	var $primaryModel = 'Contact';
 	var $helpers = array('T','Contact');
+	var $paginate = array(
+		'limit' => 10,
+		'order' => array('Contact.name' => 'ASC'),
+		'recursive' => 1
+	);
 
 	function index() {
-		$page = isset($this->params['page'])?strtoupper($this->params['page']):'all';
-		if($page=='all') {
-			$contacts= $this->Contact->find('all',array(
-				'recursive'=>0
-			));
-			$this->set('contacts', $contacts);
-		} else {
-			$contacts = $this->Contact->find('all',array(
-				'conditions'=>array('Contact.name LIKE'=>$page.'%'),
-				'recursive'=>0
-			));
-			$this->set('contacts', $contacts);
-			$this->set('title_for_layout',sprintf('Contacts - %s',$page));
+		$paginationOptions = array();
+		$doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
+		if (!empty($this->params['url']['customer_id'])) {
+			$paginationOptions['Contact.customer_id'] = $this->params['url']['customer_id'];
 		}
+		if ($doPaginate) {
+			$contacts = $this->paginate('Contact',$this->Contact->generateRelatedConditions($paginationOptions));
+		} else {
+			$contacts = $this->Contact->find('allRelated',array(
+				'conditions' => $paginationOptions
+			));
+		}
+		$this->set('doPaginate',$doPaginate);
+		$this->set('contacts',$contacts);
 	}
 
 	function view($id = null) {
-		$this->Customer->unbindModel(array('hasMany'=>array('Note')));
-		$this->Customer->bindModel(array('hasMany'=>array('Note'=>array(
-			'limit'=>10,
-			'order'=>'Note.created DESC'
-		))));
 		$customer = $this->Customer->find('first',array(
 			'conditions' => array('Customer.id'=>$id),
 			'recursive' => 2
@@ -42,7 +42,6 @@ class ContactsController extends AppController {
 
 	function add() {
 		$this->set('title_for_layout',__('Add New Contact',true));
-		$this->log($this->data);
 		if(empty($this->data)) {
 			$this->set('customers',$this->Contact->Customer->getCustomerList());
 		} else {
@@ -57,24 +56,27 @@ class ContactsController extends AppController {
 	}
 
 	function edit($id = null) {
+		extract($this->Dux->commonRequestInfo());
 		if(!$id) {
 			$this->cakeError('missingId',array('model'=>'Contact'));
-		} else {
-			if (empty($this->data)) {
-				$this->data = $this->Contact->find('first',array('conditions'=>array('Contact.id'=>$id)));
-				if (!empty($this->data)) {
-					$this->set('contact', $this->data);
-				} else {
-					$this->cakeError('recordNotFound');
-				}
+		}
+		$this->Contact->id = $id;
+		$this->Contact->recursive = 0;
+
+		if (!($isPost || $isPut)) {
+			$this->data = $this->Contact->read();
+		} else if ($isAjax) {
+			if ($this->Contact->save($this->data)) {
+				$this->set('model',$this->Contact->readRoot());
 			} else {
-				if($this->Customer->save($this->data)) {
-					$this->Session->setFlash("Customer details saved successfully.");
-					$this->redirect("/customers/view/$id");
-				} else {
-					$this->Session->setFlash('Please correct errors below.');
-					$this->set('customer', $this->Customer->read(null, $id));
-				}
+				$this->cakeError('ajaxError',array('message'=>'Not saved'));
+			}
+		} else {
+			if($this->Contact->save($this->data)) {
+				$this->Session->setFlash("Contact saved successfully.");
+				$this->redirect(array('action'=>'view',$id));
+			} else {
+				$this->Session->setFlash('Please correct errors below.');
 			}
 		}
 	}

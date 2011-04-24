@@ -3,7 +3,11 @@ class Customer extends AppModel {
 	var $order = 'Customer.company_name';
 	var $recursive = 1;
 	var $displayField = 'company_name';
-	var $actsAs = array('Joined','Searchable.Searchable');
+	var $actsAs = array('RemoveEmptyRelationships','Joined','Searchable.Searchable','IntCaster'=>array('cacheConfig'=>'lenore'));
+	var $virtualFields = array(
+		'text_status' => '(SELECT CASE Customer.status WHEN 1 THEN "Active" WHEN 0 THEN "Inactive" END)'
+	);
+	var $_findMethods = array('listPotentialParents' => true);
 
 	public static $status = array(
 		'Cancelled'=>2,
@@ -11,7 +15,8 @@ class Customer extends AppModel {
 		'Pending'=>1
 	);
 
-	var $validate = array();
+	var $validate = array(
+	);
 
 	var $hasMany = array(	
 		'Website' => array(
@@ -37,19 +42,19 @@ class Customer extends AppModel {
 		'Note' => array(
 			'order' => 'Note.created DESC'
 		),
+		'Contact' => array(
+			'order' => 'Contact.created DESC'
+		)
 	);
 	var $belongsTo = array(
 		'Reseller' => array(
 			'fields' => array('id','company_name'),
 			'className' => 'Customer',
-			'foreignKey' => 'customer_id',
+			'foreignKey' => 'customer_id'
 		),
 		'User' => array(
 			'fields' => array('name','id')
 		)
-	);
-	var $hasAndBelongsToMany = array(
-		'Contact'
 	);
 
 	function cancel($customer_data=false) {
@@ -73,10 +78,30 @@ class Customer extends AppModel {
 		return $results;
 	}
 
+	function _findListPotentialParents($state, $query, $results = array()) {
+		if ($state == "before") {
+			$query['conditions'] = array('Customer.customer_id'=>null,array('NOT'=>array('Customer.id'=>$this->id)));
+			$query['fields'] = array('Customer.id','Customer.'.$this->displayField);
+			$query['order'] = 'Customer.company_name ASC';
+			$query['recursive'] = -1;
+			return $query;
+		} elseif ($state == "after") {
+			$newResults = array();
+			foreach ($results as $result) {
+				$newResults[$result['Customer']['id']] = $result['Customer'][$this->displayField];
+			}
+			return $newResults;
+		}
+	}
+
 	function afterFind($results, $primary) {
-		$this->setStatus($results, $primary);
-		if ($primary) {
-			$this->setInactiveLocations($results);
+		$results = parent::afterFind($results, $primary);
+		if (!preg_match('/^list/',$this->findQueryType)) {
+			$this->setStatus($results, $primary);
+			if ($primary) {
+				//$this->setInactiveLocations($results);
+				$this->getResellerContacts($results);
+			}
 		}
 		return $results;
 	}
@@ -84,9 +109,30 @@ class Customer extends AppModel {
 	private function setStatus(&$results, $primary) {
 		if ($primary) {
 			foreach ($results as $x => $result) {
-				extract($this->getStatusWithService($result['Service']));
-				$results[$x]['Customer']['text_status'] = $active ? __('Active',true) : ($pending ? __('Pending',true) : __('Inactive',true));
-				$results[$x]['Customer']['status'] = $active ? 1 : ($pending ? 2 : 0);
+				if (!empty($result['Service'])) {
+					extract($this->getStatusWithService($result['Service']));
+					$results[$x]['Customer']['text_status'] = $active ? __('Active',true) : ($pending ? __('Pending',true) : __('Inactive',true));
+					$results[$x]['Customer']['status'] = $active ? 1 : ($pending ? 2 : 0);
+				}
+			}
+		}
+	}
+
+	private function getResellerContacts(&$results) {
+		foreach ($results as $x => $result) {
+			$id = $result['Customer']['id'];
+			$reseller_id = $result['Customer']['customer_id'];
+			if ($reseller_id != null) {
+				$contacts = $this->Contact->find('all',array(
+					'conditions' => array('Contact.customer_id'=>$reseller_id),
+					'recursive' => -1
+				));
+				if (!empty($contacts)) {
+					foreach ($contacts as $contact) {
+						$contact['Contact']['role'] = 'Reseller';
+						array_push($results[$x]['Contact'],$contact['Contact']);
+					}
+				}
 			}
 		}
 	}
@@ -110,25 +156,26 @@ class Customer extends AppModel {
 		return array('active'=>$active,'pending'=>$pending);
 	}
 
-	private function setInactiveLocations(&$results) {
-		foreach ($results as $x => $result) {
-			if (!empty($result['Service']) && !empty($result['Website'])) {
-				$inactive_locations = array();
-				foreach ($result['Website'] as $y => $website) {
-					$active = false;
-					foreach ($result['Service'] as $service) {
-						$active = $active || ($service['website_id'] == $website['id']);
-					}
-					if (!$active) {
-						$inactive_locations[] = $website;
-						unset($results[$x]['Website'][$y]);
-					}
-				}
-				$results[$x]['InactiveLocation'] = $inactive_locations;
-				$results[$x]['Website'] = array_values($results[$x]['Website']);
-			}
-		}
-	}
+	//private function setInactiveLocations(&$results) {
+	//	foreach ($results as $x => $result) {
+	//		if (!empty($result['Service']) && !empty($result['Website'])) {
+	//			$inactive_locations = array();
+	//			foreach ($result['Website'] as $y => $website) {
+	//				$active = false;
+	//				print_r($result['Service']);
+	//				foreach ($result['Service'] as $service) {
+	//					$active = $active || ($service['website_id'] == $website['id']);
+	//				}
+	//				if (!$active) {
+	//					$inactive_locations[] = $website;
+	//					unset($results[$x]['Website'][$y]);
+	//				}
+	//			}
+	//			$results[$x]['InactiveLocation'] = $inactive_locations;
+	//			$results[$x]['Website'] = array_values($results[$x]['Website']);
+	//		}
+	//	}
+	//}
 
 	function findResellers() {
 		$results = array();

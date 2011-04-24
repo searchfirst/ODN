@@ -4,9 +4,8 @@ class User extends AppModel {
 	var $displayField = 'username';
 	public static $currentUser = array();
 	var $actsAs = array(
-		'Acl'=>array(
-			'type'=>'requester'
-		)
+		'Acl'=>array('type' => 'requester'),
+		'IntCaster' => array('cacheConfig' => 'lenore')
 	);
 	var $recursive = 1;
 

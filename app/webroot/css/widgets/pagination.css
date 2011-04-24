@@ -1,0 +1,38 @@
+.paginated { position: relative; }
+
+.paginated .pagelinks {
+position: absolute;
+right: 0;
+top: 0;
+color: rgba(0,0,0,.1);
+margin-right: .25em;
+}
+
+.paginated .pagelinks li {
+display: inline-block;
+line-height: 2;
+}
+
+.paginated .pagelinks li:before {
+content: '-';
+margin: 0 .25em;
+}
+
+.paginated .pagelinks li:first-child:before {
+content: '<';
+}
+
+.paginated .pagelinks li:last-child:after {
+content: '>';
+margin-left: .25em;
+}
+
+.paginated .pagelinks a {
+color: #333;
+text-shadow: rgba(255,255,255,.1);
+text-decoration: none;
+}
+
+@media print {
+	.paginated .pagelinks { display: none; }
+}

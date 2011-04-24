@@ -7,33 +7,35 @@ class CustomersController extends AppController {
 	var $helpers = array(
 		'Status','Javascript','Html','Form','Time',
 		'TextAssistant','T','Customer','Service','Note',
-		'Invoice','Contact'
+		'Invoice','Contact','Paginator'
+	);
+	var $paginate = array(
+		'limit' => 50,
+		'order' => array('Customer.company_name' => 'ASC'),
+		'recursive' => 0
 	);
 
-	function index() {
-		$page = isset($this->params['page'])?strtoupper($this->params['page']):'all';
-		if($page=='all') {
-			$customer = $this->Customer->find('all',array(
-				'recursive'=>0
-			));
-			$this->set('customers', $customer);
-			$this->pageTitle = 'Customer List';
-		} else {
-			$customers = $this->Customer->find('all',array(
-				'conditions'=>array('Customer.company_name LIKE'=>$page.'%'),
-				'recursive'=>0
-			));
-			$this->set('customers', $customers);
-			$this->set('title_for_layout',sprintf('Customer List - %s',$page));
+	function index($page=null) {
+		$paginationOptions = array();
+		$doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
+		if ($this->RequestHandler->isAjax()) { $this->paginate['limit'] = 10; }
+		if (!empty($this->params['url']['customer_id'])) {
+			$customer_id = $this->params['url']['customer_id'] == 'null' ? null : $this->params['url']['customer_id'];
+			$conditions = array('Customer.customer_id' => $customer_id);
 		}
+		if ($doPaginate) {
+			$customers = $this->paginate('Customer',$conditions);
+		} else {
+			$this->Customer->recursive = 0;
+			$customers = $this->Customer->find('all',array('conditions' => $conditions));
+		}
+		$this->set('doPaginate',$doPaginate);
+		$this->set('customers', $customers);
+		$this->set('title_for_layout',sprintf('Customer List - %s',$page));
 	}
 
 	function view($id = null) {
-		$this->Customer->unbindModel(array('hasMany'=>array('Note')));
-		$this->Customer->bindModel(array('hasMany'=>array('Note'=>array(
-			'limit'=>10,
-			'order'=>'Note.created DESC'
-		))));
+		$this->Customer->id = $id;
 		$this->Customer->Service->unbindModel(array(
 			'hasMany'=>array('Note'),
 			'belongsTo'=>array('Customer','Website')
@@ -54,73 +56,84 @@ class CustomersController extends AppController {
 			'hasAndBelongsToMany'=>array('TechnicalCustomer','Website')
 		));
 		$this->Customer->Referral->unbindModel(array(
-			'hasMany'=>array('Referral','Invoice','Note'),
-			'belongsTo'=>array('Reseller','User'),
-			'hasAndBelongsToMany'=>array('Contact')
+			'hasMany'=>array('Referral','Invoice','Note','Contact'),
+			'belongsTo'=>array('Reseller','User')
 		));
+		$this->Customer->Contact->unbindModel(array(
+			'belongsTo'=>array('Customer')
+		));
+		if (!$this->RequestHandler->isAjax()) {
+			$this->Customer->recursive = 1;
+			$customer = $this->Customer->read();
+		} else {
+			$this->Customer->recursive = -1;
+			$customer = $this->Customer->readRoot();
+		}
 		
-		$customer = $this->Customer->find('first',array(
-			'conditions' => array('Customer.id'=>$id),
-			'recursive' => 3
-		));
+		//$customer = $this->Customer->find('first',array(
+		//	'conditions' => array('Customer.id'=>$id),
+		//	'recursive' => 3
+		//));
 		if(!empty($customer)) {
 			$this->set('customer', $customer);
 			$this->pageTitle = sprintf('%s | Customer',$customer['Customer']['company_name']);
 		} else {
-			$this->viewPath = 'errors';
-			$this->render('not_found');
-			return true;
+			$this->cakeError('error404');
 		}
 	}
 
 	function add() {
-		if(empty($this->data)) {
-			$this->set('customer_list',$this->Customer->getCustomerList());
-			if(isset($this->data['Referrer']['customer_id']))
-				$this->set('customer',array('Customer'=>array('customer_id'=>$this->data['Referrer']['customer_id'])));
-			else
-				$this->set('customer',array('Customer'=>array('customer_id'=>null)));
-		} else {
-			if($this->Customer->save($this->data)) {
-				$newcustomer = $this->Customer->getLastInsertId();
-				if(!empty($this->data['Website']['uri'])) {
-					$this->data['Website']['customer_id'] = $newcustomer;
-					$websitedata['Website'] = $this->data['Website'];
-					$this->Customer->Website->save($websitedata);
+		extract($this->Dux->commonRequestInfo());
+		if ($isPost) {
+			if (!$isAjax) {
+				if ($this->Customer->saveAll($this->data)) {
+					$this->Session->setFlash(__("Customer created successfully.",true));
+					$this->redirect(array('controller'=>'customers','action'=>'view',$this->Customer->id));
+				} else {
+					$this->Session->setFlash(__("Please correct errors below.",true));
 				}
-				$this->Session->setFlash("Customer created successfully.");
-				$this->redirect("/customers/view/$newcustomer");
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('customer_list',$this->Customer->getCustomerList());
+				if ($this->Customer->save($this->data)) {
+					$this->set('model', $this->Customer->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
+			}
+		} else {
+			if (!empty($this->passedArgs['customer_id'])) {
+				$this->data['Customer']['customer_id'] = $this->passedArgs['customer_id'];
+			} else {
+				$this->set('customers',$this->Customer->getCustomerList());
 			}
 		}
 	}
 
 	function edit($id = null) {
-		$customer_list = $this->Customer->find('all',array(
-			'fields' => array('Customer.customer_id','Customer.id','Customer.company_name'),
-// 			'conditions' => array('OR' => array('Customer.customer_id'=>'IS NULL','Customer.customer_id'=>0)),
-			'conditions' => array('Customer.customer_id'=>0,array('NOT'=>array('Customer.id'=>$id))),
-			'recursive' => 0,
-			'order' => 'Customer.company_name ASC'
-		));
-		$this->set('customer_list',Set::combine($customer_list,'{n}.Customer.id','{n}.Customer.company_name'));
+		if(!$id) {
+			$this->cakeError('missingId',array('model'=>'Customer'));
+		}
+		$this->Customer->id = $id;
+		$this->Customer->recursive = -1;
+		$this->set('customers',$this->Customer->find('listPotentialParents'));
 
-		if( (isset($this->data['Customer']['submit'])) || (empty($this->data)) ) {
-			if(!$id) {
-				$this->Session->setFlash('Invalid Customer');
-				$this->redirect('/customer/');
-			}
-			$this->data = $this->Customer->find(array('Customer.id'=>$id),null,'Customer.id ASC');
-			$this->set('customer', $this->data);
-		} else {
+		if (!($this->RequestHandler->isPost() || $this->RequestHandler->isPut())) {
+			$this->data = $this->Customer->read(null,$id);
+		} else if ($this->RequestHandler->isPost()) {
 			if($this->Customer->save($this->data)) {
 				$this->Session->setFlash("Customer details saved successfully.");
-				$this->redirect("/customers/view/$id");
+				$this->redirect(array('action'=>'view',$id));
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
-				$this->set('customer', $this->Customer->read(null, $id));
+			}
+		} else if ($this->RequestHandler->isPut() && $this->RequestHandler->isAjax()) {
+			$this->data = array('Customer' => $this->data['Customer']);
+			if ($this->Customer->save($this->data)) {
+				$this->set('model',array(
+					'id'=>$id,
+					'Customer'=>$this->data['Customer']
+				));
+			} else {
+				$this->cakeError('ajaxError',array('message'=>'Not saved'));
 			}
 		}
 	}
@@ -162,4 +175,3 @@ class CustomersController extends AppController {
 		}		
 	}
 }
-?>

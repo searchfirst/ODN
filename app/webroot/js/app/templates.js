@@ -69,6 +69,49 @@ Handlebars.registerHelper('txtlFlag', function(f,t) {
 	return linen(t);
 });
 
+Handlebars.registerHelper('txtl', function(t) {
+	return linen(t);
+});
+
+Handlebars.registerHelper('editable', function(t,f,m) {
+	if (!t) { t = ''; }
+	var multiLine = m === "1",
+		usePlaceholder = t === '',
+		tag = multiLine ? 'div' : 'span',
+		text = multiLine ? linen(t.replace(/\r/g,'')) : t,
+		output = '';
+	output += '<' + tag + ' data-field="' + f + '" contenteditable';
+	if (usePlaceholder) {
+		output += ' class="ed_placeholder">' + '&nbsp;';
+	} else {
+		output += '>' + text;
+	}
+	output += '</' + tag + '>';
+	return new Handlebars.SafeString(output);
+});
+
+Handlebars.registerHelper('pageLinks', function(pageInfo,model,customerId) {
+	if (pageInfo.pages < 2) { return ''; }
+	var nextPage = pageInfo.page++,
+			previousPage = pageInfo.page--, params = customerId ? '&customer_id=' + customerId : '',
+			controller = model.toLowerCase() + 's',
+			r = '<ul class="pagelinks">';
+	r += '<li>';
+	if (pageInfo.prev !==false) {
+		r += '<a href="/' + controller + '?page=' + previousPage + params + '" data-noroute="1" class="prev">Back</a>';
+	} else {
+		r += 'Back';
+	}
+	r += '</li><li>' + pageInfo.page + ' of ' + pageInfo.pages + '</li><li>';
+	if (pageInfo.next !==false) {
+		r += '<a href="/' + controller + '?page=' + nextPage + params + '" data-noroute="1" class="next">Next</a>';
+	} else {
+		r += 'Next';
+	}
+	r += '</li></ul>';
+	return new Handlebars.SafeString(r);
+});
+
 $(function() {
 	var $templatesInHtml = $('script[type="text/x-js-template"]');
 	$templatesInHtml.each(function(i,obj) {

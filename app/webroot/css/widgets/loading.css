@@ -1,0 +1,8 @@
+.loading {
+background-image: url('/img/widgets/loading.svg');
+background-repeat: no-repeat;
+background-position: center center;
+background-size: 50% 3px;
+-moz-background-size: 50% 3px;
+text-indent: -9999em;
+}

@@ -1,14 +1,4 @@
 <section class="customer detail list">
 <h1 class="collapse_hook">Customers</h1>
-<ul class="hook_menu">
-<li><a href="/customers/add?data[Referral][id]={{id}}">Add Customer</a></li>
-</ul>
-<ul class="mini list">
-{{#Referral}}
-<li><a href="/customers/view/{{id}}">{{company_name}}</a></li>
-{{/Referral}}
-{{^Referral}}
-<li>No Customers</li>
-{{/Referral}}
-</ul>
+<div class="loading">Loading</div>
 </section>

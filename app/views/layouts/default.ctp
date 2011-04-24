@@ -11,7 +11,7 @@
 <?php echo $this->element('css') ?> 
 <?php echo $this->element('js') ?> 
 </head>
-<body><div class="bw">
+<body>
 <?php echo $this->element('header') ?> 
 <?php echo $this->element('menu') ?> 
 <?php echo $this->element('search/search') ?> 
@@ -23,7 +23,6 @@
 </section>
 <?php echo $this->element('users/details') ?> 
 <?php echo $this->element('footer') ?> 
-</div>
 <?php echo $this->element('js_foot') ?>
 </body>
 </html>

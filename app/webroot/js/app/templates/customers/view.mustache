@@ -1,31 +1,15 @@
-{{#Customer}}
-<h1>
-{{{statusTag text_status}}} {{company_name}}
+<h1>{{{statusTag text_status}}}
 {{#Reseller}}
-<span class="referrer">Reseller: <a href="/customers/view/{{id}}">{{company_name}}</a></span>
+Customer of <a href="#/customers/view/{{id}}">{{company_name}}</a>:
+{{^}}
+Customer:
 {{/Reseller}}
+<span data-field="company_name" contenteditable>{{company_name}}</span>
 </h1>
-<ul class="hook_menu">
-<li><a href="/customers/edit/{{id}}">Edit Customer</a></li>
-</ul>
-<p>Customer since {{{dateFormat joined}}}</p>
-{{/Customer}}
-<div class="cwrap_2">
+<div class="fwrap c2 p">
 <div>
-<section class="contact detail list">
-<h1>Details</h1>
-<ul class="hook_menu">
-<li><a href="/customers/add?data[Customer][id]={{id}}">Add Contact</a></li>
-</ul>
-{{#Contact}}
 {{> customersViewDetails}}
-{{/Contact}}
-{{^Contact}}
-<article>
-<p>No Contacts</p>
-</article>
-{{/Contact}}
-</section>
+{{> customersViewWebsites}}
 {{> customersViewServices}}
 {{> customersViewInvoices}}
 {{> customersViewCustomers}}

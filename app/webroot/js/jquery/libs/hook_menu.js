@@ -18,15 +18,15 @@ jQuery.fn.hookMenu = function(settings) {
 		var font_size = parseInt(hook.css('font-size')),
 			mid_font_size = font_size/2,
 			mid_point = hook.height()/2,
-			hook_bottom = hook.offset().top + mid_point + mid_font_size;
+			hook_bottom = hook.position().top + mid_point + mid_font_size;
 		return hook_bottom;
 	}
 	function hookCorner(hook,popup) {
 		var window_width = document.width,
-			distance_to_right = window_width - hook.offset().left,
+			distance_to_right = window_width - hook.position().left,
 			popup_width = popup.outerWidth();
 		if(distance_to_right > popup_width)
-			return {label:'left',value:hook.offset().left};
+			return {label:'left',value:hook.position().left + parseInt(hook.css('margin-left'))};
 		else
 			return {label:'right',value:(distance_to_right - hook.outerWidth())};
 	}

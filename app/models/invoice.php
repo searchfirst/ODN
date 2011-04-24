@@ -3,6 +3,7 @@ class Invoice extends AppModel {
 	var $validate = array();
 	var $order = 'Invoice.created';
 	var $recursive = 1;
+	var $actsAs = array('IntCaster' => array('cacheConfig' => 'lenore'));
 	var $_findMethods = array('overdue' => true,'notOverdue' => true);
 
 	var $hasMany = array('Note'=>array());

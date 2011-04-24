@@ -5,6 +5,11 @@ class InvoicesController extends AppController
 	var $primaryModel = 'Invoice';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant','Invoice');
 	var $uses = array("Invoice");
+	var $paginate = array(
+		'limit' => 5,
+		'order' => array('Invoice.created' => 'DESC'),
+		'recursive' => 0
+	);
 
 	function raise() {
 		if(empty($this->data) || !empty($this->data['Referrer'])) {
@@ -156,39 +161,46 @@ class InvoicesController extends AppController
 	
 	function index() {
 		$title = __('Invoices',true);
-		if(!empty($this->data['Invoice']['types'])) {
-			$type = $this->data['Invoice']['types'];
-			if (!empty($this->data['Invoice']['date'])) {
-				$month = $this->data['Invoice']['date']['month'];
-				$year = $this->data['Invoice']['date']['year'];
-				$title = __('Invoices: ',true).sprintf(' %s - %s/%s',Inflector::humanize($type),$month,$year);
-				$invoices = $this->Invoice->find('all',array(
-					'conditions' => array("MONTH(Invoice.$type)"=>$month,"YEAR(Invoice.$type)"=>$year),
-					'order' => "Invoice.$type DESC",
-					'recursive' => 1
-				));
-			} elseif (!( empty($this->data['Invoice']['start_date']) || empty($this->data['Invoice']['end_date']) )) {
-				$start_date = $this->data['Invoice']['start_date'];
-				$start_date = sprintf('%s-%s-%s 00:00:00',$start_date['year'],$start_date['month'],$start_date['day']);
-				$end_date = $this->data['Invoice']['end_date'];
-				$end_date = sprintf('%s-%s-%s 23:59:59',$end_date['year'],$end_date['month'],$end_date['day']);
-				$title = __('Invoices: '.Inflector::humanize($type),true).sprintf(' %s - %s',substr($start_date,0,10),substr($end_date,0,10));
-				$invoices = $this->Invoice->find('all',array(
-					'conditions' => array("Invoice.$type BETWEEN ? and ?" => array($start_date,$end_date)),
-					'order' => "Invoice.$type DESC",
-					'recursive' => 1
-				));
-			} elseif (!empty($this->data['Invoice']['type'])) {
-				if($this->data['Invoice']['type'] == 'overdue') {
-					$invoices = $this->Invoice->find('overdue');
-					$title = __('Invoices: All Overdue',true);
-				} elseif ($this->data['Invoice']['type'] == 'notoverdue') {
-					$invoices = $this->Invoice->find('notOverdue');
-					$title = __('Invoices: All Due',true);
+		if (empty($this->params['url']['customer_id'])) {
+			if(!empty($this->data['Invoice']['types'])) {
+				$type = $this->data['Invoice']['types'];
+				if (!empty($this->data['Invoice']['date'])) {
+					$month = $this->data['Invoice']['date']['month'];
+					$year = $this->data['Invoice']['date']['year'];
+					$title = __('Invoices: ',true).sprintf(' %s - %s/%s',Inflector::humanize($type),$month,$year);
+					$invoices = $this->Invoice->find('all',array(
+						'conditions' => array("MONTH(Invoice.$type)"=>$month,"YEAR(Invoice.$type)"=>$year),
+						'order' => "Invoice.$type DESC",
+						'recursive' => 1
+					));
+				} elseif (!( empty($this->data['Invoice']['start_date']) || empty($this->data['Invoice']['end_date']) )) {
+					$start_date = $this->data['Invoice']['start_date'];
+					$start_date = sprintf('%s-%s-%s 00:00:00',$start_date['year'],$start_date['month'],$start_date['day']);
+					$end_date = $this->data['Invoice']['end_date'];
+					$end_date = sprintf('%s-%s-%s 23:59:59',$end_date['year'],$end_date['month'],$end_date['day']);
+					$title = __('Invoices: '.Inflector::humanize($type),true).sprintf(' %s - %s',substr($start_date,0,10),substr($end_date,0,10));
+					$invoices = $this->Invoice->find('all',array(
+						'conditions' => array("Invoice.$type BETWEEN ? and ?" => array($start_date,$end_date)),
+						'order' => "Invoice.$type DESC",
+						'recursive' => 1
+					));
+				} elseif (!empty($this->data['Invoice']['type'])) {
+					if($this->data['Invoice']['type'] == 'overdue') {
+						$invoices = $this->Invoice->find('overdue');
+						$title = __('Invoices: All Overdue',true);
+					} elseif ($this->data['Invoice']['type'] == 'notoverdue') {
+						$invoices = $this->Invoice->find('notOverdue');
+						$title = __('Invoices: All Due',true);
+					}
 				}
 			}
 			$this->set('invoices', $invoices);
 			$this->set('title_for_layout', $title);
+		} else {
+			$customer_id = $this->params['url']['customer_id'];
+			$paginationOptions = array('Invoice.customer_id' => $customer_id);
+			$invoices = $this->paginate('Invoice',$paginationOptions);
+			$this->set('invoices', $invoices);
 		}
 		$this->set('types',array('created'=>'Raised','date_invoice_paid'=>'Paid'));
 	}

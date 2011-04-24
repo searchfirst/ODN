@@ -11,6 +11,66 @@ display: block;
 margin-bottom: .25em;
 }
 
+a[role=button] {
+display: inline-block;
+}
+
+a[role=button], input[type=submit] {
+background-color: #d0d0d0;
+background-image: -moz-linear-gradient(top, #d0d0d0, #bbb); 
+background-image: -ms-linear-gradient(top, #d0d0d0, #bbb); 
+background-image: -o-linear-gradient(top, #d0d0d0, #bbb); 
+background-image: -webkit-gradient(linear, left top, left bottom, from(#d0d0d0), to(#bbb)); 
+background-image: -webkit-linear-gradient(top, #d0d0d0, #bbb); 
+background-image: linear-gradient(top, #d0d0d0, #bbb);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#d0d0d0', EndColorStr='#bbb'); 
+border: 1px solid #aaa;
+-moz-border-radius: .25em;
+-webkit-border-radius: .25em;
+border-radius: .25em;
+color: #444;
+font-size: .75em;
+padding: .25em;
+text-decoration: none;
+text-shadow: 1px 1px 0 rgba(255,255,255,.2);
+}
+
+a[role=button]:hover, input[type=submit]:hover {
+background-color: #dedede;
+background-image: -moz-linear-gradient(top, #dedede, #b2b2b2); 
+background-image: -ms-linear-gradient(top, #dedede, #b2b2b2); 
+background-image: -o-linear-gradient(top, #dedede, #b2b2b2); 
+background-image: -webkit-gradient(linear, left top, left bottom, from(#dedede), to(#b2b2b2)); 
+background-image: -webkit-linear-gradient(top, #dedede, #b2b2b2); 
+background-image: linear-gradient(top, #dedede, #b2b2b2);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#dedede', EndColorStr='#b2b2b2'); 
+}
+
+a[role=button]:active, input[type=submit]:active {
+border-color: #bfbfbf;
+}
+
+textarea {
+width: 100%;
+}
+
+fieldset {
+border: 1px solid #ddd;
+margin-bottom: .25em;
+}
+
+input[type=tel], input[type=number], input[type=url], input[type=email], input[type=text], textarea {
+background-color: #efefef;
+border: 1px solid #ddd;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+box-sizing: border-box;
+color: #444;
+padding: .125em;
+text-shadow: 1px 1px 0 rgba(255,255,255,.2);
+width: 100%;
+}
+
 .wizard > div {
 padding: .5em;
 background-color: #47b1d5;
@@ -18,6 +78,21 @@ background-color: #47b1d5;
 
 .wizard > div:nth-child(2n+2) {
 background-color: #9ad4e8;
+}
+
+form.simple {
+margin-bottom: .25em;
+}
+
+form.simple div {
+margin-bottom: .0625em;
+}
+
+form.simple label {
+position: absolute;
+direction: ltr;
+text-indent: -9999em;
+border: none;
 }
 
 @media print {

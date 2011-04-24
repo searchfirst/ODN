@@ -1,0 +1,6 @@
+<h1 class="collapse">{{editable title "title"}}</h1>
+<div>
+{{editable description "description" "1"}}
+</div>
+<p>{{{statusTag text_status}}} service on {{Website.uri}}, assigned to <a href="/users/view/{{User.id}}">{{User.name}}</a>.<br> 
+{{#cancelled}}Cancelled {{dateFormat .}}{{^}}Started {{dateFormat ../joined}}{{/cancelled}}</p>

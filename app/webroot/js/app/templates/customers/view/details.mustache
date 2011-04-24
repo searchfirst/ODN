@@ -1,14 +1,4 @@
-<article>
-<h1>{{name}}{{#role}} - {{.}}{{/role}}</h1>
-<ul class="hook_menu">
-<li><a href="/contacts/edit/{{id}}">Edit Contact</a></li>
-<li><a href="/contacts/delete/{{id}}">Delete Contact</a></li>
-</ul>
-{{#address}}<p>{{{nl2br .}}}</p>{{/address}}
-<p>
-{{#email}}<b>Email:</b> {{{emailList .}}}<br>{{/email}}
-{{#telephone}}<b>Telephone:</b> {{.}}<br>{{/telephone}}
-{{#mobile}}<b>Mobile:</b> {{.}}<br>{{/mobile}}
-{{#fax}}<b>Fax:</b> {{.}}<br>{{/fax}}
-</p>
-</article>
+<section class="contact card list">
+<h1>Contacts</h1>
+<div class="loading">Loading</div>
+</section>

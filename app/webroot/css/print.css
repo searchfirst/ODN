@@ -4,16 +4,34 @@ text-decoration: none;
 color: #444;
 }
 
+html {
+padding: 0;
+margin: 0;
+background-color: transparent !important;
+background-image: none !important;
+background: none !important;
+}
+
 body {
 padding: 10mm;
 margin: 0;
+background-color: transparent;
+background-image: none;
 }
 
-#menu, header[role=banner], section[role=search], #user_details {
+section[role=main] {
+-moz-box-shadow: 0 0 0 transparent;
+-webkit-box-shadow: 0 0 0 transparent;
+box-shadow: 0 0 0 transparent;
+}
+
+#menu, header[role=banner], section[role=search], #user_details, .list form, .list .p_form, .list [role=button], .customer.mini.list {
 display: none;
 }
 
-.detail.list.note, .customer.detail.list {
+.list { page-break-inside: avoid; }
+
+.invoice.list, .detail.list.note, .customer.detail.list {
 page-break-before: always;
 }
 
