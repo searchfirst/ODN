@@ -16,3 +16,6 @@
 [submodule "app/webroot/js/libs/linen"]
 	path = app/webroot/js/libs/linen
 	url = git://github.com/connrs/linen.git
+[submodule "app/webroot/js/jquery/libs/timepicker"]
+	path = app/webroot/js/jquery/libs/timepicker
+	url = git://github.com/trentrichardson/jQuery-Timepicker-Addon.git
