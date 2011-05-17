@@ -1,6 +1,5 @@
 <?php
-class InvoicesController extends AppController
-{
+class InvoicesController extends AppController {
 	var $name = 'Invoices';
 	var $primaryModel = 'Invoice';
 	var $helpers = array('Javascript','Html','Form','Time','TextAssistant','MediaAssistant','Invoice');
@@ -11,65 +10,28 @@ class InvoicesController extends AppController
 		'recursive' => 0
 	);
 
-	function raise() {
-		if(empty($this->data) || !empty($this->data['Referrer'])) {
-			if(!empty($this->data['Referrer']['customer_id']))
-				$this->data['Invoice']['customer_id'] = $this->data['Referrer']['customer_id'];
-			$customer_id = $this->data['Invoice']['customer_id'];
-			$this->data['Invoice']['reference'] = $this->Invoice->generateReference($customer_id);
-			$service_list = $this->Invoice->Service->find('all',array(
-				'conditions' => array('Customer.id'=>$customer_id),
-				'order' => 'Service.cancelled ASC'
-			));
-			$services = array();
-			foreach($service_list as $service_item) {
-				$services[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
-			}
-			$this->set('services',$services);
-			$this->set('vat_rates',$this->Invoice->getVatRates());
-		} else {
-			if($this->Invoice->save($this->data)) {
-				$this->Session->setFlash('Invoice Successfully Raised');
-				$this->redirect($this->referer());
-			} else {
-				$this->Session->setFlash('Please correct the errors below');
-				$service_list = $this->Invoice->Service->findAll(
-					array('Customer.id'=>$this->customer_id),
-					null,
-					'Service.cancelled ASC'
-				);
-				$services = array();
-				foreach($service_list as $service_item) {
-					$services[$service_item['Service']['id']] = (($service_item['Service']['status']=='0')?'[Cancelled] ':'').$service_item['Website']['uri'].' '.$service_item['Service']['title'];
-				}
-				$this->set('services',$services);
-				if(!empty($this->data['Invoice']['customer_id']))
-					$this->data['Referrer']['customer_id'] = $this->data['Invoice']['customer_id'];
-				if(!empty($this->data['Invoice']['website_id']))
-					$this->data['Referrer']['website_id'] = $this->data['Invoice']['website_id'];
-				if(!empty($this->data['Invoice']['service_id'])) {
-					$this->data['Referrer']['service_id'] = $this->data['Invoice']['service_id'];
-				}
-			}
-		}
-	}
-
 	function add() {
-		if(empty($this->data) || isset($this->data['Referrer']['customer_id'])) {
-			$this->data['Website']['customer_id'] =!empty($this->data['Referrer']['customer_id'])?$this->data['Referrer']['customer_id']:null;
-			$this->set('website',$this->data);
-			$this->set('customer', $this->Website->Customer->generateList());
-		} else {
-			if($this->Website->save($this->data)) {
-				$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
-				if(isset($GLOBALS['moonlight_inline_count_set']))
-					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Website->getLastInsertId());
-				else
-					$this->redirect('/'.strtolower($this->name).'/view/'.$this->Website->getLastInsertId());
+		extract($this->Dux->commonRequestInfo());
+		if ($isPost) {
+			if (!$isAjax) {
+				if ($this->Invoice->saveAll($this->data)) {
+					$this->Session->setFlash(__("Invoice created.",true));
+					$this->redirect(array('controller'=>'invoices','action'=>'view',$this->Invoice->id));
+				} else {
+					$this->Session->setFlash(__("Please correct errors below.",true));
+				}
 			} else {
-				$this->Session->setFlash('Please correct the errors below');
-				$this->data['Referrer']['customer_id'] = $this->data['Website']['customer_id'];
-				$this->set('customer', $this->Website->Customer->generateList());
+				if ($this->Invoice->save($this->data)) {
+					$this->set('model', $this->Invoice->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
+			}
+		} else {
+			if (!empty($this->passedArgs['customer_id'])) {
+				$this->data['Invoice']['customer_id'] = $this->passedArgs['customer_id'];
+			} else {
+				$this->cakeError('missingId',array('model'=>'Customer'));
 			}
 		}
 	}
@@ -100,25 +62,19 @@ class InvoicesController extends AppController
 		}
 	}
 
-	function view($id) {
-		$conditions = array('Invoice.id'=>$id);
-		$extra_vars = $this->params['url'];
-		unset($extra_vars['url']);
-		if(!count($extra_vars)) $extra_vars = null;
-			if($invoice = $this->Invoice->find($conditions)) {
-				if(isset($this->params['alt_content']) && $this->params['alt_content']=='Pdf') {
-					$this->Invoice->cacheFDF($id,$extra_vars);
-					$invoice_pdf = $this->Invoice->generatePDF($id,$extra_vars);
-					header("Content-Disposition: inline; filename=\"Invoice-{$invoice['Invoice']['reference']}.pdf\"");
-					$this->set('invoice',$invoice_pdf);
-				} else {
-					$this->set('invoice',$invoice);
-				}
-			} else {
-				$this->viewPath = 'errors';
-				$this->render('not_found');
-				return true;
-			}
+	function view($id = null) {
+		$this->Invoice->id = $id;
+		$this->Invoice->recursive = 0;
+		if (!$this->RequestHandler->isAjax()) {
+			$invoice = $this->Invoice->read();
+		} else {
+			$invoice = $this->Invoice->readRoot();
+		}
+		if(!empty($invoice)) {
+			$this->set('invoice', $invoice);
+		} else {
+			$this->cakeError('error404');
+		}
 	}
 
 	function paid_in_full($id) {

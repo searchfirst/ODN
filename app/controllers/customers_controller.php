@@ -17,11 +17,15 @@ class CustomersController extends AppController {
 
 	function index($page=null) {
 		$paginationOptions = array();
+		$conditions = array();
 		$doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
 		if ($this->RequestHandler->isAjax()) { $this->paginate['limit'] = 10; }
 		if (!empty($this->params['url']['customer_id'])) {
 			$customer_id = $this->params['url']['customer_id'] == 'null' ? null : $this->params['url']['customer_id'];
-			$conditions = array('Customer.customer_id' => $customer_id);
+			$conditions['Customer.customer_id'] = $customer_id;
+		}
+		if (array_key_exists('filter',$this->params['url'])) {
+			$conditions['Customer.company_name LIKE'] = $this->params['url']['filter'] . '%';
 		}
 		if ($doPaginate) {
 			$customers = $this->paginate('Customer',$conditions);
@@ -65,18 +69,13 @@ class CustomersController extends AppController {
 		if (!$this->RequestHandler->isAjax()) {
 			$this->Customer->recursive = 1;
 			$customer = $this->Customer->read();
+			$this->pageTitle = sprintf('%s | Customer',$customer['Customer']['company_name']);
 		} else {
-			$this->Customer->recursive = -1;
+			$this->Customer->recursive = 0;
 			$customer = $this->Customer->readRoot();
 		}
-		
-		//$customer = $this->Customer->find('first',array(
-		//	'conditions' => array('Customer.id'=>$id),
-		//	'recursive' => 3
-		//));
 		if(!empty($customer)) {
 			$this->set('customer', $customer);
-			$this->pageTitle = sprintf('%s | Customer',$customer['Customer']['company_name']);
 		} else {
 			$this->cakeError('error404');
 		}

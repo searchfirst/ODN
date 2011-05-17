@@ -31,22 +31,27 @@ class WebsitesController extends AppController {
 	}
 
 	function add() {
-		if(empty($this->data) || isset($this->data['Referrer']['customer_id'])) {
-			$this->data['Website']['customer_id'] =!empty($this->data['Referrer']['customer_id'])?$this->data['Referrer']['customer_id']:null;
-			$this->set('website',$this->data);
-			$this->set('customer',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
-//			$this->set('customer', $this->Website->Customer->generateList());
-		} else {
-			if($this->Website->save($this->data)) {
-				$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
-				if(isset($GLOBALS['moonlight_inline_count_set']))
-					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Website->getLastInsertId());
-				else
-					$this->redirect('/'.strtolower($this->name).'/view/'.$this->Website->getLastInsertId());
+		extract($this->Dux->commonRequestInfo());
+		if ($isPost) {
+			if (!$isAjax) {
+				if ($this->Website->saveAll($this->data)) {
+					$this->Session->setFlash(__("Website created.",true));
+					$this->redirect(array('controller'=>'websites','action'=>'view',$this->Website->id));
+				} else {
+					$this->Session->setFlash(__("Please correct errors below.",true));
+				}
 			} else {
-				$this->Session->setFlash('Please correct the errors below');
-				$this->data['Referral']['customer_id'] = $this->data['Website']['customer_id'];
-				$this->set('customer',Set::combine($this->Website->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+				if ($this->Website->save($this->data)) {
+					$this->set('model', $this->Website->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
+			}
+		} else {
+			if (!empty($this->passedArgs['customer_id'])) {
+				$this->data['Website']['customer_id'] = $this->passedArgs['customer_id'];
+			} else {
+				$this->cakeError('missingId',array('model'=>'Website'));
 			}
 		}
 	}
@@ -62,7 +67,7 @@ class WebsitesController extends AppController {
 		if (!($isPost || $isPut)) {
 			$this->data = $this->Website->read();
 		} else {
-			if (!isAjax) {
+			if (!$isAjax) {
 				if($this->Website->save($this->data)) {
 					$this->Session->setFlash("Website saved successfully.");
 					$this->redirect(array('action'=>'view',$id));

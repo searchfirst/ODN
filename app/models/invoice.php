@@ -19,6 +19,18 @@ class Invoice extends AppModel {
 		);
 	}
 
+	function beforeSave() {
+		parent::beforeSave();
+		$this->addReferenceIfEmpty();
+		return true;
+	}
+
+	function addReferenceIfEmpty() {
+		if (!empty($this->data) && array_key_exists('Invoice',$this->data) && empty($this->data['Invoice']['reference'])) {
+			$this->data['Invoice']['reference'] = $this->generateReference($this->data['Invoice']['customer_id']);
+		}
+	}
+
 	function getVatTotal(&$invoice) {
 		$c_vat_modifier = $invoice['Invoice']['vat_rate']/100;
 		$vattotal = round($invoice['Invoice']['amount'] * $c_vat_modifier,2);

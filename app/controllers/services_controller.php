@@ -113,7 +113,7 @@ class ServicesController extends AppController
 		if (!($isPost || $isPut)) {
 			$this->data = $this->Website->read();
 		} else {
-			if (!isAjax) {
+			if (!$isAjax) {
 				if($this->Service->save($this->data)) {
 					$this->Session->setFlash("Service saved successfully.");
 					$this->redirect(array('controller'=>'customers','action'=>'view',$this->Service->field('customer_id')));

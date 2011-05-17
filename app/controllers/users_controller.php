@@ -79,7 +79,7 @@ class UsersController extends AppController {
 		if (!($isPost || $isPut)) {
 			$this->data = $this->User->read();
 		} else {
-			if (!isAjax) {
+			if (!$isAjax) {
 				if($this->User->save($this->data)) {
 					$this->Session->setFlash("User saved successfully.");
 					$this->redirect(array('action'=>'view',$id));

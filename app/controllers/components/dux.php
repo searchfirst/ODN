@@ -36,7 +36,9 @@ class DuxComponent extends Object {
 				$data[$modelClass] = array();
 				foreach ($data as $key => $val) {
 					if (!preg_match('/^[A-Z]{1}/',$key)) {
-						$data[$modelClass][$key] = $val;
+						if (!($key == 'created' && $key == 'modified')) {
+							$data[$modelClass][$key] = $val;
+						}
 						unset($data[$key]);
 					}
 				}
@@ -100,9 +102,48 @@ class DuxComponent extends Object {
 				'js/libs/modernizr.js','js/libs/yepnope.min.js'
 			),
 			'foot' => array(
-				'js/jquery/libs/hook_menu.js','js/jquery/libs/dux_tabs.js','js/jquery/libs/editable.js','js/jquery/libs/collapse.js',
-				'js/libs/linen/linen.js','js/libs/underscore.js','js/libs/backbone.js',
-				'js/libs/backbone-ps.js','js/libs/paginatedcollection.backbone.js','js/libs/handlebars.min.js'
+				'js/jquery/libs/hook_menu.js',
+				'js/jquery/libs/dux_tabs.js',
+				'js/jquery/libs/editable.js',
+				'js/jquery/libs/collapse.js',
+				'js/jquery/libs/timepicker/jquery-ui-timepicker-addon.js',
+				'js/libs/linen/linen.js',
+				'js/libs/underscore.js',
+				'js/libs/backbone.js',
+				'js/libs/backbone-ps.js',
+				'js/libs/paginatedcollection.backbone.js',
+				'js/libs/handlebars.min.js',
+				'js/app/cache.js',
+				'js/app/templates.js',
+				'js/app/classes.js',
+				'js/app/models/customer.js',
+				'js/app/models/contact.js',
+				'js/app/models/service.js',
+				'js/app/models/website.js',
+				'js/app/models/user.js',
+				'js/app/models/note.js',
+				'js/app/models/invoice.js',
+				'js/app/models/facade.js',
+				'js/app/models/schedule.js',
+				'js/app/views/customers.js',
+				'js/app/views/contacts.js',
+				'js/app/views/services.js',
+				'js/app/views/websites.js',
+				'js/app/views/users.js',
+				'js/app/views/notes.js',
+				'js/app/views/invoices.js',
+				'js/app/views/facades.js',
+				'js/app/views/schedules.js',
+				'js/app/controllers/customers.js',
+				'js/app/controllers/contacts.js',
+				'js/app/controllers/services.js',
+				'js/app/controllers/websites.js',
+				'js/app/controllers/users.js',
+				'js/app/controllers/notes.js',
+				'js/app/controllers/invoices.js',
+				'js/app/controllers/facades.js',
+				'js/app/controllers/schedules.js',
+				'js/app/app.js'
 			)
 		);
 		$template_list = array(
@@ -115,6 +156,7 @@ class DuxComponent extends Object {
 					'customerItemView' => 'js/app/templates/customers/view_item.mustache',
 					'customerItemAdd' => 'js/app/templates/customers/add_item.mustache',
 					'customerButtons' => 'js/app/templates/customers/buttons.mustache',
+					'invoicesView' => 'js/app/templates/invoices/view.mustache',
 					'invoiceItemView' => 'js/app/templates/invoices/view_item.mustache',
 					'invoiceItemAdd' => 'js/app/templates/invoices/add_item.mustache',
 					'invoiceButtons' => 'js/app/templates/invoices/buttons.mustache',
@@ -153,7 +195,7 @@ class DuxComponent extends Object {
 			'css/reset.css','css/type.css','css/default.css','css/framework.css','css/tablets_netbooks.css','css/desktop.css',
 			'css/print.css','css/widgets/tabs.css','css/widgets/lists.css','css/widgets/modal.css','css/widgets/hook_menu.css',
 			'css/widgets/forms.css','css/widgets/flags.css','css/widgets/dialog.css','css/widgets/loading.css','css/widgets/pagination.css',
-			'css/widgets/editable.css','css/widgets/collapse.css'
+			'css/widgets/editable.css','css/widgets/collapse.css','css/ui/jquery-ui-1.8.11.custom.css'
 		);
 		if ($additional_js = Configure::read('Dux.additional_js')) {
 			$js_list['foot'] = array_merge($js_list['foot'], $additional_js);

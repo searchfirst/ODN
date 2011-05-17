@@ -1,11 +1,6 @@
 <?php
 class Website extends AppModel {
 	var $validate = array(
-		'uri'=>array(
-			'rule'=>'url',
-			'allowEmpty'=>false,
-			'message' => 'You must provide a web address'
-		)
 	);
 	var $belongsTo = array("Customer");
 	var $hasMany = array("Service");
