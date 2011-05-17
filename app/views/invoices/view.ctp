@@ -1,4 +1,3 @@
-<?php setlocale(LC_MONETARY, 'en_GB.UTF-8'); ?>
 <div class="options">
 <?php // echo $this->element('website/edit',array('id'=>$website['Website']['id'],'title'=>$website['Website']['uri']))?> 
 </div>
@@ -17,12 +16,3 @@ else echo " (VAT Not Included)";
 <dt>Due Date</dt>
 <dd><?php echo $time->relativeTime($invoice['Invoice']['due_date']) ?> (<?php echo $time->nice($invoice['Invoice']['due_date']) ?>)</dd>
 </dl>
-
-<script type="text/javascript" charset="utf-8">
-$('#ModifyStatusButton').bind('click',function(e){
-	$(this).parent().find('a.thickbox').click();
-	$('.date_pick').datePicker();
-	return false;
-});
-
-</script>
