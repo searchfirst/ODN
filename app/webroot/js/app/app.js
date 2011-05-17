@@ -19,6 +19,7 @@ $(function(){
 	new AppController();
 	new FacadesController;
 	new CustomersController;
+	new InvoicesController;
 	$('nav#menu a').each(function(i){
 		var $this = $(this);
 		$this.attr('href','#'+$this.attr('href'));

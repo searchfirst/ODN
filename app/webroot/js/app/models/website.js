@@ -1,6 +1,9 @@
 var Website = DuxModel.extend({
 	name: 'Website',
-	url: function(){return '/websites/'+this.get('id')}
+	url: function(){
+		var id = this.get('id');
+		return '/websites' + (id !== undefined ? '/' + id : '');
+	}
 }),
 WebsitesCollection = DuxCollection.extend({
 	name: 'websites',

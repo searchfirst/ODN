@@ -1,6 +1,9 @@
 var Invoice = DuxModel.extend({
 	name: 'Invoice',
-	url: function(){return '/invoices/'+this.get('id')}
+	url: function() {
+		id = this.get('id');
+		return '/invoices' + (id !== undefined ? '/' + id : '');
+	}
 }),
 InvoicesCollection = DuxCollection.extend({
 	name: 'invoices',

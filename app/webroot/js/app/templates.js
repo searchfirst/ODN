@@ -37,12 +37,17 @@ var CnrsTemplates = function(window,document,$,undefined) {
 }(this,this.document,jQuery);
 
 Handlebars.registerHelper('statusTag', function(h) {
-	return '<span class="flag ' + h.toLowerCase() + '">' + h + '</span>';
+	return new Handlebars.SafeString('<span class="flag ' + h.toLowerCase() + '">' + h + '</span>');
 });
 
 Handlebars.registerHelper('dateFormat', function(t) {
 	var parts = t.split(' '),dateParts = parts[0].split('-');
 	return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+});
+
+Handlebars.registerHelper('isoDate', function(dayOffset) {
+	var date = new Date(Date.now() + (86400000 * dayOffset));
+	return date.toISOString().substr(0,10);
 });
 
 Handlebars.registerHelper('nl2br', function(t) {

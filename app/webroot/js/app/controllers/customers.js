@@ -23,40 +23,36 @@ var CustomersController = DuxController.extend({
 		this.pageView.rendering();
 		this.extras = {
 			users: new UsersCollection(),
-			websites: new WebsitesCollection({page:1,params:{limit:'all',customer_id:id}})
+			websites: new WebsitesCollection({page:1,params:{limit:'all',customer_id:id}}),
+			services: new ServicesCollection({page:1,params:{limit:'all',customer_id:id}})
 		};
 		this.extras.users.fetch();
 		this.extras.websites.fetch();
+		this.extras.services.fetch();
 		customer.bind('change', _.bind(this._renderView,this,customer.id)).fetch();
 	},
-	add: function(customer_id) {
-		var params = customer_id !== undefined ? {Customer:{customer_id:customer_id}}:{},
-			customer = new Customer(params),
-			customers = new CustomersCollection({
-				page:1,
-				params:{limit:'all'},
-				comparator: function(customer) { return customer.get('company_name'); }
-			});
+	index: function() {
+		var customers = new CustomersCollection({page: 1,params:{limit:'all',filter:'A'}});
 		this.pageView = new DuxPageView({
 			el: $('[role=main]').get(0),
-			viewTemplate: 'customersAdd',
-			model: customer,
-			context: 'model'
+			events: {
+				'submit .p_form form[action="/customers/add"]': 'add',
+				'click ul[data-field="filter"] span': 'filterBy'
+			},
+			collection: customers,
+			gotoViewOnAdd: true,
+			hideFormOnSubmit: false,
+			viewTemplate: 'customersIndex'
 		});
-		this.pageView
-			.rendering()
-			.bind('rendered',function(view){
-				var $select = $('select[name="data[Customer][customer_id]"]');
-				customers
-					.bind('fetched',function(){
-						this.each(function(customer) {
-							var Customer = customer.get('Customer');
-							$select.append('<option value="' + Customer.id + '">' + Customer.company_name + '</option>');
-						});
-					})
-					.fetch();
-			})
-			.render();
+		this.pageView.render();
+		var customersView = new DuxListView({
+				modelName: 'Customer',
+				el: $('.customer.list').get(0),
+				collection: customers,
+				gotoViewOnAdd: true
+			});
+
+		customers.fetch();
 	},
 	_renderView: function(id) {
 		this.pageView.render().delegateEvents();
@@ -65,9 +61,7 @@ var CustomersController = DuxController.extend({
 				params: {customer_id: id}
 			},
 			widgets = {
-				'cnrsEditable [contenteditable]': [
-					{callbacks:{save: 'update'}}
-				],
+				'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
 				'cnrsCollapse .collapse': [{}]
 			};
 			customers = new CustomersCollection(baseCollectionParams),
@@ -86,7 +80,7 @@ var CustomersController = DuxController.extend({
 				extras: this.extras,
 				itemWidgets: {
 					'cnrsEditable [contenteditable]': [
-						{callbacks:{save: 'update'}}
+						{save: 'cb_update'}
 					],
 					'cnrsCollapse .collapse': [{}]
 				},
@@ -100,7 +94,7 @@ var CustomersController = DuxController.extend({
 				extras: this.extras,
 				itemWidgets: {
 					'cnrsEditable [contenteditable]': [
-						{callbacks:{save: 'update'}}
+						{save: 'cb_update'}
 					],
 					'cnrsCollapse .collapse': [{}]
 				},
@@ -114,7 +108,7 @@ var CustomersController = DuxController.extend({
 				extras: this.extras,
 				itemWidgets: {
 					'cnrsEditable [contenteditable]': [
-						{callbacks:{save: 'update'}}
+						{save: 'cb_update'}
 					],
 					'cnrsCollapse .collapse': [{}]
 				},
@@ -128,11 +122,16 @@ var CustomersController = DuxController.extend({
 				extras: this.extras,
 				itemWidgets: {
 					'cnrsEditable [contenteditable]': [
-						{callbacks:{save: 'update'}}
+						{save: 'cb_update'}
 					],
 					'cnrsCollapse .collapse': [{}]
 				},
-				itemTagName: 'article'
+				itemTagName: 'article',
+				widgets: {
+					'datepicker input[type="date"]': [{
+						dateFormat: 'yy-mm-dd',
+					}]
+				}
 			}),
 			notes = new NotesCollection(baseCollectionParams),
 			notesView = new DuxListView({
@@ -142,7 +141,7 @@ var CustomersController = DuxController.extend({
 				extras: this.extras,
 				itemWidgets: {
 					'cnrsEditable [contenteditable]': [
-						{callbacks:{save: 'update'}}
+						{save: 'cb_update'}
 					],
 					'cnrsCollapse .collapse': [{}]
 				},

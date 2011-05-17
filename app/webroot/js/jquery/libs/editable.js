@@ -43,7 +43,7 @@
 			$field = $(e.data.field),
 			field = e.data.field,
 			buttons = e.data.buttons,
-			callbacks = e.data.callbacks,
+			save = e.data.save,
 			multiEdit = e.data.multiEdit,
 			widget = e.data.widget,
 			originalState = $field.data('originalState'),
@@ -57,8 +57,8 @@
 
 		if (changed && triggerSave) {
 			//Run save & save callbacks
-			if (callbacks.save !== undefined) {
-				callbacks.save(field,{
+			if (save !== undefined) {
+				save(field,{
 					success: function(){
 						saveState($field);
 						hideWidget(widget);
@@ -83,7 +83,8 @@
 	$.fn.cnrsEditable = function(settings) {
 		this.each(function(i) {
 			var $this = $(this),
-				callbacks = settings ? settings.callbacks || {} : {},
+				//callbacks = settings ? settings.callbacks || {} : {},
+				save = settings ? settings.save || undefined : undefined,
 				multiEdit = $this.data('multi') == '1' || $this.attr('tagName') == 'DIV',
 				originalState = multiEdit ? $this.html() : $this.text(),
 				widget = '<span class="ce-widget"><span class="save" tabindex="0" role="button">Save</span> <span class="cancel" tabindex="0" role="button">Cancel</span></span>',
@@ -98,7 +99,7 @@
 			.bind('keyup.cnrsEditable', {
 				multiEdit: multiEdit,
 				widget: $widget.get(0),
-				callbacks: callbacks,
+				save: save,
 				field: $this.get(0),
 				buttons: false
 			}, activity);
@@ -116,7 +117,7 @@
 			.bind('click.cnrsEditable,keypress.cnrsEditable', {
 				multiEdit: multiEdit,
 				widget: $widget.get(0),
-				callbacks: callbacks,
+				save: save,
 				field: $this.get(0),
 				buttons: true
 			}, activity);

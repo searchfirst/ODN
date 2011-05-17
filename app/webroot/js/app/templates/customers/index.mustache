@@ -1,16 +1,20 @@
 <h1>Customers</h1>
-<ul class="hook_menu">
-<li><a href="/customers/add?data[Customer][customer_id]={{customerId}}">Add Customer</a></li>
+<div class="p_form">
+<form action="/customers/add">
+<fieldset><legend>Add Customer</legend>
+<div><label for="CustomerCompanyName">Company Name</label>
+<input type="text" name="company_name" id="CustomerCompanyName">
+</div>
+{{#customer_id}}
+<input type="hidden" name="customer_id" value="{{.}}">
+{{/customer_id}}
+<input type="submit" value="Add Customer">
+</fieldset>
+</form>
+</div>
+<ul data-field="filter">
+<li><span tabindex="0">0</span></li><li><span tabindex="0">1</span></li><li><span tabindex="0">2</span></li><li><span tabindex="0">3</span></li><li><span tabindex="0">4</span></li><li><span tabindex="0">5</span></li><li><span tabindex="0">6</span></li><li><span tabindex="0">7</span></li><li><span tabindex="0">8</span></li><li><span tabindex="0">9</span></li><li><span tabindex="0">A</span></li><li><span tabindex="0">B</span></li><li><span tabindex="0">C</span></li><li><span tabindex="0">D</span></li><li><span tabindex="0">E</span></li><li><span tabindex="0">F</span></li><li><span tabindex="0">G</span></li><li><span tabindex="0">H</span></li><li><span tabindex="0">I</span></li><li><span tabindex="0">J</span></li><li><span tabindex="0">K</span></li><li><span tabindex="0">L</span></li><li><span tabindex="0">M</span></li><li><span tabindex="0">N</span></li><li><span tabindex="0">O</span></li><li><span tabindex="0">P</span></li><li><span tabindex="0">Q</span></li><li><span tabindex="0">R</span></li><li><span tabindex="0">S</span></li><li><span tabindex="0">T</span></li><li><span tabindex="0">U</span></li><li><span tabindex="0">V</span></li><li><span tabindex="0">W</span></li><li><span tabindex="0">X</span></li><li><span tabindex="0">Y</span></li><li><span tabindex="0">Z</span></li>
 </ul>
-<ul class="mini list">
-{{#customers}}
-{{#Customer}}
-<li><a href="/customers/view/{{id}}">{{company_name}}</a></li>
-{{/Customer}}
-{{^}}
-<li>No Customers</li>
-{{/customers}}
-</ul>
-{{#pageInfo}}
-{{{pageLinks . "Note"}}}
-{{/pageInfo}}
+<section class="customer detail list">
+<div class="loading">Loading</div>
+</section>

@@ -87,7 +87,6 @@ DuxCollection = Backbone.Collection.extend({
 		options.success = function(resp) {
 			if (success) { success(self, resp); }
 			self.trigger('fetched',self);
-			//this.params = undefined;
 		};
 		Backbone.Collection.prototype.fetch.call(self, options);
 	},
@@ -171,35 +170,51 @@ DuxView = Backbone.View.extend({
 			if (options.modelName !== undefined) { this.modelName = options.modelName; delete options.modelName; }
 			if (options.itemTagName !== undefined) { this.itemTagName = options.itemTagName; delete options.itemTagName; }
 			if (options.extras !== undefined) { this.extras = options.extras; delete options.extras; }
+			if (options.gotoViewOnAdd !== undefined) {
+				this.gotoViewOnAdd = options.gotoViewOnAdd;
+				delete options.gotoViewOnAdd;
+			}
+			if (options.hideFormOnSubmit !== undefined) {
+				this.hideFormOnSubmit = options.hideFormOnSubmit;
+				delete options.hideFormOnSubmit;
+			}
+			if (options.showButtons !== undefined) {
+				this.showButtons = options.showButtons;
+				delete options.showButtons;
+			}
 		}
 	},
 	widgets: {
-		// 'h1': { plugin: 'summat',params: [] }
 		// 'plugin selector': []
 	},
 	templates: CnrsTemplates,
 	commonWidgets: function($rootElement) {
 		$rootElement.find('ul.tab_hooks').duxTab();
-		$rootElement.find('h1,h2').hookMenu();
+		//$rootElement.find('h1,h2').hookMenu();
 		for (widget in this.widgets) {
 			var eventSplitter = /^(\w+)\s*(.*)$/,
 				match = widget.match(eventSplitter),
 				$selector = $(match[2],$rootElement.get()),
 				method = match[1],
-				params = this.widgets[widget];
+				params = this.widgets[widget],
+				_params = [];
 
-			for (a in params) {
-				if (params[a].callbacks !== undefined) {
-					for (c in params[a].callbacks) {
-						if (typeof params[a].callbacks[c] === 'string') {
-							params[a].callbacks[c] = _.bind(this[params[a].callbacks[c]],this);
-						}
+			for (p in params) {
+				_params[p] = _.clone(params[p]);
+			}
+
+			for (a in _params) {
+				for (b in _params[a]) {
+					console.log(typeof _params[a][b]);
+					if (typeof _params[a][b] === 'string' && _params[a][b].match(/^cb_/)) {
+						var callback = _params[a][b].substr(3);
+						_params[a][b] = _.bind(this[callback],this);
 					}
 				}
 			}
 
-			if (params !== undefined) {
-				$selector[method].apply($selector, params);
+			if (_params !== undefined) {
+				$selector[method].apply($selector, _params);
 			} else {
 				$selector[method]();
 			}
@@ -217,7 +232,7 @@ DuxView = Backbone.View.extend({
 		Backbone.history.saveLocation('#' + url);
 		Backbone.history.loadUrl();
 	},
-	delegateEvents: function(events) {
+	asdfdelegateEvents: function(events) {
 		var eventSplitter = /^(\w+)\s*(.*)$/,
 				$thisel = typeof this.el == 'function' ? $(this.el()) : $(this.el);
 		if (!(events || (events = this.events))) return;
@@ -233,6 +248,50 @@ DuxView = Backbone.View.extend({
 				$thisel.delegate(selector, eventName, method);
 			}
 		}
+	},
+	add: function(e) {
+		e.preventDefault();
+		var $target = $(e.target),
+			target = e.target,
+			collection = this.collection,
+			$inputs = $('input,textarea,select',e.target).not('input[type=submit]'),
+			inputSplitter = /^((\w+)\.)?(\w+)$/,
+			gotoViewOnAdd = this.gotoViewOnAdd,
+			hideFormOnSubmit = this.hideFormOnSubmit,
+			thisview = this,
+			model = {};
+
+		$inputs.each(function(i){
+			var value = $(this).val(),
+				match = $(this).attr('name').match(inputSplitter),
+				mField = match[2],
+				field = match[3];
+			if (mField !== undefined) {
+				model[mField] || (model[mField] = {})
+				model[mField][field] = value;
+			} else {
+				model[field] = value;
+			}
+		});
+
+		var newModel = new this.collection.model(model);
+		newModel.save(null,{
+			success: function(model, response){
+				collection.add([model]);
+				$target.removeClass('ajax-error');
+				target.reset();
+				if (gotoViewOnAdd) {
+					thisview.redirect('/' + collection.name + '/view/' + model.get('id'));
+				}
+				if (hideFormOnSubmit) {
+					$target.fadeOut('fast');
+				}
+			},
+			error: function(model, response) {
+				$target.addClass('ajax-error');
+			}
+		});
+
 	},
 	update: function(el,callbacks) {
 		var saveSet = {},
@@ -279,12 +338,19 @@ DuxPageView = DuxView.extend({
 					this.viewTemplate = options.viewTemplate;
 				}
 			}
+			if (options.events) {
+				this.events || ( this.events = {} );
+				_(this.events).extend(options.events);
+				delete options.events;
+				this.delegateEvents();
+			}
 		}
 		this.bind('rendered',this.rendered);
 	},
 	render: function() {
-		$thisEl = $(this.el);
-		$thisEl.html(this.viewTemplate(this[this.context].toJSON()));
+		var $thisEl = $(this.el),
+			data = (this.context && this[this.context]) ? this[this.context].toJSON() : {};
+		$thisEl.html(this.viewTemplate(data));
 		this.commonWidgets($thisEl);
 		this.trigger('rendered',this.rendered);
 		return this;
@@ -292,6 +358,11 @@ DuxPageView = DuxView.extend({
 	rendering: function() {
 		$(this.el).fadeTo(0.5,0.5);
 		return this;
+	},
+	filterBy: function(e) {
+		var filter = $(e.target).text();
+		this.collection.params.filter = filter;
+		this.collection.fetch();
 	},
 	rendered: function() {
 		$(this.el).fadeTo(0.5,1);
@@ -306,20 +377,6 @@ DuxListView = DuxView.extend({
 	hideFormOnSubmit: true,
 	initialize: function(options) {
 		DuxView.prototype.initialize.call(this, options);
-		if (options) {
-			if (options.gotoViewOnAdd !== undefined) {
-				this.gotoViewOnAdd = options.gotoViewOnAdd;
-				delete options.gotoViewOnAdd;
-			}
-			if (options.hideFormOnSubmit !== undefined) {
-				this.hideFormOnSubmit = options.hideFormOnSubmit;
-				delete options.hideFormOnSubmit;
-			}
-			if (options.showButtons !== undefined) {
-				this.showButtons = options.showButtons;
-				delete options.showButtons;
-			}
-		}
 		$(this.el).addClass('paginated');
 		this.collection
 			.bind('add', _.bind(this.redrawItems,this))
@@ -332,51 +389,6 @@ DuxListView = DuxView.extend({
 		'click .p_form a[data-type="add"]': 'renderAddForm',
 		'submit form[action*="add"]': 'add'
 	},
-	add: function(e) {
-		e.preventDefault();
-		var $target = $(e.target),
-			target = e.target,
-			collection = this.collection,
-			$inputs = $('input,textarea',e.target).not('input[type=submit]'),
-			inputSplitter = /^((\w+)\.)?(\w+)$/,
-			gotoViewOnAdd = this.gotoViewOnAdd,
-			hideFormOnSubmit = this.hideFormOnSubmit,
-			thisview = this,
-			model = {};
-
-		$inputs.each(function(i){
-			var value = $(this).val(),
-				match = $(this).attr('name').match(inputSplitter),
-				mField = match[2],
-				field = match[3];
-			if (mField !== undefined) {
-				model[mField] || (model[mField] = {})
-				model[mField][field] = value;
-			} else {
-				model[field] = value;
-			}
-		});
-
-		var newModel = new this.collection.model(model);
-		newModel.save(null,{
-			success: function(model, response){
-				collection.add([model]);
-				$target.removeClass('ajax-error');
-				target.reset();
-				if (gotoViewOnAdd) {
-					console.log(collection.name + '/view/' + model.get('id'));
-					thisview.redirect('/' + collection.name + '/view/' + model.get('id'));
-				}
-				if (hideFormOnSubmit) {
-					$target.fadeOut('fast');
-				}
-			},
-			error: function(model, response) {
-				$target.addClass('ajax-error');
-			}
-		});
-
-	},
 	fetchingItems: function() {
 		$(this.el).fadeTo(0.5,0.5);
 	},
@@ -388,17 +400,21 @@ DuxListView = DuxView.extend({
 			$pForm = $thisel.find('.p_form'),
 			$form = $(formTemplate(data)).insertBefore($pForm.get(0));
 
+		this.commonWidgets($form);
+		console.log($form.get(0));
 		$pForm.fadeOut('fast');
 	},
 	_extendDataWithExtras: function(data) {
-		if (this.extras.users !== undefined) {
-			data.users = this.extras.users.toJSON();
-		}
-		if (this.extras.websites !== undefined) {
-			data.websites = this.extras.websites.toJSON();
-		}
-		if (this.extras.services !== undefined) {
-			data.services = this.extras.services.toJSON();
+		if (this.extras !== undefined) {
+			if (this.extras.users !== undefined) {
+				data.users = this.extras.users.toJSON();
+			}
+			if (this.extras.websites !== undefined) {
+				data.websites = this.extras.websites.toJSON();
+			}
+			if (this.extras.services !== undefined) {
+				data.services = this.extras.services.toJSON();
+			}
 		}
 		return data;
 	},

@@ -1,0 +1,15 @@
+<form action="/invoices/add/customer_id:{{customer_id}}" method="post">
+<div><label for="InvoiceDescription">Description</label><textarea name="description" cols="30" rows="5" id="InvoiceDescription"></textarea></div> 
+<div><label for="InvoiceReference">Reference</label><input name="reference" type="text" maxlength="13" id="InvoiceReference"></div> 
+<div><label for="InvoiceYourReference">Their Reference</label><input name="your_reference" type="text" maxlength="13" id="InvoiceYourReference"></div> 
+<div><label for="InvoiceAmount">Amount</label><input name="amount" type="number" min="0" id="InvoiceAmount"></div> 
+<div><input type="hidden" name="vat_included" value="0"><input type="checkbox" name="vat_included" value="1" id="InvoiceVatIncluded"><label for="InvoiceVatIncluded">Vat Included</label></div> 
+<div><label for="InvoiceDueDate">Due Date</label><input name="due_date" type="date" id="InvoiceDueDate" value="{{isoDate "28"}}"></div>
+<div><label for="InvoiceServiceId">Service</label><select name="service_id" id="InvoiceServiceId">
+{{#services}}
+<option value="{{id}}">[{{text_status}}] {{Website.uri}} {{title}}</option>
+{{/services}}
+</select></div>
+<input type="hidden" name="customer_id" value="{{customer_id}}" id="InvoiceCustomerId"> 
+<div><input type="submit" value="Add"></div> 
+</form>
