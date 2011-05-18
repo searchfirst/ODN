@@ -1,12 +1,13 @@
-<?php echo $this->Minify->js_link($minify['js']['head']) ?>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>
+<?php echo $this->Minify->js_link($minify['js']['head']) ?>
 <script>
 yepnope([
 {test:Modernizr.localstorage,nope:['/js/libs/poly/storage.js']}
 ]);
 </script>
 <?php echo $this->Minify->js_link($minify['js']['foot']) ?> 
+<!--
 <script src="/js/app/cache.js"></script>
 <script src="/js/app/templates.js"></script>
 <script src="/js/app/classes.js"></script>
@@ -38,4 +39,5 @@ yepnope([
 <script src="/js/app/controllers/facades.js"></script>
 <script src="/js/app/controllers/schedules.js"></script>
 <script src="/js/app/app.js"></script>
+-->
 <?php echo $this->Minify->js_tpl($minify['tpl']) ?>
