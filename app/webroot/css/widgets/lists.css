@@ -154,15 +154,30 @@ margin-bottom: .5em;
 .detail.list > article > h1, .detail.list > section > h1, .detail.list > div > h1 {
 }
 
-.card.list > article h1 {
-font-size: 1.3125em;
-line-height: 1;
-margin-bottom: .125em;
+.detail.list > article ul, .detail.list > article p, .detail.list > article h3 {
+margin-bottom: .5em;
+}
+
+.detail.list > article ul {
+list-style: inside square;
+padding-left: .25em;
 }
 
 .card.list > article .info {
 color: rgb(68,68,68);
 padding-left: 1em;
+}
+
+ul[data-field="filter"] li { display: inline; }
+
+ul[data-field="filter"] li span {
+display: inline-block;
+padding: .5em;
+cursor: pointer;
+}
+
+ul[data-field="filter"] li span:hover {
+background-color: rgba(0,0,0,.2);
 }
 
 @media print {

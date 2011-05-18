@@ -50,6 +50,11 @@ a[role=button]:active, input[type=submit]:active {
 border-color: #bfbfbf;
 }
 
+input[type=checkbox] {
+float: left;
+margin-right: .5em;
+}
+
 textarea {
 width: 100%;
 }
@@ -59,7 +64,7 @@ border: 1px solid #ddd;
 margin-bottom: .25em;
 }
 
-input[type=tel], input[type=number], input[type=url], input[type=email], input[type=text], textarea {
+input[type=password], input[type=tel], input[type=number], input[type=url], input[type=email], input[type=text], textarea {
 background-color: #efefef;
 border: 1px solid #ddd;
 -moz-box-sizing: border-box;
