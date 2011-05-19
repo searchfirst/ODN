@@ -19,3 +19,6 @@
 [submodule "app/webroot/js/jquery/libs/timepicker"]
 	path = app/webroot/js/jquery/libs/timepicker
 	url = git://github.com/trentrichardson/jQuery-Timepicker-Addon.git
+[submodule "app/plugins/alkemann"]
+	path = app/plugins/alkemann
+	url = git://github.com/alkemann/CakePHP-Assets.git
