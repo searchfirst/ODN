@@ -4,6 +4,7 @@ class Service extends AppModel {
 	var $actsAs = array(
 		'Joined',
 		'Searchable.Searchable',
+		'Alkemann.Revision',
 		'Detextiliser'=>array('fields'=>array('description')),
 		'IntCaster'=>array('cacheConfig'=>'lenore')
 	);

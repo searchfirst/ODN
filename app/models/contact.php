@@ -1,7 +1,10 @@
 <?php
 class Contact extends AppModel {
 	var $belongsTo = array('Customer');
-	var $actsAs = array('Detextiliser'=>array('fields'=>array('address')));
+	var $actsAs = array(
+		'Detextiliser'=>array('fields'=>array('address')),
+		'Alkemann.Revision'
+	);
 	var $_findMethods = array('allRelated' => true);
 	function _findAllRelated($state, $query, $results = array()) {
 		if ($state == "before") {

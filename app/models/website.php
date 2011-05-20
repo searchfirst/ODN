@@ -5,7 +5,10 @@ class Website extends AppModel {
 	var $belongsTo = array("Customer");
 	var $hasMany = array("Service");
 	var $recursive = 2;
-	var $actsAs = array('Searchable.Searchable');
+	var $actsAs = array(
+		'Searchable.Searchable',
+		'Alkemann.Revision'
+	);
 
 	function beforeSave() {
 		parent::beforeSave();

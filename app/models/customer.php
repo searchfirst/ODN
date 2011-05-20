@@ -3,7 +3,13 @@ class Customer extends AppModel {
 	var $order = 'Customer.company_name';
 	var $recursive = 1;
 	var $displayField = 'company_name';
-	var $actsAs = array('RemoveEmptyRelationships','Joined','Searchable.Searchable','IntCaster'=>array('cacheConfig'=>'lenore'));
+	var $actsAs = array(
+		'RemoveEmptyRelationships',
+		'Joined',
+		'Searchable.Searchable',
+		'IntCaster'=>array('cacheConfig'=>'lenore'),
+		'Alkemann.Revision'=>array('limit'=>2)
+	);
 	var $virtualFields = array(
 		'text_status' => '(SELECT CASE Customer.status WHEN 1 THEN "Active" WHEN 0 THEN "Inactive" END)'
 	);
