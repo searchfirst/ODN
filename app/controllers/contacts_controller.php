@@ -41,16 +41,27 @@ class ContactsController extends AppController {
 	}
 
 	function add() {
-		$this->set('title_for_layout',__('Add New Contact',true));
-		if(empty($this->data)) {
-			$this->set('customers',$this->Contact->Customer->getCustomerList());
-		} else {
-			if($this->Contact->save($this->data)) {
-				$this->Session->setFlash("New contact created.");
-				$this->redirect("/customers/view/$newcustomer");
+		extract($this->Dux->commonRequestInfo());
+		if ($isPost) {
+			if (!$isAjax) {
+				if ($this->Contact->save($this->data)) {
+					$this->Session->setFlash(__("Contact created.",true));
+					$this->redirect(array('controller'=>'contacts','action'=>'view',$this->Contact->id));
+				} else {
+					$this->Session->setFlash(__("Please correct errors below.",true));
+				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('customers',$this->Contact->Customer->getCustomerList());
+				if ($this->Contact->save($this->data)) {
+					$this->set('model', $this->Contact->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
+			}
+		} else {
+			if (!empty($this->passedArgs['customer_id'])) {
+				$this->data['Contact']['customer_id'] = $this->passedArgs['customer_id'];
+			} else {
+				$this->cakeError('missingId',array('model'=>'Website'));
 			}
 		}
 	}
