@@ -1,8 +1,5 @@
 <?php
 class Customer extends AppModel {
-	var $order = 'Customer.company_name';
-	var $recursive = 1;
-	var $displayField = 'company_name';
 	var $actsAs = array(
 		'RemoveEmptyRelationships',
 		'Joined',
@@ -10,9 +7,14 @@ class Customer extends AppModel {
 		'IntCaster'=>array('cacheConfig'=>'lenore'),
 		'Alkemann.Revision'=>array('limit'=>2)
 	);
+	var $displayField = 'company_name';
+	var $order = 'Customer.company_name';
+	var $recursive = 1;
+	var $validate = array();
 	var $virtualFields = array(
 		'text_status' => '(SELECT CASE Customer.status WHEN 1 THEN "Active" WHEN 0 THEN "Inactive" END)'
 	);
+
 	var $_findMethods = array('listPotentialParents' => true);
 
 	public static $status = array(
@@ -21,12 +23,10 @@ class Customer extends AppModel {
 		'Pending'=>1
 	);
 
-	var $validate = array(
-	);
-
 	var $hasMany = array(	
 		'Website' => array(
 			'dependent' => true,
+			'order' => 'Website.uri ASC'
 		),
 		'Invoice' => array (
 			'dependent' => true,
@@ -36,19 +36,19 @@ class Customer extends AppModel {
 			'fields' => array('id','company_name','status'),
 			'className' => 'Customer',
 			'foreignKey' => 'customer_id',
-			'order'=>'Referral.company_name ASC',
 			'dependent' => true,
+			'order'=>'Referral.company_name ASC'
 		),
 		'Service' => array(
 			'dependent' => true,
-			'className' => 'Service',
-			'order' => 'Service.website_id',
-			'group' => 'Service.website_id'
+			'order' => 'Service.title',
 		),
 		'Note' => array(
+			'dependent' => true,
 			'order' => 'Note.created DESC'
 		),
 		'Contact' => array(
+			'dependent' => true,
 			'order' => 'Contact.created DESC'
 		)
 	);
@@ -105,7 +105,6 @@ class Customer extends AppModel {
 		if (!preg_match('/^list/',$this->findQueryType)) {
 			$this->setStatus($results, $primary);
 			if ($primary) {
-				//$this->setInactiveLocations($results);
 				$this->getResellerContacts($results);
 			}
 		}
@@ -117,7 +116,6 @@ class Customer extends AppModel {
 			foreach ($results as $x => $result) {
 				if (!empty($result['Service'])) {
 					extract($this->getStatusWithService($result['Service']));
-					$results[$x]['Customer']['text_status'] = $active ? __('Active',true) : ($pending ? __('Pending',true) : __('Inactive',true));
 					$results[$x]['Customer']['status'] = $active ? 1 : ($pending ? 2 : 0);
 				}
 			}
@@ -143,10 +141,6 @@ class Customer extends AppModel {
 		}
 	}
 
-	private function __isAssoc($array) {
-		return (is_array($array) && (count($array)==0 || 0 !== count(array_diff_key($array, array_keys(array_keys($array))) )));
-	}
-	
 	private function getStatusWithService($services) {
 		$active = false;
 		$pending = false;
@@ -161,27 +155,6 @@ class Customer extends AppModel {
 		}
 		return array('active'=>$active,'pending'=>$pending);
 	}
-
-	//private function setInactiveLocations(&$results) {
-	//	foreach ($results as $x => $result) {
-	//		if (!empty($result['Service']) && !empty($result['Website'])) {
-	//			$inactive_locations = array();
-	//			foreach ($result['Website'] as $y => $website) {
-	//				$active = false;
-	//				print_r($result['Service']);
-	//				foreach ($result['Service'] as $service) {
-	//					$active = $active || ($service['website_id'] == $website['id']);
-	//				}
-	//				if (!$active) {
-	//					$inactive_locations[] = $website;
-	//					unset($results[$x]['Website'][$y]);
-	//				}
-	//			}
-	//			$results[$x]['InactiveLocation'] = $inactive_locations;
-	//			$results[$x]['Website'] = array_values($results[$x]['Website']);
-	//		}
-	//	}
-	//}
 
 	function findResellers() {
 		$results = array();
@@ -198,5 +171,34 @@ class Customer extends AppModel {
 			'order'=>'Customer.company_name ASC'
 		));
 		return $customers;
+	}
+
+	function reassessStatus($id) {
+		$this->id = $id;
+		$this->recursive = 1;
+		if ($this->id && $customer = $this->read()) {
+			$service_status = false;
+			if (!empty($customer['Service'])) {
+				foreach ($customer['Service'] as $service) {
+					$service_status = $service_status || $service['status'] > 0;
+				}
+			}
+			$service_status = $service_status || !$this->allCustomersAreInactive($id);
+			$this->saveField('status', (integer) $service_status);
+		}
+	}
+
+	private function allCustomersAreInactive($id) {
+		$customer_count = $this->find('count',array('conditions' => array('Customer.customer_id' => $id)));
+		if ($customer_count > 0) {
+			$active_customer_count = $this->find('count',array('conditions' => array('Customer.customer_id' => $id)));
+			if ($active_customer_count == 0) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
 	}
 }

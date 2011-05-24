@@ -1,6 +1,5 @@
 <?php
 class Service extends AppModel {
-	var $order = 'Service.modified';
 	var $actsAs = array(
 		'Joined',
 		'Searchable.Searchable',
@@ -8,24 +7,8 @@ class Service extends AppModel {
 		'Detextiliser'=>array('fields'=>array('description')),
 		'IntCaster'=>array('cacheConfig'=>'lenore')
 	);
+	var $order = 'Service.modified';
 	var $recursive = 1;
-	var $virtualFields = array(
-		'text_status' => '(SELECT CASE Service.status WHEN 0 THEN "Cancelled" WHEN 1 THEN "Pending" WHEN 2 THEN "Active" WHEN 3 THEN "Complete" END)'
-	);
-	var $_findMethods = array('customers' => true);
-
-	public static $status = array(
-		'Cancelled'=>0,
-		'Pending'=>1,
-		'Active'=>2,
-		'Complete'=>3
-	);
-
-	public static $statuses = array(
-		'num' => array('Cancelled','Pending','Active','Complete'),
-		'alpha' => array('Cancelled'=>0,'Pending'=>1,'Active'=>2,'Complete'=>3)
-	);
-
 	var $validate = array(
 		'title'=>array(
 			'rule'=>'notEmpty',
@@ -46,6 +29,23 @@ class Service extends AppModel {
 			'rule'=>'notEmpty',
 			'allowEmpty'=>false
 		)
+	);
+	var $virtualFields = array(
+		'text_status' => '(SELECT CASE Service.status WHEN 0 THEN "Cancelled" WHEN 1 THEN "Pending" WHEN 2 THEN "Active" WHEN 3 THEN "Complete" END)'
+	);
+
+	var $_findMethods = array('customers' => true);
+
+	public static $status = array(
+		'Cancelled'=>0,
+		'Pending'=>1,
+		'Active'=>2,
+		'Complete'=>3
+	);
+
+	public static $statuses = array(
+		'num' => array('Cancelled','Pending','Active','Complete'),
+		'alpha' => array('Cancelled'=>0,'Pending'=>1,'Active'=>2,'Complete'=>3)
 	);
 
 	var $hasMany = array(
@@ -91,58 +91,8 @@ class Service extends AppModel {
 		}
 	}
 
-	function afterFind($results, $primary) {
-		//$this->setStatus($results,$primary);
-		return $results;
-	}
-
 	function afterSave($created) {
-		$this->reassessCustomerStatus();
-	}
-
-	function reassessCustomerStatus() {
-		$this->Customer->id = $this->read('customer_id');
-		$this->Customer->recursive = 1;
-		if ($this->Customer->id && $customer = $this->Customer->read()) {
-			$service_status = false;
-			if (!empty($customer['Service'])) {
-				foreach ($customer['Service'] as $service) {
-					$service_status = $service_status || $service['status'] > 0;
-				}
-			}
-			$this->Customer->saveField('status', (integer) $service_status);
-		}
-	}
-
-	private function __isAssoc($array) {
-		return (is_array($array) && (count($array)==0 || 0 !== count(array_diff_key($array, array_keys(array_keys($array))) )));
-	}
-
-	private function setStatus(&$results,$primary) {
-		if ($primary) {
-			foreach ($results as $x => $result) {
-				$results[$x]['Service']['text_status'] = self::$statuses['num'][$result['Service']['status']];
-			}
-		} else {
-			if (!empty($results['status'])) {
-				$results['text_status'] = self::$statuses['num'][$results['status']];
-			} elseif (!empty($results)) {
-				if (!$this->__isAssoc($results)) {
-					foreach ($results as $x => $result) {
-						if ($this->__isAssoc($result['Service'])) {
-							if (!empty($result['Service']) && isset($result['Service']['status'])) {
-								$results[$x]['Service']['text_status'] = self::$statuses['num'][$result['Service']['status']];
-							}
-						} else {
-							foreach($result['Service'] as $y => $res) {
-								if (!empty($res['status'])) {
-									$results[$x]['Service'][$y]['text_status'] = self::$statuses['num'][$res['status']];
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		$this->Customer->reassessStatus($this->field('customer_id'));
+		parent::afterSave($created);
 	}
 }

@@ -1,6 +1,9 @@
 var Service = DuxModel.extend({
 	name: 'Service',
-	url: function(){return '/services/'+this.get('id')}
+	url: function(){
+		var id = this.get('id');
+		return '/services' + (id !== undefined ? '/' + id : '');
+	}
 }),
 ServicesCollection = DuxCollection.extend({
 	name: 'services',

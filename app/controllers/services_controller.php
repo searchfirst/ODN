@@ -63,41 +63,49 @@ class ServicesController extends AppController
 	}
 
 	function add() {
-		if(empty($this->data) || isset($this->data['Referrer']['customer_id'])) {
-			if(!empty($this->data['Referrer']['customer_id']))
-				$this->data['Service']['customer_id'] = $this->data['Referrer']['customer_id'];
-			if(!empty($this->data['Referrer']['website_id']))
-				$this->data['Service']['website_id'] = $this->data['Referrer']['website_id'];
-			$this->set('customer',
-				Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
-			$this->set('website',Set::combine($this->Service->Website->find('all',array(
-				'recursive'=>0,
-				'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
-			)),'{n}.Website.id','{n}.Website.uri'));
-			$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
-		} else {
-			if($this->Service->save($this->data)) {
-				$this->Session->setFlash("Service added successfully.");
-				$customer_id = $this->data['Service']['customer_id'];
-				$current_customer_status = $this->Service->Customer->field('Customer.status',array('Customer.id'=>$customer_id));
-				if($current_customer_status!=0) {
-					$update_customer_data = array('Customer'=>array('id'=>$customer_id,'status'=>0));
-					$this->Service->Customer->save($update_customer_data);
-				}
-				if($this->RequestHandler->isAjax())
-					$this->redirect($this->referer('/'));
-				else {
-					$this->redirect("/customers/view/$customer_id");
+		extract($this->Dux->commonRequestInfo());
+		if ($isPost) {
+			if (!$isAjax) {
+				if ($this->Service->save($this->data)) {
+					$this->Session->setFlash(__("Service created.",true));
+					$this->redirect(array('controller'=>'services','action'=>'view',$this->Service->id));
+				} else {
+					$this->Session->setFlash(__("Please correct errors below.",true));
+					$this->set('customer',Set::combine($this->Service->Customer->find('all',array(
+						'recursive'=>0
+					)),'{n}.Customer.id','{n}.Customer.company_name'));
+					$this->set('website',Set::combine($this->Service->Website->find('all',array(
+						'recursive'=>0,
+						'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
+					)),'{n}.Website.id','{n}.Website.uri'));
+					$this->set('user',Set::combine($this->Service->User->find('all',array(
+						'recursive'=>0
+					)),'{n}.User.id','{n}.User.name'));
 				}
 			} else {
-				$this->Session->setFlash('Please correct the errors below');
-				$this->set('customer',
-					Set::combine($this->Service->Customer->find('all',array('recursive'=>0)),'{n}.Customer.id','{n}.Customer.company_name'));
+				if ($this->Service->save($this->data)) {
+					$this->set('model', $this->Service->readRoot());
+				} else {
+					$this->cakeError('ajaxError',array('message'=>'Not saved'));
+				}
+			}
+		} else {
+			if (!empty($this->passedArgs['customer_id'])) {
+				$this->data['Service']['customer_id'] = $this->passedArgs['customer_id'];
+			} else {
+				$this->cakeError('missingId',array('model'=>'Service'));
+			}
+			if (!$isAjax) {
+				$this->set('customer',Set::combine($this->Service->Customer->find('all',array(
+					'recursive'=>0
+				)),'{n}.Customer.id','{n}.Customer.company_name'));
 				$this->set('website',Set::combine($this->Service->Website->find('all',array(
 					'recursive'=>0,
 					'conditions'=>array('Website.customer_id'=>$this->data['Service']['customer_id'])
 				)),'{n}.Website.id','{n}.Website.uri'));
-				$this->set('user',Set::combine($this->Service->User->find('all',array('recursive'=>0)),'{n}.User.id','{n}.User.name'));
+				$this->set('user',Set::combine($this->Service->User->find('all',array(
+					'recursive'=>0
+				)),'{n}.User.id','{n}.User.name'));
 			}
 		}
 	}
