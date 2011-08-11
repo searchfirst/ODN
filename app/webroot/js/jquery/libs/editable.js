@@ -64,7 +64,6 @@
 						hideWidget(widget);
 					},
 					error: function(){
-						console.log('e');
 						restoreState($field)}
 				});
 			}
@@ -85,7 +84,7 @@
 			var $this = $(this),
 				//callbacks = settings ? settings.callbacks || {} : {},
 				save = settings ? settings.save || undefined : undefined,
-				multiEdit = $this.data('multi') == '1' || $this.attr('tagName') == 'DIV',
+				multiEdit = $this.data('multi') == '1' || this.tagName == 'DIV',
 				originalState = multiEdit ? $this.html() : $this.text(),
 				widget = '<span class="ce-widget"><span class="save" tabindex="0" role="button">Save</span> <span class="cancel" tabindex="0" role="button">Cancel</span></span>',
 				$widget = $(widget).insertAfter(this);
