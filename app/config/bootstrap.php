@@ -49,4 +49,3 @@ if (!Cache::isInitialized('lenore')) {
 		'duration' => '+365 days'
 	));
 }
-?>
