@@ -14,9 +14,7 @@ var CustomersController = DuxController.extend({
 			model: customer,
 			context: 'model',
 			widgets: {
-				'cnrsEditable [contenteditable]': [
-					{callbacks:{save: 'update'}}
-				],
+				'cnrsEditable [contenteditable]': [{save: 'cb_update'}],
 				'cnrsCollapse .collapse': [{}]
 			}
 		});
@@ -96,6 +94,7 @@ var CustomersController = DuxController.extend({
 					'cnrsEditable [contenteditable]': [
 						{save: 'cb_update'}
 					],
+					'cnrsSelectable .selectable': [ {save: 'cb_update', options: services.status} ],
 					'cnrsCollapse .collapse': [{}]
 				},
 				itemTagName: 'article'

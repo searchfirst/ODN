@@ -22,3 +22,6 @@
 [submodule "app/plugins/alkemann"]
 	path = app/plugins/alkemann
 	url = git://github.com/alkemann/CakePHP-Assets.git
+[submodule "app/webroot/js/libs/gruft"]
+	path = app/webroot/js/libs/gruft
+	url = git://github.com/nikola/gruft.git

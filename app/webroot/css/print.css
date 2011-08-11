@@ -25,7 +25,7 @@ section[role=main] {
 box-shadow: 0 0 0 transparent;
 }
 
-#menu, header[role=banner], section[role=search], #user_details, .list form, .list .p_form, .list [role=button], .customer.mini.list {
+#menu, header[role=banner], section[role=search], #user_details, .list form, .list .p_form, .list [role=button], .customer.mini.list, .empty.list {
 display: none;
 }
 

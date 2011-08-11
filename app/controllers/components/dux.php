@@ -105,6 +105,7 @@ class DuxComponent extends Object {
 				'js/jquery/libs/hook_menu.js',
 				'js/jquery/libs/dux_tabs.js',
 				'js/jquery/libs/editable.js',
+				'js/jquery/libs/selectable.js',
 				'js/jquery/libs/collapse.js',
 				'js/jquery/libs/timepicker/jquery-ui-timepicker-addon.js',
 				'js/libs/linen/linen.js',
@@ -113,6 +114,8 @@ class DuxComponent extends Object {
 				'js/libs/backbone-ps.js',
 				'js/libs/paginatedcollection.backbone.js',
 				'js/libs/handlebars.min.js',
+				'js/libs/gruft/src/gruft-common.js',
+				'js/libs/gruft/src/gruft-md5.js',
 				'js/app/cache.js',
 				'js/app/templates.js',
 				'js/app/classes.js',
@@ -195,7 +198,7 @@ class DuxComponent extends Object {
 			'css/reset.css','css/type.css','css/default.css','css/framework.css','css/tablets_netbooks.css','css/desktop.css',
 			'css/print.css','css/widgets/tabs.css','css/widgets/lists.css','css/widgets/modal.css','css/widgets/hook_menu.css',
 			'css/widgets/forms.css','css/widgets/flags.css','css/widgets/dialog.css','css/widgets/loading.css','css/widgets/pagination.css',
-			'css/widgets/editable.css','css/widgets/collapse.css','css/ui/jquery-ui-1.8.11.custom.css'
+			'css/widgets/editable.css','css/widgets/selectable.css','css/widgets/collapse.css','css/ui/jquery-ui-1.8.11.custom.css'
 		);
 		if ($additional_js = Configure::read('Dux.additional_js')) {
 			$js_list['foot'] = array_merge($js_list['foot'], $additional_js);

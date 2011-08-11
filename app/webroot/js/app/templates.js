@@ -40,6 +40,15 @@ Handlebars.registerHelper('statusTag', function(h) {
 	return new Handlebars.SafeString('<span class="flag ' + h.toLowerCase() + '">' + h + '</span>');
 });
 
+Handlebars.registerHelper('selectableStatusTag', function(statusText, fieldName, fieldData) {
+	var outputTag = '';
+	outputTag += '<span class="flag selectable ' + statusText.toLowerCase() + '" ';
+	outputTag += 'data-field = "' + fieldName + '" ';
+	outputTag += 'data-field-data="' + fieldData + '">';
+	outputTag += statusText + '</span>';
+	return new Handlebars.SafeString(outputTag);
+});
+
 Handlebars.registerHelper('dateFormat', function(t) {
 	var parts = t.split(' '),dateParts = parts[0].split('-');
 	return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];

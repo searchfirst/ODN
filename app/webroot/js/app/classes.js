@@ -197,7 +197,18 @@ DuxView = Backbone.View.extend({
 				$selector = $(match[2],$rootElement.get()),
 				method = match[1],
 				params = this.widgets[widget],
-				_params = [];
+				_params = [],
+				$backboneEl = $(this.el),
+				id,
+				title;
+
+			if (this.tagName !== undefined && this.model && this.model.get) {
+				id = this.model.get('id') || Math.random();
+				title = this.model.get('title') || this.model.get('name') || 'unknown';
+			} else {
+				id = Math.random();
+				title = 'unknown';
+			}
 
 			for (p in params) {
 				_params[p] = _.clone(params[p]);
@@ -205,12 +216,14 @@ DuxView = Backbone.View.extend({
 
 			for (a in _params) {
 				for (b in _params[a]) {
-					console.log(typeof _params[a][b]);
 					if (typeof _params[a][b] === 'string' && _params[a][b].match(/^cb_/)) {
 						var callback = _params[a][b].substr(3);
 						_params[a][b] = _.bind(this[callback],this);
 					}
 				}
+				_params[a].$backboneEl = $backboneEl;
+				_params[a].id = id;
+				_params[a].title = title;
 			}
 
 			if (_params !== undefined) {
@@ -298,9 +311,20 @@ DuxView = Backbone.View.extend({
 			model = this.model,
 			$el = $(el),
 			multiEdit = el.nodeName == 'DIV',
+			hasValueData = $el.attr('data-field-data') !== undefined,
 			field = $el.data('field'),
-			value = multiEdit ? $el.html() : $el.text(),
+			value,
 			r = {success: false,ret: false};
+
+		if (multiEdit) {
+			value = $el.html();
+		} else {
+			if (hasValueData) {
+				value = $el.attr('data-field-data');
+			} else {
+				value = $el.text();
+			}
+		}
 
 		model.attributes[field] = value;
 		model._changed = true;
@@ -353,6 +377,7 @@ DuxPageView = DuxView.extend({
 		$thisEl.html(this.viewTemplate(data));
 		this.commonWidgets($thisEl);
 		this.trigger('rendered',this.rendered);
+		$thisEl.trigger('rendered');
 		return this;
 	},
 	rendering: function() {
@@ -401,7 +426,6 @@ DuxListView = DuxView.extend({
 			$form = $(formTemplate(data)).insertBefore($pForm.get(0));
 
 		this.commonWidgets($form);
-		console.log($form.get(0));
 		$pForm.fadeOut('fast');
 	},
 	_extendDataWithExtras: function(data) {
@@ -425,6 +449,7 @@ DuxListView = DuxView.extend({
 		this.$('article, .pagelinks, .emptycollection, ul[data-icontainer], .p_form').remove();
 		this.$('.loading').fadeOut('fast').remove();
 		if (this.collection.models.length > 0) {
+			$thisEl.removeClass('empty');
 			if (this.itemTagName === 'li') {
 				$itemContainer = $thisEl.find('ul[data-icontainer]');
 				if ($itemContainer.length === 0) {
@@ -445,12 +470,14 @@ DuxListView = DuxView.extend({
 				} else {
 					$thisEl.append(itemView.render().el);
 				}
+				$(itemView.el).trigger('rendered');
 			}
 			$thisEl.append(paginationTemplate({
 				model: this.modelName,
 				pageInfo: this.collection.pageInfo()
 			}));
 		} else {
+			$thisEl.addClass('empty');
 			$thisEl.append(this.templates.compile('emptyCollection')({
 				modelName: this.modelName
 			}));
