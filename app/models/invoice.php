@@ -125,7 +125,25 @@ class Invoice extends AppModel {
 
 	function afterFind($results, $primary) {
 		$this->setStatus($results,$primary);
+		$this->addPrimaryAddressToCustomer($results,$primary);
 		return $results;
+	}
+
+	private function addPrimaryAddressToCustomer(&$results, $primary) {
+		if ($primary) {
+			foreach ($results as $a => $result) {
+				if (!empty($result['Customer'])) {
+					$contact = $this->Customer->Contact->find('first',array(
+						'conditions' => array('Contact.customer_id' => $result['Customer']['id']),
+						'recursive' => -1,
+						'order' => 'Contact.created ASC'
+					));
+					if (!empty($contact)) {
+						$results[$a]['Customer']['address'] = $contact['Contact']['address'];
+					}
+				}
+			}
+		}
 	}
 
 	private function getStatusString($invoice) {

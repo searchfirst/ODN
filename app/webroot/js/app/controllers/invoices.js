@@ -12,7 +12,9 @@ var InvoicesController = DuxController.extend({
 			context: 'model',
 			widgets: {
 				'cnrsEditable [contenteditable]': [
-					{callbacks:{save: 'update'}}
+					{
+						save: 'cb_update'
+					}
 				],
 				'cnrsCollapse .collapse': [{}]
 			}
