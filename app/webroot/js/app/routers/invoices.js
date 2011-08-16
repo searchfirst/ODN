@@ -1,4 +1,4 @@
-var InvoicesController = DuxController.extend({
+var InvoicesRouter = DuxRouter.extend({
 	routes: {
 		'/invoices': 'index',
 		'/invoices/view/:id': 'view',

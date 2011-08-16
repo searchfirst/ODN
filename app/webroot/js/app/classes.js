@@ -11,7 +11,7 @@ var DuxModel = Backbone.Model.extend({
 		Backbone.Model.prototype.fetch.call(self, options);
 	}
 }),
-DuxController = Backbone.Controller.extend({
+DuxRouter = Backbone.Router.extend({
 	initialize: function(options) {
 		this.bind('route',function(){
 			this.viewVars = {};
@@ -164,6 +164,7 @@ DuxCollection = Backbone.Collection.extend({
 DuxView = Backbone.View.extend({
 	initialize: function(options) {
 		if (options) {
+			if (options.router !== undefined) {this.router = options.router; delete options.router; }
 			if (options.model !== undefined) { this.model = options.model; delete options.model; }
 			if (options.widgets !== undefined) { this.widgets = options.widgets; delete options.widgets; }
 			if (options.itemWidgets !== undefined) { this.itemWidgets = options.itemWidgets; delete options.itemWidgets; }

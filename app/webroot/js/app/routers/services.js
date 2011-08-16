@@ -1,10 +1,10 @@
-var ServicesController = DuxController.extend({
+var ServicesRouter = DuxRouter.extend({
 	initialize: function() {
 		var self = this;
 		this.services = new ServicesCollection();
 		this.service = new Service();
 		this.view = new ServicesView({collection: this.services});
-		DuxController.prototype.initialize.call(self);
+		DuxRouter.prototype.initialize.call(self);
 	},
 	routes: {
 		'/services/add': 'add',

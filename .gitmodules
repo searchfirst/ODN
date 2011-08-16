@@ -25,3 +25,6 @@
 [submodule "app/webroot/js/libs/gruft"]
 	path = app/webroot/js/libs/gruft
 	url = git://github.com/nikola/gruft.git
+[submodule "app/webroot/js/libs/backbone"]
+	path = app/webroot/js/libs/backbone
+	url = git://github.com/documentcloud/backbone.git

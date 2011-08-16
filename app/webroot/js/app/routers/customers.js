@@ -1,14 +1,15 @@
-var CustomersController = DuxController.extend({
+var CustomersRouter = DuxRouter.extend({
 	routes: {
-		'/customers': 'index',
-		'/customers/add': 'add',
-		'/customers/add/customer_id::customer_id': 'add',
-		'/customers/view/:id': 'view',
-		'/customers/delete/:id': 'delete'
+		'customers': 'index',
+		'customers?f=:filter': 'index',
+		'customers/add': 'add',
+		'customers/add/customer_id::customer_id': 'add',
+		'customers/view/:id': 'view',
+		'customers/delete/:id': 'delete'
 	},
 	view: function(id) {
 		var customer = new Customer({id: +id});
-		this.pageView = new DuxPageView({
+		pageView = new DuxPageView({
 			el: $('[role=main]').get(0),
 			viewTemplate: 'customersView',
 			model: customer,
@@ -18,7 +19,7 @@ var CustomersController = DuxController.extend({
 				'cnrsCollapse .collapse': [{}]
 			}
 		});
-		this.pageView.rendering();
+		pageView.rendering();
 		this.extras = {
 			users: new UsersCollection(),
 			websites: new WebsitesCollection({page:1,params:{limit:'all',customer_id:id}}),
@@ -29,20 +30,22 @@ var CustomersController = DuxController.extend({
 		this.extras.services.fetch();
 		customer.bind('change', _.bind(this._renderView,this,customer.id)).fetch();
 	},
-	index: function() {
-		var customers = new CustomersCollection({page: 1,params:{limit:'all',filter:'A'}});
-		this.pageView = new DuxPageView({
-			el: $('[role=main]').get(0),
-			events: {
-				'submit .p_form form[action="/customers/add"]': 'add',
-				'click ul[data-field="filter"] span': 'filterBy'
-			},
-			collection: customers,
-			gotoViewOnAdd: true,
-			hideFormOnSubmit: false,
-			viewTemplate: 'customersIndex'
-		});
-		this.pageView.render();
+	index: function(filter) {
+		console.log(filter);
+		var filter = filter || 'A',
+			customers = new CustomersCollection({page: 1,params:{limit:'all',filter: filter}}),
+			pageView = new DuxPageView({
+				el: $('[role=main]').get(0),
+				events: {
+					'submit .p_form form[action="/customers/add"]': 'add',
+					'click ul[data-field="filter"] span': 'filterBy'
+				},
+				collection: customers,
+				gotoViewOnAdd: true,
+				hideFormOnSubmit: false,
+				viewTemplate: 'customersIndex'
+			});
+		pageView.render();
 		var customersView = new DuxListView({
 				modelName: 'Customer',
 				el: $('.customer.list').get(0),
@@ -53,7 +56,7 @@ var CustomersController = DuxController.extend({
 		customers.fetch();
 	},
 	_renderView: function(id) {
-		this.pageView.render().delegateEvents();
+		pageView.render().delegateEvents();
 		var baseCollectionParams = {
 				page: 1,
 				params: {customer_id: id}
