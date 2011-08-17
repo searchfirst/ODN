@@ -118,7 +118,6 @@ var CustomersView = DuxPageView.extend({
 	},
 	_filterBy: function(e) {
 		var filter = $(e.target).text();
-		console.log(filter);
 		this.router.navigate('customers?f='+filter,true);
 	}
 });
