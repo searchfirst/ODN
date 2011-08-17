@@ -6,7 +6,7 @@ var DuxModel = Backbone.Model.extend({
 		self.trigger('fetching');
 		options.success = function(resp) {
 			if (success) { success(self, resp); }
-			self.trigger('fetched',self);
+			self.trigger('fetched');
 		};
 		Backbone.Model.prototype.fetch.call(self, options);
 	}
@@ -63,6 +63,7 @@ DuxRouter = Backbone.Router.extend({
 }),
 DuxCollection = Backbone.Collection.extend({
 	initialize: function(options) {
+		var self = this;
 		if (options) {
 			if (options.page !== undefined && options.page != 0) {
 				this.page = options.page;
@@ -72,6 +73,11 @@ DuxCollection = Backbone.Collection.extend({
 			}
 			if (options.modelName !== undefined) {
 				this.modelName = options.modelName;
+			}
+			if (options.watch !== undefined) {
+				var wItem = options.watch.parent,
+					wEvent = options.watch.event;
+				wItem.bind(wEvent, self.fetch, self);
 			}
 		}
 	},
@@ -86,7 +92,7 @@ DuxCollection = Backbone.Collection.extend({
 		self.trigger('fetching');
 		options.success = function(resp) {
 			if (success) { success(self, resp); }
-			self.trigger('fetched',self);
+			self.trigger('fetched');
 		};
 		Backbone.Collection.prototype.fetch.call(self, options);
 	},
@@ -171,6 +177,7 @@ DuxView = Backbone.View.extend({
 			if (options.modelName !== undefined) { this.modelName = options.modelName; delete options.modelName; }
 			if (options.itemTagName !== undefined) { this.itemTagName = options.itemTagName; delete options.itemTagName; }
 			if (options.extras !== undefined) { this.extras = options.extras; delete options.extras; }
+			if (options.parentModel !== undefined) { this.parentModel = options.parentModel; delete options.parentModel; }
 			if (options.gotoViewOnAdd !== undefined) {
 				this.gotoViewOnAdd = options.gotoViewOnAdd;
 				delete options.gotoViewOnAdd;
@@ -246,23 +253,6 @@ DuxView = Backbone.View.extend({
 		Backbone.history.saveLocation('#' + url);
 		Backbone.history.loadUrl();
 	},
-	asdfdelegateEvents: function(events) {
-		var eventSplitter = /^(\w+)\s*(.*)$/,
-				$thisel = typeof this.el == 'function' ? $(this.el()) : $(this.el);
-		if (!(events || (events = this.events))) return;
-		$thisel.unbind();
-		for (var key in events) {
-			var methodName = events[key],
-					match = key.match(eventSplitter),
-					eventName = match[1], selector = match[2],
-					method = _.bind(this[methodName], this);
-			if (selector === '') {
-				$thisel.bind(eventName, method);
-			} else {
-				$thisel.delegate(selector, eventName, method);
-			}
-		}
-	},
 	add: function(e) {
 		e.preventDefault();
 		var $target = $(e.target),
@@ -299,6 +289,9 @@ DuxView = Backbone.View.extend({
 				}
 				if (hideFormOnSubmit) {
 					$target.fadeOut('fast');
+				}
+				if (this.parentModel && this.parentModel.trigger) {
+					this.parentModel.trigger('childAdd');
 				}
 			},
 			error: function(model, response) {
@@ -370,14 +363,14 @@ DuxPageView = DuxView.extend({
 				this.delegateEvents();
 			}
 		}
-		this.bind('rendered',this.rendered);
+		this.bind('rendered',this.rendered,this);
 	},
 	render: function() {
 		var $thisEl = $(this.el),
 			data = (this.context && this[this.context]) ? this[this.context].toJSON() : {};
 		$thisEl.html(this.viewTemplate(data));
 		this.commonWidgets($thisEl);
-		this.trigger('rendered',this.rendered);
+		this.trigger('rendered');
 		$thisEl.trigger('rendered');
 		return this;
 	},
@@ -402,12 +395,13 @@ DuxListView = DuxView.extend({
 	showButtons: true,
 	hideFormOnSubmit: true,
 	initialize: function(options) {
-		DuxView.prototype.initialize.call(this, options);
-		$(this.el).addClass('paginated');
-		this.collection
-			.bind('add', _.bind(this.redrawItems,this))
-			.bind('fetched', _.bind(this.redrawItems,this))
-			.bind('fetching', _.bind(this.fetchingItems,this));
+		var self = this;
+		DuxView.prototype.initialize.call(self, options);
+		$(self.el).addClass('paginated');
+		self.collection
+			.bind('add', self.redrawItems, self)
+			.bind('fetched', self.redrawItems ,self)
+			.bind('fetching', self.fetchingItems, self);
 	},
 	events: {
 		'click .next': 'next',
