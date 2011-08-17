@@ -3,18 +3,21 @@ color: #007299;
 }
 
 html {
-background-color: #c49e91;
-background-image: -moz-linear-gradient(top, #c49e91, #b88d7f); 
-background-image: -ms-linear-gradient(top, #c49e91, #b88d7f); 
-background-image: -o-linear-gradient(top, #c49e91, #b88d7f); 
-background-image: -webkit-gradient(linear, left top, left bottom, from(#c49e91), to(#b88d7f)); 
-background-image: -webkit-linear-gradient(top, #c49e91, #b88d7f); 
-background-image: linear-gradient(top, #c49e91, #b88d7f);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#c49e91', EndColorStr='#b88d7f'); 
+background-color: #69BAD5;
+background-image: -moz-linear-gradient(top, #69BAD5, #5D9EB4); 
+background-image: -ms-linear-gradient(top, #69BAD5, #5D9EB4); 
+background-image: -o-linear-gradient(top, #69BAD5, #5D9EB4); 
+background-image: -webkit-gradient(linear, left top, left bottom, from(#69BAD5), to(#5D9EB4)); 
+background-image: -webkit-linear-gradient(top, #69BAD5, #5D9EB4); 
+background-image: linear-gradient(top, #69BAD5, #5D9EB4);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#69BAD5', EndColorStr='#5D9EB4'); 
+min-height: 100%;
 }
 
 body {
 font-family: 'Helvetica Neue',HelveticaNeue,Helvetica-Neue,Helvetica,Arial,sans-serif;
+color: rgba(0,0,0,.5);
+text-shadow: 1px 1px 0 rgba(255,255,255,.2);
 margin: .5em;
 }
 
@@ -56,10 +59,8 @@ width: 1em;
 /* Header */
 
 header[role="banner"] {
-color: rgba(145,95,78,.8);
 margin-bottom: .25em;
 padding: 0 .5em;
-text-shadow: 1px 1px 0 rgba(255,255,255,.2);
 }
 
 header[role="banner"] h1 {
@@ -70,7 +71,6 @@ line-height: 1;
 section[role="search"] {
 line-height: 1;
 padding: .5em;
-color: rgba(145,95,78,.8);
 text-shadow: 1px 1px 0 rgba(255,255,255,.2);
 }
 section[role="search"] label {
@@ -81,7 +81,6 @@ display: inline;
 /* Navigation */
 
 nav#menu > ul {
-color: rgba(145,95,78,.8);
 line-height: 3;
 margin-bottom: 0;
 padding: 0;
@@ -94,7 +93,7 @@ display: inline-block;
 
 nav#menu a {
 background-color: transparent;
-color: rgba(145,95,78,.8);
+color: rgba(0,0,0,.5);
 display: inline-block;
 line-height: 3;
 padding: 0 .5em;
@@ -109,66 +108,6 @@ nav#menu a:hover {
 background-color: rgba(255,255,255,0.3);
 }
 
-nav#menu ul > li > div {
-display: none;
-background-color: #333;
-color: #FFF;
--moz-box-sizing: border-box;
--webkit-box-sizing: border-box;
--o-box-sizing: border-box;
--ms-box-sizing: border-box;
-box-sizing: border-box;
--moz-box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
--webkit-box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
-box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
-padding: 0;
-}
-
-nav#menu ul li, nav#menu ul ul, nav#menu ul div {
-margin-bottom: 0;
-}
-
-nav#menu ul > li > div a {
-color: #eee;
-}
-
-nav#menu ul > li > div li > a {
-padding: 0 .5em;
-}
-
-nav#menu ul > li > div li, nav#menu ul > li > div li > a {
-display: block;
-}
-
-nav#menu ul > li > div li a:hover {
-background-color: #eee;
-color: #333;
-}
-
-nav#menu ul.cloud {
-font-family: monospace;
-max-width: 21em;
-}
-
-nav#menu ul > li > div ul.cloud li, nav#menu ul > li > div ul.cloud a {
-display: inline-block;
-margin: auto;
-}
-
-nav#menu ul > li > div p {
-margin: 0;
-}
-
-nav#menu ul > li > div p a {
-padding: 0 .5em;
-display: block;
-}
-
-nav#menu ul > li > div p a:hover {
-background-color: #eee;
-color: #333;
-}
-
 @media screen and (max-width: 30em) {
 nav#menu ul > li > div {
 left: 0 !important;
@@ -176,13 +115,16 @@ width: 100%;
 }
 }
 
-section[role="main"] {
+[role="main"] {
+color: #444;
+text-shadow: none;
 padding: .5em;
 background-color: #fff;
+background-color: #fff9f6;
 border-top: none;
--moz-box-shadow: 0px 0px 2px rgba(145,95,78,.8); 
--webkit-box-shadow: 0px 0px 2px rgba(145,95,78,.8); 
-box-shadow: 0px 0px 2px rgba(145,95,78,.8); 
+-moz-box-shadow: 0px 0px 4px rgba(145,95,78,.8); 
+-webkit-box-shadow: 0px 0px 4px rgba(145,95,78,.8); 
+box-shadow: 0px 0px 4px rgba(145,95,78,.8); 
 }
 
 section[role="main"] h1 .referrer {
@@ -195,6 +137,6 @@ margin-bottom: .5em;
 }
 
 #user_details, #user_details a {
-color: rgba(145,95,78,.8);
-text-shadow: 1px 1px 0 rgba(255,255,255,.2);
+color: rgba(0,0,0,.5);
+text-decoration: none;
 }
