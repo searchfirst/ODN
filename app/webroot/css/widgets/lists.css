@@ -168,6 +168,18 @@ color: rgb(68,68,68);
 padding-left: 1em;
 }
 
+.box.detail {
+margin-bottom: .5em;
+}
+
+.box.detail p {
+margin-bottom: .5em;
+}
+
+.box.detail *:last-child {
+margin-bottom: 0;
+}
+
 ul[data-field="filter"] li { display: inline; }
 
 ul[data-field="filter"] li span {

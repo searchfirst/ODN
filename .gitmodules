@@ -28,3 +28,6 @@
 [submodule "app/webroot/js/libs/backbone"]
 	path = app/webroot/js/libs/backbone
 	url = git://github.com/documentcloud/backbone.git
+[submodule "app/plugins/datasources"]
+	path = app/plugins/datasources
+	url = git://github.com/cakephp/datasources.git

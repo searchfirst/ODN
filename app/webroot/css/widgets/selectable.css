@@ -1,3 +1,7 @@
+.cs-widget-wrapper {
+	position: relative;
+}
+
 .cs-widget {
 	position: absolute;
 }

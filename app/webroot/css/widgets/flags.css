@@ -1,28 +1,36 @@
 span.flag {
-padding: .125em .25em;
--moz-border-radius: .25em;
--o-border-radius: .25em;
--webkit-border-radius: .25em;
-border-radius: .25em;
-margin-right: .125em;
+	white-space: nowrap;
+	border-bottom: 1px dotted #444;
 }
 
-span[class~=flag][class~=inactive], span[class~=flag][class~=cancelled], span.flag.overdue {
+span.flag.inactive, span.flag.cancelled, span.flag.overdue,
+span.flag.pending, span.flag.flagged, span.flag.due,
+span.flag.active, span.flag.paid, span.flag.complete {
+	-moz-border-radius: .25em;
+	-o-border-radius: .25em;
+	-webkit-border-radius: .25em;
+	border-radius: .25em;
+	margin-right: .125em;
+	padding: .125em .25em;
+	border-bottom: none;
+}
+
+span.flag.inactive, span.flag.cancelled, span.flag.overdue {
 background-color: #d92b57;
 color: #fff;
 }
 
-span[class~=flag][class~=pending], span.flag.flagged, span.flag.due {
+span.flag.pending, span.flag.flagged, span.flag.due {
 background-color: #cc7a29;
 color: #fff;
 }
 
-span[class~=flag][class~=paid], span[class~=flag][class~=complete] {
+span.flag.paid, span.flag.complete {
 background-color: #47b224;
 color: #fff;
 }
 
-span[class~=flag][class~=active] {
+span.flag.active {
 background-color: #248fb2;
 color: #fff;
 }
