@@ -2,5 +2,5 @@
 <div>
 {{editable description "description" "1"}}
 </div>
-<p>{{{selectableStatusTag text_status "status" status}}} service on {{Website.uri}}, assigned to <a href="/users/view/{{User.id}}">{{User.name}}</a>.<br> 
+<p>{{{selectableStatusTag text_status "status" status}}} service on {{Website.uri}}, assigned to {{{selectableStatusTag User.name "user_id" User.id}}}.<br> 
 {{#cancelled}}Cancelled {{dateFormat .}}{{^}}Started {{dateFormat ../joined}}{{/cancelled}}</p>

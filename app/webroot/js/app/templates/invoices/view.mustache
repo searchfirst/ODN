@@ -1,14 +1,16 @@
 <h1>Invoice</h1>
+<div class="detail box">
 <p>{{Customer.company_name}}</p>
 {{{txtl Customer.address}}}
+<p><b>Reference:</b> {{reference}}</p>
+</div>
 <div class="fwrap c2 p">
 <div>
 <section class="detail list">
 <h1>Details</h1>
-<p><b>Reference:</b> {{reference}}</p>
+{{{txtl description}}}
 </section>
 </div>
 <div>
-{ { > invoicesViewPayments } }
 </div>
 </div>

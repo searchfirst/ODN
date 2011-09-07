@@ -42,6 +42,7 @@
 	function attachWidget($field, $widget) {
 		var dimensions = { width: $field.outerWidth(), height: $field.outerHeight() },
 			$select = $widget.find('select');
+		$field.wrap('<span class="cs-widget-wrapper"/>');
 		$field.after($widget);
 		$select
 			.val($field.data('originalState').fieldData)
@@ -105,11 +106,13 @@
 					fieldData: $this.attr('data-field-data')
 				},
 				field = $this.get(0),
+				selectableFor = $this.data('field'),
 				md5 = new gruft.MD5(),
-				uid = md5.digest(id + title);
-				widget;
+				uid = md5.digest(id + title),
+				widget,
+				$widget;
 
-			widget += '<span class="cs-widget"><label class="visuallyhidden" for="' + uid + '">Change service status for ' + title + '</label><select id="' + uid + '" class="seethrough">';
+			widget += '<span class="cs-widget"><label class="visuallyhidden" for="' + uid + '">Change service status for ' + title + '</label><select id="' + uid + '" class="seethrough" data-selectable-for="' + selectableFor + '">';
 			for (o in options) {
 				var t = options[o].text, d = options[o].fieldData;
 				widget += '<option value="'+d+'">'+t+'</option>';

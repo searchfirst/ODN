@@ -110,8 +110,6 @@ class DuxComponent extends Object {
 				'js/jquery/libs/timepicker/jquery-ui-timepicker-addon.js',
 				'js/libs/linen/linen.js',
 				'js/libs/underscore.js',
-				//'js/libs/backbone.js',
-				//'js/libs/backbone-ps.js',
 				'js/libs/backbone/backbone.js',
 				'js/libs/paginatedcollection.backbone.js',
 				'js/libs/handlebars.min.js',
@@ -120,6 +118,7 @@ class DuxComponent extends Object {
 				'js/app/cache.js',
 				'js/app/templates.js',
 				'js/app/classes.js',
+				'js/app/bootstrap.js',
 				'js/app/models/customer.js',
 				'js/app/models/contact.js',
 				'js/app/models/service.js',
@@ -129,6 +128,7 @@ class DuxComponent extends Object {
 				'js/app/models/invoice.js',
 				'js/app/models/facade.js',
 				'js/app/models/schedule.js',
+				'js/app/views/app_view.js',
 				'js/app/views/customers.js',
 				'js/app/views/contacts.js',
 				'js/app/views/services.js',
@@ -138,6 +138,7 @@ class DuxComponent extends Object {
 				'js/app/views/invoices.js',
 				'js/app/views/facades.js',
 				'js/app/views/schedules.js',
+				'js/app/routers/app_router.js',
 				'js/app/routers/customers.js',
 				'js/app/routers/contacts.js',
 				'js/app/routers/services.js',
@@ -153,7 +154,7 @@ class DuxComponent extends Object {
 		$template_list = array(
 			'core' => array(
 				'file_list' => array(
-					'facades_index' => 'js/app/templates/facades/index.mustache',
+					'facadesIndex' => 'js/app/templates/facades/index.mustache',
 					'customersIndex' => 'js/app/templates/customers/index.mustache',
 					'customersView' => 'js/app/templates/customers/view.mustache',
 					'customersAdd' => 'js/app/templates/customers/add.mustache',
@@ -182,8 +183,8 @@ class DuxComponent extends Object {
 			),
 			'partials' => array(
 				'file_list' => array(
-					'facades_projects' => 'js/app/templates/facades/index/projects.mustache',
-					'facades_notes' => 'js/app/templates/facades/index/notes.mustache',
+					'facadesProjects' => 'js/app/templates/facades/index/projects.mustache',
+					'facadesNotes' => 'js/app/templates/facades/index/notes.mustache',
 					'customersViewDetails' => 'js/app/templates/customers/view/details.mustache',
 					'customersViewInvoices' => 'js/app/templates/customers/view/invoices.mustache',
 					'customersViewNotes' => 'js/app/templates/customers/view/notes.mustache',
