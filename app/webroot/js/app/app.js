@@ -1,10 +1,9 @@
-(function(window,document,$,duxAppClasses,undefined){
 	$(function(){
 		var duxApp = {
-			appRouter: new duxAppClasses.AppRouter,
-			facadesRouter: new duxAppClasses.FacadesRouter,
-			customersRouter: new duxAppClasses.CustomersRouter,
-			invoicesRouter: new duxAppClasses.InvoicesRouter
+			appRouter: new dac.AppRouter,
+			facadesRouter: new dac.FacadesRouter,
+			customersRouter: new dac.CustomersRouter,
+			invoicesRouter: new dac.InvoicesRouter
 		};
 		$('nav#menu a').click(function(e){
 			var usedModifier = e.which == 1 && (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey),
@@ -17,4 +16,3 @@
 		Backbone.history.start({pushState:true});
 		window.duxApp = duxApp;
 	})
-})(this,document,jQuery,this.duxAppClasses);

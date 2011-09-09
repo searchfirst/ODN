@@ -10,9 +10,9 @@
 [submodule "app/plugins/searchable"]
 	path = app/plugins/searchable
 	url = git://github.com/connrs/Searchable-Behaviour-for-CakePHP.git
-[submodule "app/plugins/minify"]
-	path = app/plugins/minify
-	url = git://github.com/connrs/minify.git
+[submodule "app/plugins/sma"]
+	path = app/plugins/sma
+	url = git://github.com/connrs/Sma.git
 [submodule "app/webroot/js/libs/linen"]
 	path = app/webroot/js/libs/linen
 	url = git://github.com/connrs/linen.git
@@ -31,3 +31,6 @@
 [submodule "app/plugins/datasources"]
 	path = app/plugins/datasources
 	url = git://github.com/cakephp/datasources.git
+[submodule "app/webroot/js/libs/cbb"]
+	path = app/webroot/js/libs/cbb
+	url = git://github.com/connrs/connrs-Backbone-Boilerplate.git

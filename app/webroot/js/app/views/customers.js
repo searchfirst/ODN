@@ -1,5 +1,4 @@
-(function(window,document,cbb,duxAppClasses,undefined){
-	var CustomersView = cbb.PageView.extend({
+	dac.CustomersView = cbb.PageView.extend({
 		events: {
 			'submit .p_form form[action="/customers/add"]': 'add',
 			'click a[href^=/invoices/view]': '_navigateInvoiceView',
@@ -7,22 +6,22 @@
 		},
 		view: function(id) {
 			var extras = {
-					users: new duxAppClasses.UsersCollection({watch: {parent: this.model, event: 'childAdd'}}),
-					websites: new duxAppClasses.WebsitesCollection({page:1,params:{limit:'all',customer_id:id},watch: {parent: this.model, event: 'childAdd'}}),
-					services: new duxAppClasses.ServicesCollection({page:1,params:{limit:'all',customer_id:id},watch: {parent: this.model, event: 'childAdd'}})
+					users: new dac.UsersCollection({watch: {parent: this.model, event: 'childAdd'}}),
+					websites: new dac.WebsitesCollection({page:1,params:{limit:'all',customer_id:id},watch: {parent: this.model, event: 'childAdd'}}),
+					services: new dac.ServicesCollection({page:1,params:{limit:'all',customer_id:id},watch: {parent: this.model, event: 'childAdd'}})
 				};
 			var e = {
-				users: new duxAppClasses.UsersCollection({
+				users: new dac.UsersCollection({
 					page:1,
 					limit:'all',
 					watch:{parent: this.model, event: 'childAdd'}
 				}),
-				websites: new duxAppClasses.WebsitesCollection({
+				websites: new dac.WebsitesCollection({
 					page:1,
 					params:{limit:'all', customer_id:id},
 					watch:{parent: this.model, event: 'childAdd'}
 				}),
-				services: new duxAppClasses.ServicesCollection({
+				services: new dac.ServicesCollection({
 					page:1,
 					params:{limit:'all', customer_id:id},
 					watch:{parent: this.model, event: 'childAdd'}
@@ -44,7 +43,7 @@
 						contactsView = new cbb.ListView({
 							modelName: 'Contact',
 							el: $('.contact.list').get(0),
-							collection: new duxAppClasses.ContactsCollection(collectionParams),
+							collection: new dac.ContactsCollection(collectionParams),
 							parentModel: this.model,
 							itemWidgets: {
 								'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
@@ -55,7 +54,7 @@
 						notesView = new cbb.ListView({
 							modelName: 'Note',
 							el: $('.note.list').get(0),
-							collection: new duxAppClasses.NotesCollection(collectionParams),
+							collection: new dac.NotesCollection(collectionParams),
 							extras: {
 								users: {
 									collection: e.users,
@@ -79,7 +78,7 @@
 						websitesView = new cbb.ListView({
 							modelName: 'Website',
 							el: $('.website.list').get(0),
-							collection: new duxAppClasses.WebsitesCollection(collectionParams),
+							collection: new dac.WebsitesCollection(collectionParams),
 							parentModel: this.model,
 							itemWidgets: {
 								'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
@@ -90,7 +89,7 @@
 						servicesView = new cbb.ListView({
 							modelName: 'Service',
 							el: $('.service.list').get(0),
-							collection: new duxAppClasses.ServicesCollection(collectionParams),
+							collection: new dac.ServicesCollection(collectionParams),
 							extras: {
 								users: {
 									collection: e.users,
@@ -116,7 +115,7 @@
 								'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
 								'cnrsSelectable .selectable[data-field="status"]': [{
 									save: 'cb_update',
-									options: duxAppClasses.ServicesCollection.prototype.status
+									options: dac.ServicesCollection.prototype.status
 								}],
 								'cnrsSelectable .selectable[data-field="user_id"]': [{
 									save: 'cb_update',
@@ -129,7 +128,7 @@
 						invoicesView = new cbb.ListView({
 							modelName: 'Invoice',
 							el: $('.invoice.list').get(0),
-							collection: new duxAppClasses.InvoicesCollection(collectionParams),
+							collection: new dac.InvoicesCollection(collectionParams),
 							extras: {
 								users: {
 									collection: e.users,
@@ -172,7 +171,7 @@
 						customersView = new cbb.ListView({
 							modelName: 'Customer',
 							el: $('.customer.list').get(0),
-							collection: new duxAppClasses.CustomersCollection(collectionParams),
+							collection: new dac.CustomersCollection(collectionParams),
 							parentModel: this.model,
 							gotoViewOnAdd: true
 						});
@@ -185,7 +184,7 @@
 					var customersView = new cbb.ListView({
 							modelName: 'Customer',
 							el: $('.customer.list').get(0),
-							collection: new duxAppClasses.CustomersCollection({
+							collection: new dac.CustomersCollection({
 								page: 1,
 								params:{limit: 'all',filter: filter},
 								watch: { parent: this, event: 'renderChildren' }
@@ -207,5 +206,3 @@
 			this.router.navigate(url,true);
 		}
 	});
-	duxAppClasses.CustomersView = CustomersView;
-})(this,document,this.connrsBackboneBoilerplate,this.duxAppClasses);

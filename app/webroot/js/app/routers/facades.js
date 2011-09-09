@@ -1,19 +1,14 @@
-(function(window,document,cbb,duxAppClasses,undefined){
-	var FacadesRouter = cbb.Router.extend({
-		templates: CnrsTemplates,
+	dac.FacadesRouter = cbb.Router.extend({
 		routes: {
 			'': 'index'
 		},
 		index: function() {
-			var view = new duxAppClasses.FacadesView({
+			var view = new dac.FacadesView({
 				context: 'collection',
 				el: $('[role=main]').get(0),
-				collection: new duxAppClasses.FacadesCollection,
+				collection: new dac.FacadesCollection,
 				viewTemplate: 'facadesIndex'
 			});
-			window.fv = view;
 			view.index();
 		},
 	});
-	duxAppClasses.FacadesRouter = FacadesRouter;
-})(this,document,this.connrsBackboneBoilerplate,this.duxAppClasses);

@@ -2,10 +2,10 @@
 class AppController extends Controller {
 	var $components = array(
 		'Acl', 'Auth', 'Dux', 'RequestHandler',
-		'Session', 'Minify.Minify'/*, 'AclMenu.AclMenu'*/
+		'Session', 'Sma.Sma'/*, 'AclMenu.AclMenu'*/
 	);
 	var $helpers = array(
-		'Status', 'Html', 'Form', 'Time', 'TextAssistant', 'Js', 'Session', 'Minify.Minify'
+		'Status', 'Html', 'Form', 'Time', 'TextAssistant', 'Js', 'Session', 'Sma.Sma'
 	);
 	var $uses = array('User');
 	var $view = 'Theme';

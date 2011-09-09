@@ -1,5 +1,4 @@
-(function(window,document,cbb,duxAppClasses,undefined){
-	var CustomersRouter = cbb.Router.extend({
+	dac.CustomersRouter = cbb.Router.extend({
 		routes: {
 			'customers': 'index',
 			'customers?f=:filter': 'index',
@@ -9,10 +8,10 @@
 			'customers/delete/:id': 'delete'
 		},
 		view: function(id) {
-			var view = new duxAppClasses.CustomersView({
+			var view = new dac.CustomersView({
 					context: 'model',
 					el: $('[role=main]').get(0),
-					model: new duxAppClasses.Customer({id: +id}),
+					model: new dac.Customer({id: +id}),
 					router: this,
 					viewTemplate: 'customersView',
 					widgets: {
@@ -24,7 +23,7 @@
 		},
 		index: function(filter) {
 			var filter = filter || 'A',
-				view = new duxAppClasses.CustomersView({
+				view = new dac.CustomersView({
 					el: $('[role=main]').get(0),
 					gotoViewOnAdd: true,
 					hideFormOnSubmit: false,
@@ -34,5 +33,3 @@
 			view.index(filter);
 		}
 	});
-	duxAppClasses.CustomersRouter = CustomersRouter;
-})(this,document,this.connrsBackboneBoilerplate,this.duxAppClasses);

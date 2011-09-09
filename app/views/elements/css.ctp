@@ -1,1 +1,1 @@
-<?php echo $this->Minify->css_link($minify['css']) ?>
+<?php echo $this->Sma->link($assets['css']['default'],'css') ?>

@@ -12,7 +12,7 @@ class DuxComponent extends Object {
 		if ($this->controller->RequestHandler->isAjax() && $this->controller->name != 'CakeError') {
 			$this->getAjaxPutData();
 		} else {
-			$this->minifyInit();
+			//$this->minifyInit();
 		}
 	}
 
@@ -20,6 +20,7 @@ class DuxComponent extends Object {
 		if (!$this->controller->RequestHandler->isAjax()) {
 			$this->setTheme();
 			$this->modelInit();
+			$this->minifyInit();
 		}
 	}
 
@@ -113,47 +114,18 @@ class DuxComponent extends Object {
 				'js/libs/backbone/backbone.js',
 				'js/libs/paginatedcollection.backbone.js',
 				'js/libs/handlebars.min.js',
+				array(
+					'js/libs/cbb/build/_head.js',
+					'js/libs/cbb/cache.js',
+					'js/libs/cbb/templates.js',
+					'js/libs/cbb/classes.js',
+					'js/libs/cbb/build/_foot.js'
+				),
 				'js/libs/gruft/src/gruft-common.js',
 				'js/libs/gruft/src/gruft-md5.js',
-				'js/app/cache.js',
-				'js/app/templates.js',
-				'js/app/classes.js',
-				'js/app/bootstrap.js',
-				'js/app/models/customer.js',
-				'js/app/models/contact.js',
-				'js/app/models/service.js',
-				'js/app/models/website.js',
-				'js/app/models/user.js',
-				'js/app/models/note.js',
-				'js/app/models/invoice.js',
-				'js/app/models/facade.js',
-				'js/app/models/schedule.js',
-				'js/app/views/app_view.js',
-				'js/app/views/customers.js',
-				'js/app/views/contacts.js',
-				'js/app/views/services.js',
-				'js/app/views/websites.js',
-				'js/app/views/users.js',
-				'js/app/views/notes.js',
-				'js/app/views/invoices.js',
-				'js/app/views/facades.js',
-				'js/app/views/schedules.js',
-				'js/app/routers/app_router.js',
-				'js/app/routers/customers.js',
-				'js/app/routers/contacts.js',
-				'js/app/routers/services.js',
-				'js/app/routers/websites.js',
-				'js/app/routers/users.js',
-				'js/app/routers/notes.js',
-				'js/app/routers/invoices.js',
-				'js/app/routers/facades.js',
-				'js/app/routers/schedules.js',
-				'js/app/app.js'
-			)
-		);
-		$template_list = array(
-			'core' => array(
-				'file_list' => array(
+				'hb_templates' => array(
+					'_head' => 'js/app/templates/build/_head.js',
+					'_foot' => 'js/app/templates/build/_foot.js',
 					'facadesIndex' => 'js/app/templates/facades/index.mustache',
 					'customersIndex' => 'js/app/templates/customers/index.mustache',
 					'customersView' => 'js/app/templates/customers/view.mustache',
@@ -178,11 +150,9 @@ class DuxComponent extends Object {
 					'pagination' => 'js/app/templates/elements/pagination.mustache',
 					'emptyCollection' => 'js/app/templates/elements/empty_collection.mustache',
 				),
-				'variable' => 'hb_templates',
-				'post_commands' => '_(hb_templates).each(function(value,key){CnrsTemplates.add(key,value)});'
-			),
-			'partials' => array(
-				'file_list' => array(
+				'hb_partials' => array(
+					'_head' => 'js/app/templates/build/_head.js',
+					'_foot' => 'js/app/templates/build/_foot_partials.js',
 					'facadesProjects' => 'js/app/templates/facades/index/projects.mustache',
 					'facadesNotes' => 'js/app/templates/facades/index/notes.mustache',
 					'customersViewDetails' => 'js/app/templates/customers/view/details.mustache',
@@ -192,29 +162,60 @@ class DuxComponent extends Object {
 					'customersViewWebsites' => 'js/app/templates/customers/view/websites.mustache',
 					'customersViewCustomers' => 'js/app/templates/customers/view/customers.mustache'
 				),
-				'variable' => 'hb_partials',
-				'post_commands' => '_(hb_partials).each(function(value,key){CnrsTemplates.addPartial(key,value)});'
+				array(
+					'js/app/build/_head.js',
+					'js/app/models/customer.js',
+					'js/app/models/contact.js',
+					'js/app/models/service.js',
+					'js/app/models/website.js',
+					'js/app/models/user.js',
+					'js/app/models/note.js',
+					'js/app/models/invoice.js',
+					'js/app/models/facade.js',
+					'js/app/models/schedule.js',
+					'js/app/views/app_view.js',
+					'js/app/views/customers.js',
+					'js/app/views/contacts.js',
+					'js/app/views/services.js',
+					'js/app/views/websites.js',
+					'js/app/views/users.js',
+					'js/app/views/notes.js',
+					'js/app/views/invoices.js',
+					'js/app/views/facades.js',
+					'js/app/views/schedules.js',
+					'js/app/routers/app_router.js',
+					'js/app/routers/customers.js',
+					'js/app/routers/contacts.js',
+					'js/app/routers/services.js',
+					'js/app/routers/websites.js',
+					'js/app/routers/users.js',
+					'js/app/routers/notes.js',
+					'js/app/routers/invoices.js',
+					'js/app/routers/facades.js',
+					'js/app/routers/schedules.js',
+					'js/app/templates/helpers.js',
+					'js/app/app.js',
+					'js/app/build/_foot.js'
+				)
 			)
 		);
 		$css_list = array(
-			'css/reset.css','css/type.css','css/default.css','css/framework.css','css/tablets_netbooks.css','css/desktop.css',
-			'css/print.css','css/widgets/tabs.css','css/widgets/lists.css','css/widgets/modal.css','css/widgets/hook_menu.css',
-			'css/widgets/forms.css','css/widgets/flags.css','css/widgets/dialog.css','css/widgets/loading.css','css/widgets/pagination.css',
-			'css/widgets/editable.css','css/widgets/selectable.css','css/widgets/collapse.css','css/ui/jquery-ui-1.8.11.custom.css'
+			'default' => array(
+				'css/reset.css','css/type.css','css/default.css','css/framework.css','css/tablets_netbooks.css','css/desktop.css',
+				'css/print.css','css/widgets/tabs.css','css/widgets/lists.css','css/widgets/modal.css','css/widgets/hook_menu.css',
+				'css/widgets/forms.css','css/widgets/flags.css','css/widgets/dialog.css','css/widgets/loading.css','css/widgets/pagination.css',
+				'css/widgets/editable.css','css/widgets/selectable.css','css/widgets/collapse.css','css/ui/jquery-ui-1.8.11.custom.css'
+			)
 		);
 		if ($additional_js = Configure::read('Dux.additional_js')) {
 			$js_list['foot'] = array_merge($js_list['foot'], $additional_js);
 		}
 		if ($additional_css = Configure::read('Dux.additional_css')) {
-			$css_list = array_merge($css_list, $additional_css);
+			$css_list['default'] = array_merge($css_list['default'], $additional_css);
 		}
-		$js = array();
-		foreach ($js_list as $x=>$j) {
-			$js[$x] = $this->controller->Minify->js($j);
-		}
-		$tpl = $this->controller->Minify->js_tpl($template_list);
-		$css = $this->controller->Minify->css($css_list);
-		$this->controller->set('minify',array('css'=>$css,'js'=>$js,'tpl'=>$tpl));
+		$js = $this->controller->Sma->build($js_list, 'js');
+		$css = $this->controller->Sma->build($css_list, 'css');
+		$this->controller->set('assets',array('css'=>$css,'js'=>$js));
 	}
 
 	function mergeGetData() {

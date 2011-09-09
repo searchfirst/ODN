@@ -1,10 +1,9 @@
-(function(window,document,cbb,duxAppClasses,undefined){
-	var ServicesRouter = cbb.Router.extend({
+	dac.ServicesRouter = cbb.Router.extend({
 		initialize: function() {
 			var self = this;
-			this.services = new duxAppClasses.ServicesCollection();
-			this.service = new duxAppClasses.Service();
-			this.view = new duxAppClasses.ServicesView({collection: this.services});
+			this.services = new dac.ServicesCollection();
+			this.service = new dac.Service();
+			this.view = new dac.ServicesView({collection: this.services});
 			DuxRouter.prototype.initialize.call(self);
 		},
 		routes: {
@@ -27,4 +26,3 @@
 		add: function() {
 		}
 	});
-})(this,document,this.connrsBackboneBoilerplate,this.duxAppClasses);
