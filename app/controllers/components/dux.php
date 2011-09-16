@@ -3,7 +3,7 @@ class DuxComponent extends Object {
 	function initialize(&$controller, $settings = array()) {
 		$this->controller =& $controller;
 		$this->settings = $settings;
-		$this->authInit();
+		$this->setCurrentUser();
 		$this->commonRequestInfo = array(
 			'isPost' => $this->controller->RequestHandler->isAjax(),
 			'isPut' => $this->controller->RequestHandler->isPut(),
@@ -11,22 +11,20 @@ class DuxComponent extends Object {
 		);
 		if ($this->controller->RequestHandler->isAjax() && $this->controller->name != 'CakeError') {
 			$this->getAjaxPutData();
-		} else {
-			//$this->minifyInit();
 		}
 	}
 
 	function startup(&$controller) {
 		if (!$this->controller->RequestHandler->isAjax()) {
 			$this->setTheme();
-			$this->modelInit();
-			$this->minifyInit();
+			$this->setPrimaryModel();
+			$this->buildAssets();
 		}
 	}
 
 	function beforeRender(&$controller) {
 		$this->mergeGetData();
-		$this->requestHandlerInit();
+		$this->setCustomRequestHandlers();
 	}
 
 	function getAjaxPutData() {
@@ -65,14 +63,8 @@ class DuxComponent extends Object {
 		}
 	}
 
-	private function authInit() {
-		$this->controller->Auth->loginError = "There was an error logging you in";
-		$this->controller->Auth->authError = "You don't have permission to access this area. You may need to log in.";
-		$this->controller->Auth->fields = array('username'=>'email','password'=>'password');
-		$this->controller->Auth->actionPath = 'controllers/';
-		$this->controller->Auth->authorize = 'actions';
+	private function setCurrentUser() {
 		User::setCurrent($this->controller->Auth->user());
-		$this->controller->set('current_user',User::getCurrent());
 		$this->controller->set('currentUser',User::getCurrent());
 	}
 
@@ -82,7 +74,7 @@ class DuxComponent extends Object {
 		}
 	}
 
-	private function requestHandlerInit() {
+	private function setCustomRequestHandlers() {
 		if($this->controller->RequestHandler->isAjax()) {
 			$this->controller->set('isAjax',true);
 			$this->controller->RequestHandler->renderAs($this->controller,'json');
@@ -90,14 +82,13 @@ class DuxComponent extends Object {
 		}
 	}
 
-	private function modelInit() {
+	private function setPrimaryModel() {
 		if(!empty($this->controller->primaryModel)) {
-			$this->controller->set('primary_model',$this->controller->primaryModel);
 			$this->controller->set('primaryModel',$this->controller->primaryModel);
 		}
 	}
 
-	private function minifyInit() {
+	private function buildAssets() {
 		$js_list = array(
 			'app' => array(
 				'js/libs/modernizr.min.js',
