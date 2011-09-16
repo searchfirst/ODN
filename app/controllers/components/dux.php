@@ -99,10 +99,8 @@ class DuxComponent extends Object {
 
 	private function minifyInit() {
 		$js_list = array(
-			'head' => array(
-				'js/libs/modernizr.js','js/libs/yepnope.min.js'
-			),
-			'foot' => array(
+			'app' => array(
+				'js/libs/modernizr.min.js',
 				'js/jquery/libs/hook_menu.js',
 				'js/jquery/libs/dux_tabs.js',
 				'js/jquery/libs/editable.js',
