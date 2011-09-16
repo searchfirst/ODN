@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<title><?php echo $this->TextAssistant->sanitiseText($title_for_layout) ?> | Dux</title>
+<title><?php echo $this->TextAssistant->sanitiseText($title_for_layout) ?> | ODN</title>
 <?php echo $this->element('css') ?> 
 <?php echo $this->element('js') ?> 
 </head>
