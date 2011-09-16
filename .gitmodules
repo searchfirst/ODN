@@ -34,3 +34,6 @@
 [submodule "app/webroot/js/libs/cbb"]
 	path = app/webroot/js/libs/cbb
 	url = git://github.com/connrs/connrs-Backbone-Boilerplate.git
+[submodule "app/webroot/js/libs/clsp"]
+	path = app/webroot/js/libs/clsp
+	url = git://github.com/connrs/clsp.git
