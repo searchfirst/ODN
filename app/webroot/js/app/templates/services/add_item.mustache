@@ -1,13 +1,13 @@
 <form action="/services/add" method="post" accept-charset="UTF-8"> 
 <div><label for="ServiceTitle">Service Type</label><input type="text" name="title"></div>
 <div class="input textarea"><label for="ServiceDescription">Details</label><textarea name="description" rows="7" id="ServiceDescription" ></textarea></div> 
-<div><label for="ServiceUserId">Employee</label><select name="user_id" id="ServiceUserId"> 
+<div><label for="ServiceUserId">Employee</label><select name="user_id" id="ServiceUserId" data-selectable-for="user_id"> 
 <option value=""></option>
 {{#users}}
 <option value="{{id}}">{{name}}</option>
 {{/users}}
 </select></div> 
-<div><label for="ServiceWebsiteId">Website</label><select name="website_id" id="ServiceWebsiteId"> 
+<div><label for="ServiceWebsiteId">Website</label><select name="website_id" id="ServiceWebsiteId" data-selectable-for="website_id">
 <option value=""></option> 
 {{#websites}}
 <option value="{{id}}">{{uri}}</option>
