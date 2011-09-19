@@ -2,7 +2,7 @@
 <h1>Notes</h1>
 <form method="post" action="/notes/add" class="simple">
 <div><label for="NoteDescription">Content</label>
-<textarea name="description" id="NoteDescription" placeholder="Enter content for the note" rows="5"></textarea></div>
+<textarea name="description" id="NoteDescription" placeholder="Enter content for the note" rows="5" class="autosave"></textarea></div>
 <input type="hidden" name="customer_id" value="{{id}}">
 <input type="submit" value="Add Note">
 </form>
