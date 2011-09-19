@@ -37,3 +37,6 @@
 [submodule "app/webroot/js/libs/clsp"]
 	path = app/webroot/js/libs/clsp
 	url = git://github.com/connrs/clsp.git
+[submodule "app/webroot/js/libs/autosave"]
+	path = app/webroot/js/libs/autosave
+	url = git://github.com/connrs/autosave.backbone.js.git
