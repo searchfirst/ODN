@@ -3,6 +3,7 @@ class Contact extends AppModel {
 	var $belongsTo = array('Customer');
 	var $actsAs = array(
 		'Detextiliser'=>array('fields'=>array('address')),
+		'Searchable.Searchable',
 		'Alkemann.Revision'
 	);
 	var $_findMethods = array('allRelated' => true);
