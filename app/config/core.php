@@ -13,4 +13,3 @@ Configure::write('Acl.classname', 'DbAcl');
 Configure::write('Acl.database', 'default');
 Configure::write('Cache.check', false);
 Cache::config('default', array('engine' => 'File'));
-?>
