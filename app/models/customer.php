@@ -73,6 +73,11 @@ class Customer extends AppModel {
         }
     }
 
+    function indexData() {
+        $index = $this->data[$this->alias][$this->displayField];
+        return $index;
+    }
+
     function search($srch_string) {
         if(preg_match('/^\S{1,3}$/',$srch_string)) {
             $query = $this->query("SELECT id FROM customers WHERE company_name LIKE \"%$srch_string%\" ORDER BY company_name ASC");
