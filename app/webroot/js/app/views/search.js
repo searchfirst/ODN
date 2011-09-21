@@ -3,7 +3,7 @@
         events: {
             'keyup input[type="search"]': 'search',
             'change input[type="search"]': 'search',
-            //'focusout': 'hide',
+            'mouseout': 'hide',
             'focusin': 'show',
             'keydown input[type="search"]': '_preventDefault'
         },
@@ -22,7 +22,6 @@
             });
             this.searchTimer = 0;
             this.searchText = '';
-            this.focusTimer = 0;
         },
         hide: function(e) {
             var view = this.searchListView,
