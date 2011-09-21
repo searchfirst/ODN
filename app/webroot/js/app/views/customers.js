@@ -130,6 +130,10 @@
                                     save: 'cb_update',
                                     options: e.users.toStatusList()
                                 }],
+                                'cnrsSelectable .selectable[data-field="website_id"]': [{
+                                    save: 'cb_update',
+                                    options: e.websites.toStatusList()
+                                }],
                                 'cnrsCollapse .collapse': [{}]
                             },
                             itemTagName: 'article'
