@@ -6,6 +6,9 @@ class Website extends AppModel {
     var $hasMany = array("Service");
     var $recursive = 2;
     var $actsAs = array(
+        'IntCaster'=>array(
+            'cacheConfig'=>'lenore'
+        ),
         'Searchable.Searchable',
         'Alkemann.Revision'
     );

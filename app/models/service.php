@@ -1,11 +1,13 @@
 <?php
 class Service extends AppModel {
 	var $actsAs = array(
+        'IntCaster'=>array(
+            'cacheConfig'=>'lenore'
+        ),
 		'Joined',
 		'Searchable.Searchable',
 		'Alkemann.Revision',
-		'Detextiliser'=>array('fields'=>array('description')),
-		'IntCaster'=>array('cacheConfig'=>'lenore')
+		'Detextiliser'=>array('fields'=>array('description'))
 	);
 	var $order = 'Service.modified';
 	var $recursive = 1;

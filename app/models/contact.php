@@ -3,6 +3,9 @@ class Contact extends AppModel {
 	var $belongsTo = array('Customer');
 	var $actsAs = array(
 		'Detextiliser'=>array('fields'=>array('address')),
+        'IntCaster'=>array(
+            'cacheConfig'=>'lenore'
+        ),
 		'Searchable.Searchable',
 		'Alkemann.Revision'
 	);
