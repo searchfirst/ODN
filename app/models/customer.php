@@ -4,18 +4,19 @@ class Customer extends AppModel {
         'RemoveEmptyRelationships',
         'Joined',
         'Searchable.Searchable',
-        'IntCaster'=>array('cacheConfig'=>'lenore'),
+        'IntCaster'=>array(
+            'cacheConfig'=>'lenore'
+        ),
         'Alkemann.Revision'=>array('limit'=>2)
     );
     var $displayField = 'company_name';
+    var $_findMethods = array('listPotentialParents' => true);
     var $order = 'Customer.company_name';
     var $recursive = 1;
     var $validate = array();
     var $virtualFields = array(
         'text_status' => '(SELECT CASE Customer.status WHEN 1 THEN "Active" WHEN 0 THEN "Inactive" END)'
     );
-
-    var $_findMethods = array('listPotentialParents' => true);
 
     public static $status = array(
         'Cancelled'=>2,
@@ -107,17 +108,6 @@ class Customer extends AppModel {
         return join("\n", $index);
     }
 
-    function search($srch_string) {
-        if(preg_match('/^\S{1,3}$/',$srch_string)) {
-            $query = $this->query("SELECT id FROM customers WHERE company_name LIKE \"%$srch_string%\" ORDER BY company_name ASC");
-        } else {
-            $query = $this->query("SELECT id, MATCH(company_name,contact_name,telephone,fax,email,address,town,county,post_code) AGAINST('$srch_string' IN BOOLEAN MODE) AS score FROM customers WHERE MATCH(company_name,contact_name,telephone,fax,email,address,town,county,post_code) AGAINST('$srch_string' IN BOOLEAN MODE) ORDER BY company_name ASC");
-        }
-        $results = array();
-        foreach($query as $result) $results[] = $this->find(array('Customer.id'=>$result['customers']['id']),null,null,-1);
-        return $results;
-    }
-
     function _findListPotentialParents($state, $query, $results = array()) {
         if ($state == "before") {
             $query['conditions'] = array('Customer.customer_id'=>null,array('NOT'=>array('Customer.id'=>$this->id)));
@@ -137,7 +127,6 @@ class Customer extends AppModel {
     function afterFind($results, $primary) {
         $results = parent::afterFind($results, $primary);
         if (!preg_match('/^list/',$this->findQueryType)) {
-            //$this->setStatus($results, $primary);
             if ($primary) {
                 if ($this->recursive >= 0) {
                     $this->getResellerContacts($results);
@@ -145,17 +134,6 @@ class Customer extends AppModel {
             }
         }
         return $results;
-    }
-
-    private function setStatus(&$results, $primary) {
-        if ($primary) {
-            foreach ($results as $x => $result) {
-                if (!empty($result['Service'])) {
-                    extract($this->getStatusWithService($result['Service']));
-                    $results[$x]['Customer']['status'] = $active ? 1 : ($pending ? 2 : 0);
-                }
-            }
-        }
     }
 
     private function getResellerContacts(&$results) {
@@ -221,31 +199,28 @@ class Customer extends AppModel {
     }
 
     function reassessStatus($id) {
-        $this->id = $id;
-        $this->recursive = 1;
-        if ($this->id && $customer = $this->read()) {
-            $service_status = false;
+        $Customer = new Customer();
+        $Customer->id = $id;
+        if ($Customer->id && $customer = $Customer->read()) {
+            $serviceStatus = false;
             if (!empty($customer['Service'])) {
                 foreach ($customer['Service'] as $service) {
-                    $service_status = $service_status || $service['status'] > 0;
+                    $serviceStatus = $serviceStatus || ( $service['status'] > 0 );
                 }
             }
-            $service_status = $service_status || !$this->allCustomersAreInactive($id);
-            $this->saveField('status', (integer) $service_status);
+            $serviceStatus = $serviceStatus || $this->hasActiveCustomers($id);
+            $serviceStatus = (integer) $serviceStatus;
+            $Customer->saveField('status', $serviceStatus, false);
         }
     }
 
-    private function allCustomersAreInactive($id) {
-        $customer_count = $this->find('count',array('conditions' => array('Customer.customer_id' => $id)));
-        if ($customer_count > 0) {
-            $active_customer_count = $this->find('count',array('conditions' => array('Customer.customer_id' => $id)));
-            if ($active_customer_count == 0) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
+    private function hasActiveCustomers($id) {
+        return $this->find('count', array(
+            'conditions' => array(
+                'Customer.customer_id' => $id,
+                'Customer.status >' => 0
+            ),
+            'recursive' => -1
+        ));
     }
 }
