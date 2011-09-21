@@ -1,19 +1,14 @@
-	dac.AppView = cbb.View.extend({
-		el: $('section[role=main]').get(0),
-		events: {
-			'click a[href^="/customers/view/"]': '_customerView'
-		},
-		//initialize: function(options) {
-		//	cbb.View.prototype.initialize(options);
-		//	_.bindAll(this,'render');
-		//	this.templates = CnrsTemplates;
-		//},
-		_customerView: function(e) {
-			var usedModifier = e.which == 1 && (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey),
-				href = 'customers/view/' + $(e.target).attr('href').match(/\d+/);
-			if (!usedModifier) {
-				e.preventDefault();
-				this.router.navigate(href,true);
-			}
-		}
-	});
+    dac.AppView = cbb.View.extend({
+        el: $('body').get(0),
+        events: {
+            'click a[href*="customers/"]': '_navigateCustomers'
+        },
+        _navigateCustomers: function(e) {
+            var usedModifier = e.which == 1 && (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey),
+                href = $(e.target).attr('href').replace(/^\/?(.*)/, '$1');
+            if (!usedModifier) {
+                e.preventDefault();
+                this.router.navigate(href,true);
+            }
+        }
+    });
