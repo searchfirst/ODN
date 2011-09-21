@@ -192,6 +192,18 @@ ul[data-field="filter"] li span:hover {
 background-color: rgba(0,0,0,.2);
 }
 
+.empty.search.list {
+display: none;
+}
+
+.search.list {
+background-color: #fff;
+z-index: 10;
+-webkit-box-shadow: 0 0 3px #000;
+-moz-box-shadow: 0 0 3px #000;
+box-shadow: 0 0 3px #000;
+}
+
 @media print {
 .p_form { display: none; }
 }
