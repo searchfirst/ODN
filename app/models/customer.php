@@ -78,7 +78,6 @@ class Customer extends AppModel {
         $index[] = $this->data[$this->alias][$this->displayField];
         $id = $this->data[$this->alias]['id'];
         $this->read();
-        echo print_r($this->data, true) . "\n";
         $contacts = $this->Contact->find('all', array(
             'conditions' => array('Contact.customer_id' => $id),
             'recursive' => -1
@@ -93,7 +92,7 @@ class Customer extends AppModel {
                 $Contact->id = $contact['Contact']['id'];
                 $Contact->recursive = -1;
                 $Contact->read();
-                $index[] = $Contact->index();
+                $index[] = $Contact->processData();
             }
         }
         if (!empty($websites)) {
@@ -102,10 +101,9 @@ class Customer extends AppModel {
                 $Website->id = $website['Website']['id'];
                 $Website->recursive = -1;
                 $Website->read();
-                $index[] = $Website->index();
+                $index[] = $Website->processData();
             }
         }
-        echo join("\n", $index);
         return join("\n", $index);
     }
 
