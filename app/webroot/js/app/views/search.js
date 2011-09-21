@@ -3,7 +3,7 @@
         events: {
             'keyup input[type="search"]': 'search',
             'change input[type="search"]': 'search',
-            'mouseout': 'hide',
+            //'mouseout': 'hide',
             'focusin': 'show',
             'keydown input[type="search"]': '_preventDefault'
         },
