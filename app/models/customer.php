@@ -74,8 +74,39 @@ class Customer extends AppModel {
     }
 
     function indexData() {
-        $index = $this->data[$this->alias][$this->displayField];
-        return $index;
+        $index = array();
+        $index[] = $this->data[$this->alias][$this->displayField];
+        $id = $this->data[$this->alias]['id'];
+        $this->read();
+        echo print_r($this->data, true) . "\n";
+        $contacts = $this->Contact->find('all', array(
+            'conditions' => array('Contact.customer_id' => $id),
+            'recursive' => -1
+        ));
+        $websites = $this->Website->find('all', array(
+            'conditions' => array('Website.customer_id' => $id),
+            'recursive' => -1
+        ));
+        if (!empty($contacts)) {
+            foreach ($contacts as $contact) {
+                $Contact = new Contact();
+                $Contact->id = $contact['Contact']['id'];
+                $Contact->recursive = -1;
+                $Contact->read();
+                $index[] = $Contact->index();
+            }
+        }
+        if (!empty($websites)) {
+            foreach ($websites as $website) {
+                $Website = new Website();
+                $Website->id = $website['Website']['id'];
+                $Website->recursive = -1;
+                $Website->read();
+                $index[] = $Website->index();
+            }
+        }
+        echo join("\n", $index);
+        return join("\n", $index);
     }
 
     function search($srch_string) {
