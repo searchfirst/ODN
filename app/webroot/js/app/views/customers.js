@@ -205,13 +205,25 @@
                             gotoViewOnAdd: true
                         });
                     this.trigger('renderChildren');
+                    this.customersView = customersView;
                 })
                 .render();
         },
         _filterBy: function(e) {
             e.preventDefault();
             var filter = $(e.target).text();
-            this.router.navigate('customers?f='+filter,true);
+            if (this.customersView !== undefined) {
+                var collection = this.customersView.collection,
+                    router = this.router;
+                collection.params.filter = filter;
+                collection.fetch({
+                    success: function() {
+                        router.navigate('customers?f='+filter);
+                    }
+                });
+            } else {
+                this.router.navigate('customers?f='+filter,true);
+            }
         },
         _navigateInvoiceView: function(e) {
             e.preventDefault();
