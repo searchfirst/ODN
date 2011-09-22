@@ -19,7 +19,7 @@
                         'cnrsCollapse .collapse': [{}]
                     }
                 });
-            view.view(id);
+            view.rendering().view(id);
         },
         index: function(filter) {
             var filter = filter || 'A',
@@ -31,6 +31,6 @@
                     router: this,
                     viewTemplate: 'customersIndex'
                 });
-            view.index(filter);
+            view.rendering().index(filter);
         }
     });

@@ -199,8 +199,8 @@
                             el: $('.customer.list').get(0),
                             collection: new dac.CustomersCollection({
                                 page: 1,
-                                params:{limit: 'all',filter: filter},
-                                watch: { parent: this, event: 'renderChildren' }
+                                params: {limit: 'all', filter: filter},
+                                watch: {parent: this, event: 'renderChildren'}
                             }),
                             gotoViewOnAdd: true
                         });
