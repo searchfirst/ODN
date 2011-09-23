@@ -121,6 +121,7 @@ class DuxComponent extends Object {
                     'customersView' => 'js/app/templates/customers/view.mustache',
                     'customersAdd' => 'js/app/templates/customers/add.mustache',
                     'customerItemView' => 'js/app/templates/customers/view_item.mustache',
+                    'customerDetailsItemView' => 'js/app/templates/customers/view_item_with_details.mustache',
                     'customerItemAdd' => 'js/app/templates/customers/add_item.mustache',
                     'customerButtons' => 'js/app/templates/customers/buttons.mustache',
                     'invoicesView' => 'js/app/templates/invoices/view.mustache',

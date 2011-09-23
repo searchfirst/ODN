@@ -9,7 +9,7 @@ class CustomersController extends AppController {
         'Invoice','Contact','Paginator'
     );
     var $paginate = array(
-        'limit' => 50,
+        'limit' => 10,
         'order' => array('Customer.company_name' => 'ASC'),
         'recursive' => 0
     );
@@ -32,6 +32,66 @@ class CustomersController extends AppController {
             $this->Customer->recursive = 0;
             $customers = $this->Customer->find('all',array('conditions' => $conditions));
         }
+        $this->set('doPaginate',$doPaginate);
+        $this->set('customers', $customers);
+        $this->set('title_for_layout',sprintf('Customer List - %s',$page));
+    }
+
+    function by_service() {
+        $idConditions = array();
+        $conditions = array();
+        $doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
+
+        if ($this->RequestHandler->isAjax()) {
+            $this->paginate['limit'] = 10;
+        }
+
+        if (!empty($this->params['url']['customer_id'])) {
+            $customer_id = $this->params['url']['customer_id'] == 'null' ? null : $this->params['url']['customer_id'];
+            $conditions['Customer.customer_id'] = $customer_id;
+        }
+
+        if (array_key_exists('page', $this->params['url'])) {
+            $page = $this->params['url']['page'];
+        } else {
+            $page = 1;
+        }
+
+        if (array_key_exists('status', $this->params['url'])) {
+            $idConditions['status'] = $this->params['url']['status'];
+        }
+
+        if (array_key_exists('filter', $this->params['url'])) {
+            $conditions['Customer.company_name LIKE'] = $this->params['url']['filter'] . '%';
+        }
+
+        if (array_key_exists('user_id', $this->params['url'])) {
+            $idConditions['user_id'] = $this->params['url'];
+        }
+
+        $this->Customer->unbindModel(array(
+            'hasMany' => array('Note', 'Invoice', 'Customer', 'Contact')
+        ), false);
+
+        if ($doPaginate) {
+            $conditions['Customer.id'] = $this->Customer->getIdsThroughService($idConditions);
+            if (!empty($idConditions['status'])) {
+                $this->Customer->rebindJustServicesForUser($idConditions['user_id'], array(
+                    'Service.status' => $idConditions['status']
+                ));
+            } else {
+                $this->Customer->rebindJustServicesForUser($idConditions['user_id']);
+            }
+            $this->paginate['recursive'] = 1;
+            $customers = $this->paginate('Customer',$conditions);
+        } else {
+            $this->Customer->Service->unbindModel(array(
+                'hasMany' => array('Note')
+            ));
+            $this->Customer->recursive = 1;
+            $customers = $this->Customer->find('throughService', $idConditions);
+        }
+
         $this->set('doPaginate',$doPaginate);
         $this->set('customers', $customers);
         $this->set('title_for_layout',sprintf('Customer List - %s',$page));

@@ -52,8 +52,7 @@ border-bottom: none;
 /* Mini List */
 
 .list.mini article, .list.mini > li {
-padding-left: .25em;
-padding-right: .25em;
+padding: 0 .25em;
 line-height: 1.8;
 }
 

@@ -10,7 +10,10 @@ class Customer extends AppModel {
         'Alkemann.Revision'=>array('limit'=>2)
     );
     var $displayField = 'company_name';
-    var $_findMethods = array('listPotentialParents' => true);
+    var $_findMethods = array(
+        'listPotentialParents' => true,
+        'throughService' => true
+    );
     var $order = 'Customer.company_name';
     var $recursive = 1;
     var $validate = array();
@@ -119,6 +122,101 @@ class Customer extends AppModel {
             $newResults = array();
             foreach ($results as $result) {
                 $newResults[$result['Customer']['id']] = $result['Customer'][$this->displayField];
+            }
+            return $newResults;
+        }
+    }
+
+    function getIdsThroughService($conditions) {
+        $serviceConditions = array();
+
+        if (!empty($conditions['user_id'])) {
+            $serviceConditions['Service.user_id'] = $conditions['user_id'];
+        } else {
+            $serviceConditions['Service.user_id'] = User::getCurrent('id');
+        }
+
+        if (!empty($conditions['status'])) {
+            $serviceConditions['Service.status'] = $conditions['status'];
+        }
+
+        $services = $this->Service->find('all', array(
+            'recursive' => -1,
+            'conditions' => $serviceConditions,
+            'fields' => array('DISTINCT customer_id')
+        ));
+        $in = array();
+
+        foreach ($services AS $service) {
+            $in[] = $service['Service']['customer_id'];
+        }
+
+        return $in;
+    }
+
+    function rebindJustServicesForUser($user_id, $conditions = false) {
+        $serviceConditions = array();
+        $serviceConditions['Service.user_id'] = $user_id;
+        if (is_array($conditions)) {
+            $serviceConditions = array_merge($serviceConditions, $conditions);
+        }
+        $this->unbindModel(array(
+            'hasMany' => array('Service')
+        ), false);
+        $this->bindModel(array(
+            'hasMany' => array(
+                'Service' => array(
+                    'conditions' => $serviceConditions
+                )
+            )
+        ), false);
+    }
+
+    function _findThroughService($state, $query, $results = array()) {
+        if ($state == "before") {
+            $serviceConditions = array();
+
+            if (!empty($query['user_id'])) {
+                $serviceConditions['user_id'] = $query['user_id'];
+            } else {
+                $serviceConditions['user_id'] = User::getCurrent('id');
+            }
+
+            if (!empty($query['status'])) {
+                $serviceConditions['status'] = $query['status'];
+            }
+
+            $query['conditions']['Customer.id'] = $this->getIdsThroughService($serviceConditions);
+            return $query;
+        } elseif ($state == "after") {
+            if (!empty($query['user_id'])) {
+                $user_id = $query['user_id'];
+            } else {
+                $user_id = User::getCurrent('id');
+            }
+            if (array_key_exists('status', $query)) {
+                $status = $query['status'];
+            } else {
+                $status = false;
+            }
+            $newResults = array();
+            foreach ($results as $r => $result) {
+                foreach ($result['Service'] as $s => $service) {
+                    if ($service['user_id'] != $user_id) {
+                        unset($result['Service'][$s]);
+                        continue;
+                    }
+                    if (false !== $status) {
+                        if ($service['status'] != $status) {
+                            unset($result['Service'][$s]);
+                            continue;
+                        }
+                    }
+                }
+                if(!empty($result['Service'])) {
+                    $result['Service'] = array_values($result['Service']);
+                    $newResults[] = $result;
+                }
             }
             return $newResults;
         }

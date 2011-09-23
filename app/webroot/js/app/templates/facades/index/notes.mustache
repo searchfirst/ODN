@@ -1,9 +1,11 @@
-<section class="note summary list">
+<section class="note detail list">
 <h1>Notes</h1>
+<div class="filter_hooks">
 <ul>
-{{#your_notes}}<li><a href="/notes/you">Your Notes <span class="count">{{count}}</span></a></li>{{/your_notes}}
-<li><a href="/notes/you/flagged">Your Flagged Notes </a></li>
-{{#flagged}}<li><a href="/notes/flagged">All Flagged <span class="count">{{count}}</span></a></li>{{/flagged}}
-{{#all}}<li><a href="/notes/">All Notes</a></li>{{/all}}
+<li class="current"><a tabindex="0" data-param-field="you" data-param-val="1">You</a></li><li><a tabindex="0" data-param-field="you" data-param-val="0">Everyone</a></li>
 </ul>
+<ul>
+<li class="current"><a tabindex="0" data-param-field="flagged" data-param-val="0">All</a></li><li><a tabindex="0" data-param-field="flagged" data-param-val="1">Flagged</a></li>
+</ul>
+</div>
 </section>
