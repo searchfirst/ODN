@@ -65,6 +65,7 @@
                 view = this.customersView;
 
             collection.params[paramField] = paramVal;
+            collection.params.page = 1;
             collection.fetch({
                 success: function() {
                     $current.removeClass('current');
@@ -91,6 +92,7 @@
                     collection.baseUrl !== undefined && delete collection.baseUrl;
                 }
             }
+            collection.params.page = 1;
 
             collection.fetch({
                 success: function() {
