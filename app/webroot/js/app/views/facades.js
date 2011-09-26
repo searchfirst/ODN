@@ -62,16 +62,23 @@
                 paramField = $target.data('paramField'),
                 paramVal = $target.data('paramVal'),
                 collection = this.customersCollection,
-                view = this.customersView;
+                view = this.customersView
+                hasChanged = false;
 
-            collection.params[paramField] = paramVal;
-            collection.params.page = 1;
-            collection.fetch({
-                success: function() {
-                    $current.removeClass('current');
-                    $li.addClass('current');
-                }
-            });
+            if (collection.params[paramField] !== paramVal) {
+                collection.params[paramField] = paramVal;
+                hasChanged = true;
+            }
+
+            if (hasChanged === true) {
+                collection.page = 1;
+                collection.fetch({
+                    success: function() {
+                        $current.removeClass('current');
+                        $li.addClass('current');
+                    }
+                });
+            }
         },
         _filterNotes: function(e) {
             e.preventDefault();
@@ -81,24 +88,30 @@
                 paramField = $target.data('paramField'),
                 paramVal = $target.data('paramVal'),
                 collection = this.notesCollection,
-                view = this.notesView;
+                view = this.notesView,
+                hasChanged = false;
 
-            if (paramField === 'flagged') {
+            if (paramField === 'flagged' && collection.params[paramField] !== paramVal) {
                 collection.params[paramField] = paramVal;
+                hasChanged = true;
             } else if (paramField === 'you') {
-                if (paramVal === 1) {
+                if (paramVal === 1 && collection.baseUrl === undefined) {
                     collection.baseUrl = '/notes/you';
-                } else {
-                    collection.baseUrl !== undefined && delete collection.baseUrl;
+                    hasChanged = true;
+                } else if (paramVal === 0 && collection.baseUrl !== undefined) {
+                    delete collection.baseUrl;
+                    hasChanged = true;
                 }
             }
-            collection.params.page = 1;
 
-            collection.fetch({
-                success: function() {
-                    $current.removeClass('current');
-                    $li.addClass('current');
-                }
-            });
+            if (hasChanged === true) {
+                collection.page = 1;
+                collection.fetch({
+                    success: function() {
+                        $current.removeClass('current');
+                        $li.addClass('current');
+                    }
+                });
+            }
         }
     });
