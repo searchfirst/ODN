@@ -18,7 +18,7 @@ class Customer extends AppModel {
     var $recursive = 1;
     var $validate = array();
     var $virtualFields = array(
-        'text_status' => '(SELECT CASE Customer.status WHEN 1 THEN "Active" WHEN 0 THEN "Inactive" END)'
+        'text_status' => "(SELECT CASE Customer.status WHEN 1 THEN 'Active' WHEN 0 THEN 'Inactive' END)"
     );
 
     public static $status = array(
@@ -143,7 +143,7 @@ class Customer extends AppModel {
         $services = $this->Service->find('all', array(
             'recursive' => -1,
             'conditions' => $serviceConditions,
-            'fields' => array('DISTINCT customer_id')
+            'fields' => array('DISTINCT customer_id', 'modified')
         ));
         $in = array();
 
