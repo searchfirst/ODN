@@ -33,7 +33,7 @@ class SearchController extends AppController {
                 $Model = ClassRegistry::init($model);
                 $this->paginate['order'] = $Model->displayField. ' ASC';
             }
-            $conditions[] = 'SearchIndex.data REGEXP "'. $query . '"';
+            $conditions[] = "SearchIndex.data ~* '$query'";
             $this->paginate['conditions'] = $conditions;
             $results = $this->paginate("SearchIndex");
             $this->set("results", $results);
