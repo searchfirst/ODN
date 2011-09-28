@@ -41,6 +41,7 @@
                         notesView = new cbb.ListView({
                             collection: notesCollection,
                             el: $('.note.list').get(0),
+                            itemListTemplateStem: 'DetailsItemView',
                             itemTagName: 'article',
                             modelName: 'Note',
                             showButtons: false

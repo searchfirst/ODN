@@ -10,7 +10,8 @@ class Note extends AppModel {
         ),
         'Detextiliser'=>array(
             'fields'=>array('description')
-        )
+        ),
+        'RemoveEmptyRelationships'
     );
     var $_findMethods = array('owned'=>true,'countOwned'=>true);
 
