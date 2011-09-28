@@ -7,15 +7,10 @@ class NotesController extends AppController {
     var $paginate = array(
         'limit' => 10,
         'order' => array('Note.created' => 'DESC'),
-        'recursive' => 0
+        //'recursive' => 0
     );
 
     function index() {
-        if (!array_key_exists('user_id',$this->params['url'])) {
-            $this->Note->unbindModel(array(
-                'belongsTo' => array('Website','Service','Customer','Invoice')
-            ),false);
-        }
         $paginationOptions = array();
         if (!empty($this->params['url']['customer_id'])) {
             $paginationOptions['Note.customer_id'] = $this->params['url']['customer_id'];
