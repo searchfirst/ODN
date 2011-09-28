@@ -4,6 +4,7 @@
             facadesRouter: new dac.FacadesRouter,
             customersRouter: new dac.CustomersRouter,
             invoicesRouter: new dac.InvoicesRouter,
+            utilitiesRouter: new dac.UtilitiesRouter,
             searchView: new dac.SearchView({viewTemplate: 'searchView'})
         };
         $('nav#menu a').click(function(e){
