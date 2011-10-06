@@ -1,7 +1,5 @@
 <?php
 class CustomersController extends AppController {
-
-    var $name = 'Customers';
     var $primaryModel = 'Customer';
     var $helpers = array(
         'Status','Javascript','Html','Form','Time',
@@ -186,10 +184,7 @@ class CustomersController extends AppController {
         } else if ($this->RequestHandler->isPut() && $this->RequestHandler->isAjax()) {
             $this->data = array('Customer' => $this->data['Customer']);
             if ($this->Customer->save($this->data)) {
-                $this->set('model',array(
-                    'id'=>$id,
-                    'Customer'=>$this->data['Customer']
-                ));
+                $this->set('model', $this->Customer->readRoot());
             } else {
                 $this->cakeError('ajaxError',array('message'=>'Not saved'));
             }

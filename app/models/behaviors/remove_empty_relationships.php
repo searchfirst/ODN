@@ -6,7 +6,8 @@ class RemoveEmptyRelationshipsBehavior extends ModelBehavior {
             foreach ($results as $r => $result) {
                 foreach ($assocKeys as $assoc) {
                     if (array_key_exists($assoc, $result) && empty($result[$assoc]['id'])) {
-                        $results[$r][$assoc] = null;
+                        //$results[$r][$assoc] = null;
+                        unset($results[$r][$assoc]);
                     }
                 }
             }

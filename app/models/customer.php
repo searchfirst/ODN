@@ -80,32 +80,36 @@ class Customer extends AppModel {
     function indexData() {
         $index = array();
         $index[] = $this->data[$this->alias][$this->displayField];
-        $id = $this->data[$this->alias]['id'];
-        $this->read();
-        $contacts = $this->Contact->find('all', array(
-            'conditions' => array('Contact.customer_id' => $id),
-            'recursive' => -1
-        ));
-        $websites = $this->Website->find('all', array(
-            'conditions' => array('Website.customer_id' => $id),
-            'recursive' => -1
-        ));
-        if (!empty($contacts)) {
-            foreach ($contacts as $contact) {
-                $Contact = new Contact();
-                $Contact->id = $contact['Contact']['id'];
-                $Contact->recursive = -1;
-                $Contact->read();
-                $index[] = $Contact->processData();
+        if (array_key_exists($this->data[$this->alias]['id'])) {
+            $id = $this->data[$this->alias]['id'];
+            $Customer = new Customer;
+            $Customer->id = $id;
+            $Customer->read();
+            $contacts = $Customer->Contact->find('all', array(
+                'conditions' => array('Contact.customer_id' => $id),
+                'recursive' => -1
+            ));
+            $websites = $Customer->Website->find('all', array(
+                'conditions' => array('Website.customer_id' => $id),
+                'recursive' => -1
+            ));
+            if (!empty($contacts)) {
+                foreach ($contacts as $contact) {
+                    $Contact = new Contact();
+                    $Contact->id = $contact['Contact']['id'];
+                    $Contact->recursive = -1;
+                    $Contact->read();
+                    $index[] = $Contact->processData();
+                }
             }
-        }
-        if (!empty($websites)) {
-            foreach ($websites as $website) {
-                $Website = new Website();
-                $Website->id = $website['Website']['id'];
-                $Website->recursive = -1;
-                $Website->read();
-                $index[] = $Website->processData();
+            if (!empty($websites)) {
+                foreach ($websites as $website) {
+                    $Website = new Website();
+                    $Website->id = $website['Website']['id'];
+                    $Website->recursive = -1;
+                    $Website->read();
+                    $index[] = $Website->processData();
+                }
             }
         }
         return join("\n", $index);
@@ -308,7 +312,7 @@ class Customer extends AppModel {
             }
             $serviceStatus = $serviceStatus || $this->hasActiveCustomers($id);
             $serviceStatus = (integer) $serviceStatus;
-            $Customer->saveField('status', $serviceStatus, false);
+            $Customer->saveField('status', $serviceStatus, array('validate' => false, 'callbacks' => false));
         }
     }
 
