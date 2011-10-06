@@ -61,7 +61,7 @@ class Invoice extends AppModel {
 		$invoice_string = '';
 		$num_inv_this_cmr = $this->find('count',array('conditions'=>array('Customer.id'=>$customer_id)));
 
-		$cur_date_str = strftime('%y%m%d');
+		$cur_date_str = strftime('%y%m');
 		$unique_inv_count_str = str_pad(((string)$num_inv_this_cmr+1),3,'0',STR_PAD_LEFT);
 		$customer_id_str = str_pad((string)$customer_id,4,'0',STR_PAD_LEFT);
 
