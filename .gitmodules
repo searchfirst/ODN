@@ -1,17 +1,17 @@
 [submodule "cake"]
 	path = cake
 	url = http://github.com/cakephp/cakephp.git
-[submodule "app/plugins/acls"]
-	path = app/plugins/acls
+[submodule "app/Plugin/Acls"]
+	path = app/Plugin/Acls
 	url = git://github.com/connrs/cakephp_acl_menu_component.git
-[submodule "app/plugins/acl_menu"]
-	path = app/plugins/acl_menu
+[submodule "app/Plugin/AclMenu"]
+	path = app/Plugin/AclMenu
 	url = git://github.com/connrs/cakephp_acl_menu_component.git
-[submodule "app/plugins/searchable"]
-	path = app/plugins/searchable
+[submodule "app/Plugin/Searchable"]
+	path = app/Plugin/Searchable
 	url = git://github.com/connrs/Searchable-Behaviour-for-CakePHP.git
-[submodule "app/plugins/sma"]
-	path = app/plugins/sma
+[submodule "app/Plugin/Sma"]
+	path = app/Plugin/Sma
 	url = git://github.com/connrs/Sma.git
 [submodule "app/webroot/js/libs/linen"]
 	path = app/webroot/js/libs/linen
@@ -19,8 +19,8 @@
 [submodule "app/webroot/js/jquery/libs/timepicker"]
 	path = app/webroot/js/jquery/libs/timepicker
 	url = git://github.com/trentrichardson/jQuery-Timepicker-Addon.git
-[submodule "app/plugins/alkemann"]
-	path = app/plugins/alkemann
+[submodule "app/Plugin/Alkemann"]
+	path = app/Plugin/Alkemann
 	url = git://github.com/alkemann/CakePHP-Assets.git
 [submodule "app/webroot/js/libs/gruft"]
 	path = app/webroot/js/libs/gruft
@@ -28,8 +28,8 @@
 [submodule "app/webroot/js/libs/backbone"]
 	path = app/webroot/js/libs/backbone
 	url = git://github.com/documentcloud/backbone.git
-[submodule "app/plugins/datasources"]
-	path = app/plugins/datasources
+[submodule "app/Plugin/Datasources"]
+	path = app/Plugin/Datasources
 	url = git://github.com/cakephp/datasources.git
 [submodule "app/webroot/js/libs/cbb"]
 	path = app/webroot/js/libs/cbb
@@ -40,3 +40,6 @@
 [submodule "app/webroot/js/libs/autosave"]
 	path = app/webroot/js/libs/autosave
 	url = git://github.com/connrs/autosave.backbone.js.git
+[submodule "app/Plugin/JsonReader"]
+	path = app/Plugin/JsonReader
+	url = git://github.com/connrs/JsonReader.git
