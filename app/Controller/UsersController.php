@@ -40,7 +40,7 @@ class UsersController extends AppController {
     }
 
     function add() {
-        extract($this->Dux->commonRequestInfo());
+        extract($this->Odn->requestInfo);
         if ($isPost) {
             if (!$isAjax) {
                 if ($this->User->saveAll($this->data)) {
@@ -66,7 +66,7 @@ class UsersController extends AppController {
     }
 
     function edit($id = null) {
-        extract($this->Dux->commonRequestInfo());
+        extract($this->Odn->requestInfo);
         if(!$id) {
             $this->cakeError('missingId',array('model'=>'User'));
         }
