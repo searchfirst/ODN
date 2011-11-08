@@ -24,7 +24,7 @@ class SearchController extends AppController {
         $conditions = array();
         $doPaginate = true;
 
-        if (array_key_exists('model', $this->request->query['model'])) {
+        if (array_key_exists('model', $this->request->query)) {
             $model = $this->request->query['model'];
             $conditions['SearchIndex.model'] = $model;
         }

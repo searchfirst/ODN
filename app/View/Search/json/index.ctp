@@ -1,6 +1,1 @@
-<?php
-if ($doPaginate) {
-	echo $this->Json->toJsonWithPagination($results, 'SearchIndex');
-} else {
-	echo $this->Json->toJson($results);
-}
+<?php echo $this->Json->toJson($results, compact('doPaginate')) ?>
