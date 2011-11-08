@@ -22,8 +22,8 @@ class Invoice extends AppModel {
             'paid' => __('Paid',true)
         );
         $this->virtualFields = array(
-            'status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN -1 WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 0 WHEN Invoice.due_date > now() THEN 1 WHEN Invoice.date_invoice_paid IS NOT NULL THEN 2 END)",
-            'text_status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN 'Cancelled' WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 'Overdue' WHEN Invoice.due_date > now() THEN 'Due' WHEN Invoice.date_invoice_paid IS NOT NULL THEN 'Paid' END)"
+            'status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN -1 WHEN Invoice.due_date > now() AND Invoice.date_invoice_paid IS NULL THEN 1 WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 0 WHEN Invoice.date_invoice_paid IS NOT NULL THEN 2 END)",
+            'text_status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN 'Cancelled' WHEN Invoice.due_date > now() AND Invoice.date_invoice_paid IS NULL THEN 'Due' WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 'Overdue' WHEN Invoice.date_invoice_paid IS NOT NULL THEN 'Paid' END)"
         );
     }
 
