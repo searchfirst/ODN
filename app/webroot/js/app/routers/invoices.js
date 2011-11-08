@@ -1,6 +1,6 @@
 	dac.InvoicesRouter = cbb.Router.extend({
 		routes: {
-			'invoices': 'index',
+			//'invoices': 'index',
 			'invoices/view/:id': 'view',
 		},
 		view: function(id) {

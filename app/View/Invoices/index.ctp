@@ -1,69 +1,70 @@
-<h1><?php echo $title_for_layout ?></h1>
-<div class="wizard cwrap_3">
+<?php if ($wizard): ?>
+<div class="wizard hwr l">
 <div>
-<?php echo $form->create(null) ?> 
-<p>Generate a report for a specific month</p>
-<?php echo $form->input('date',array(
-	'type'=>'date',
-	'dateFormat' => 'MY',
-	'minYear' => 2000,
-	'maxYear' => date('Y')
+<h1>Generate a report for a specific month</h1>
+<?php echo $this->Form->create(null) ?> 
+<?php echo $this->Form->input('date',array(
+    'type'=>'date',
+    'dateFormat' => 'MY',
+    'minYear' => 2000,
+    'maxYear' => date('Y')
 ));?> 
-<?php echo $form->input('types',array('label'=>'Type')) ?> 
-<?php echo $form->end('Apply') ?> 
+<?php echo $this->Form->input('types',array('label'=>'Type')) ?> 
+<?php echo $this->Form->end('Apply') ?> 
 </div>
 <div>
-<?php echo $form->create(null) ?> 
-<p>Generate a report between 2 dates</p>
-<?php echo $form->input('start_date',array(
-	'type'=>'date',
-	'dateFormat' => 'DMY',
-	'minYear' => 2000,
-	'maxYear' => date('Y')
+<h1>Generate a report between 2 dates</h1>
+<?php echo $this->Form->create(null) ?> 
+<?php echo $this->Form->input('start_date',array(
+    'type'=>'date',
+    'dateFormat' => 'DMY',
+    'minYear' => 2000,
+    'maxYear' => date('Y')
 )) ?> 
-<?php echo $form->input('end_date',array(
-	'type'=>'date',
-	'dateFormat' => 'DMY',
-	'minYear' => 2000,
-	'maxYear' => date('Y')
+<?php echo $this->Form->input('end_date',array(
+    'type'=>'date',
+    'dateFormat' => 'DMY',
+    'minYear' => 2000,
+    'maxYear' => date('Y')
 )) ?> 
-<?php echo $form->input('types',array('label'=>'Type')) ?> 
-<?php echo $form->end('Apply') ?> 
+<?php echo $this->Form->input('types',array('label'=>'Type')) ?> 
+<?php echo $this->Form->end('Apply') ?> 
 </div>
 <div>
-<?php echo $form->create(null) ?> 
-<p>Generate list of all reports</p>
-<?php echo $form->input('type',array(
-	'options' => array('overdue'=>'Overdue','notoverdue'=>'Open (but not overdue)')
+<h1>Generate list of all reports</h1>
+<?php echo $this->Form->create(null) ?> 
+<?php echo $this->Form->input('type',array(
+    'options' => array('overdue'=>'Overdue','notoverdue'=>'Open (but not overdue)')
 )) ?> 
-<?php echo $form->hidden('types',array('value'=>'all')) ?> 
-<?php echo $form->end('Apply') ?> 
+<?php echo $this->Form->hidden('types',array('value'=>'all')) ?> 
+<?php echo $this->Form->end('Apply') ?> 
 </div>
 </div>
-<?php if(!empty($invoices)): ?>
-<table>
-<thead><tr>
-<th>Invoice No.</th>
-<th>Company</th>
-<th>Amount</th>
-<th>Created</th>
-<th>Paid</th>
-</tr></thead>
-<tfoot><tr>
-
-</tr></tfoot>
-<tbody>
-<?php foreach($invoices as $invoice): ?>
-<tr><?php
-echo sprintf('<td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>',
-	$html->link($invoice['Invoice']['reference'],"/invoices/view/{$invoice['Invoice']['id']}"),
-	$html->link($invoice['Customer']['company_name'],"/customers/view/{$invoice['Customer']['id']}"),
-	money_format('%.2n',$invoice['Invoice']['amount']),
-	$time->format('d-m-Y',$invoice['Invoice']['created']),
-	$invoice['Invoice']['date_invoice_paid']?$time->format('d-m-Y',$invoice['Invoice']['date_invoice_paid']):'Unpaid'
-);
-?></tr>
-<?php endforeach ?>
-</tbody>
-</table>
 <?php endif ?>
+<section class="invoice detail list paginated">
+<h1><?php echo $title_for_layout ?></h1>
+<?php if (!empty($invoices)): ?>
+<?php foreach($invoices as $invoice): ?>
+<article>
+<h1><?php echo $this->Html->link($invoice['Invoice']['reference'], array(
+    'controller' => 'invoices', 'action' => 'view', $invoice['Invoice']['id']
+)) ?></h1>
+<p><span class="flag <?php echo Inflector::underscore($invoice['Invoice']['text_status']) ?>"><?php echo $invoice['Invoice']['text_status'] ?></span> <?php echo money_format('%.2n', $invoice['Invoice']['amount']) ?>. Issued <?php echo $this->Time->format('d-m-Y', $invoice['Invoice']['created']) ?> &amp;
+<?php if ($invoice['Invoice']['date_invoice_paid'] !== null): ?>
+Paid <?php echo $this->Time->format('d-m-Y', $invoice['Invoice']['date_invoice_paid']) ?>
+<?php else: ?>
+Due <?php echo $this->Time->format('d-m-Y', $invoice['Invoice']['due_date']) ?>
+<?php endif ?>
+</p>
+</article>
+<?php endforeach ?>
+<ul class="pagelinks">
+<?php $this->Paginator->options(array('url' => $this->request->query, 'convertKeys' => array('customer_id'))) ?>
+<?php echo $this->Paginator->prev(__('Back'), array('class' => 'prev', 'tag' => 'li')) ?>
+<li><?php echo $this->Paginator->counter('{:page} of {:pages}') ?></li>
+<?php echo $this->Paginator->next(__('Next'), array('class' => 'next', 'tag' => 'li')) ?>
+</ul>
+<?php else: ?>
+<div><p>No Invoices</p></div>
+<?php endif ?>
+</section>

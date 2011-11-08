@@ -68,7 +68,7 @@ CakePlugin::loadAll(array(
     'Sma' => array('bootstrap' => true)
 ));
 App::uses('User', 'Model');
-App::uses('JsonReader', 'JsonReader.Config');
+App::uses('JsonReader', 'JsonReader.Configure');
 Configure::config('jsonReader', new JsonReader);
 Configure::load('assets', 'jsonReader');
 Configure::load('dux_configuration');

@@ -43,3 +43,6 @@
 [submodule "app/Plugin/JsonReader"]
 	path = app/Plugin/JsonReader
 	url = git://github.com/connrs/JsonReader.git
+[submodule "app/webroot/css/handy"]
+	path = app/webroot/css/handy
+	url = git://github.com/connrs/handy.git
