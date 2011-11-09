@@ -1,1 +1,1 @@
-<?php echo $this->Json->toJson($customers) ?>
+<?php echo $this->Json->toJson($customer) ?>
