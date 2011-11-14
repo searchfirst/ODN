@@ -11,7 +11,6 @@
             var view = new dac.CustomersView({
                     context: 'model',
                     el: $('[role=main]').get(0),
-                    model: new dac.Customer({id: +id}),
                     router: this,
                     viewTemplate: 'customersView',
                     widgets: {
@@ -19,7 +18,7 @@
                         'cnrsCollapse .collapse': [{}]
                     }
                 });
-            view.rendering().view(id);
+            view.view(id);
         },
         index: function(filter) {
             var filter = filter || 'A',

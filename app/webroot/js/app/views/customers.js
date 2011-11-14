@@ -5,215 +5,209 @@
             'click ul[data-field="filter"] span': '_filterBy'
         },
         view: function(id) {
-            var e = {
-                    users: new dac.UsersCollection({
-                        page:1,
-                        limit:'all',
-                        watch:{parent: this.model, event: 'childAdd'}
-                    }),
-                    websites: new dac.WebsitesCollection({
-                        page:1,
-                        params:{limit:'all', customer_id:id},
-                        watch:{parent: this.model, event: 'childAdd'}
-                    }),
-                    services: new dac.ServicesCollection({
-                        page:1,
-                        params:{limit:'all', customer_id:id},
-                        watch:{parent: this.model, event: 'childAdd'}
-                    }),
-                };
-            e.users.fetch();
-            e.websites.fetch();
-            e.services.fetch();
+            this.trigger('reset')
+                .trigger('rendering');
+            this.model = new dac.Customer({
+                id: +id,
+                childOptions: {
+                    page: 1,
+                    params: {
+                        customer_id: +id
+                    },
+                    watch: {
+                        parent: this,
+                        event: 'renderChildren'
+                    }
+                }
+            });
             this.model
                 .bind('change', this.render, this)
                 .fetch();
-            this
-                .bind('rendered', function() {
-                    var collectionParams = {
-                            page: 1,
-                            params: { customer_id: id },
-                            watch: { parent: this, event: 'renderChildren' }
+            this.bind('rendered', function() {
+                var customer = this.model;
+                this.views = {
+                    contacts: new cbb.ListView({
+                        modelName: 'Contact',
+                        el: $('.contact.list').get(0),
+                        collection: customer.contacts,
+                        parentModel: customer,
+                        itemWidgets: {
+                            'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
+                            'cnrsCollapse .collapse': [{}]
                         },
-                        contactsCollection = new dac.ContactsCollection(collectionParams),
-                        notesCollection = new dac.NotesCollection(collectionParams),
-                        websitesCollection = new dac.WebsitesCollection(collectionParams),
-                        servicesCollection = new dac.ServicesCollection(collectionParams),
-                        invoicesCollection = new dac.InvoicesCollection(collectionParams),
-                        customersCollection = new dac.CustomersCollection(collectionParams),
-                        contactsView = new cbb.ListView({
-                            modelName: 'Contact',
-                            el: $('.contact.list').get(0),
-                            collection: contactsCollection,
-                            parentModel: this.model,
-                            itemWidgets: {
-                                'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
-                                'cnrsCollapse .collapse': [{}]
-                            },
-                            itemTagName: 'article'
-                        }),
-                        notesView = new cbb.ListView({
-                            collection: notesCollection,
-                            el: $('.note.list').get(0),
-                            extras: {
-                                users: {
-                                    collection: e.users,
-                                    config: {
-                                        findEl: 'select[data-selectable-for="user_id"]',
-                                        keyName: 'id',
-                                        valueName: 'name',
-                                        modelFieldName: 'user_id'
-                                    }
+                        itemTagName: 'article'
+                    }),
+                    notes: new cbb.ListView({
+                        collection: customer.notes,
+                        el: $('.note.list').get(0),
+                        extras: {
+                            users: {
+                                collection: customer.extras.users,
+                                config: {
+                                    findEl: 'select[data-selectable-for="user_id"]',
+                                    keyName: 'id',
+                                    valueName: 'name',
+                                    modelFieldName: 'user_id'
+                                }
+                            }
+                        },
+                        hideFormOnSubmit: false,
+                        itemTagName: 'article',
+                        itemWidgets: {
+                            'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
+                            'cnrsCollapse .collapse': [{}]
+                        },
+                        modelName: 'Note',
+                        parentModel: customer,
+                        showButtons: false,
+                        widgets: {
+                            'autosaveable textarea.autosave': [{
+                                uid: 'customerViewAddNote',
+                                bind: [
+                                    [customer.notes, 'add', 'removeState']
+                                ]
+                            }]
+                        }
+                    }),
+                    websites: new cbb.ListView({
+                        modelName: 'Website',
+                        el: $('.website.list').get(0),
+                        collection: customer.websites,
+                        parentModel: customer,
+                        itemWidgets: {
+                            'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
+                            'cnrsCollapse .collapse': [{}]
+                        },
+                        itemTagName: 'article'
+                    }),
+                    services: new cbb.ListView({
+                        modelName: 'Service',
+                        el: $('.service.list').get(0),
+                        collection: customer.services,
+                        extras: {
+                            users: {
+                                collection: customer.extras.users,
+                                config: {
+                                    findEl: 'select[data-selectable-for="user_id"]',
+                                    keyName: 'id',
+                                    valueName: 'name',
+                                    modelFieldName: 'user_id'
                                 }
                             },
-                            hideFormOnSubmit: false,
-                            itemTagName: 'article',
-                            itemWidgets: {
-                                'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
-                                'cnrsCollapse .collapse': [{}]
+                            websites: {
+                                collection: customer.extras.websites,
+                                config: {
+                                    findEl: 'select[data-selectable-for="website_id"]',
+                                    keyName: 'id',
+                                    valueName: 'uri',
+                                    modelFieldName: 'website_id'
+                                }
                             },
-                            modelName: 'Note',
-                            parentModel: this.model,
-                            showButtons: false,
-                            widgets: {
-                                'autosaveable textarea.autosave': [{
-                                    uid: 'customerViewAddNote',
-                                    bind: [
-                                        [notesCollection, 'add', 'removeState']
-                                    ]
-                                }]
-                            }
-                        }),
-                        websitesView = new cbb.ListView({
-                            modelName: 'Website',
-                            el: $('.website.list').get(0),
-                            collection: websitesCollection,
-                            parentModel: this.model,
-                            itemWidgets: {
-                                'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
-                                'cnrsCollapse .collapse': [{}]
+                        },
+                        parentModel: customer,
+                        itemWidgets: {
+                            'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
+                            'cnrsSelectable .selectable[data-field="status"]': [{
+                                save: 'cb_update',
+                                options: dac.ServicesCollection.prototype.status
+                            }],
+                            'cnrsSelectable .selectable[data-field="user_id"]': [{
+                                save: 'cb_update',
+                                options: customer.extras.users.toStatusList()
+                            }],
+                            'cnrsSelectable .selectable[data-field="website_id"]': [{
+                                save: 'cb_update',
+                                options: customer.extras.websites.toStatusList()
+                            }],
+                            'cnrsCollapse .collapse': [{}]
+                        },
+                        itemTagName: 'article'
+                    }),
+                    invoices: new cbb.ListView({
+                        modelName: 'Invoice',
+                        el: $('.invoice.list').get(0),
+                        collection: customer.invoices,
+                        extras: {
+                            users: {
+                                collection: customer.extras.users,
+                                config: {
+                                    findEl: 'select[data-selectable-for="user_id"]',
+                                    keyName: 'id',
+                                    valueName: 'name',
+                                    modelFieldName: 'user_id'
+                                }
                             },
-                            itemTagName: 'article'
-                        }),
-                        servicesView = new cbb.ListView({
-                            modelName: 'Service',
-                            el: $('.service.list').get(0),
-                            collection: servicesCollection,
-                            extras: {
-                                users: {
-                                    collection: e.users,
-                                    config: {
-                                        findEl: 'select[data-selectable-for="user_id"]',
-                                        keyName: 'id',
-                                        valueName: 'name',
-                                        modelFieldName: 'user_id'
-                                    }
-                                },
-                                websites: {
-                                    collection: e.websites,
-                                    config: {
-                                        findEl: 'select[data-selectable-for="website_id"]',
-                                        keyName: 'id',
-                                        valueName: 'uri',
-                                        modelFieldName: 'website_id'
-                                    }
-                                },
+                            services: {
+                                collection: customer.extras.services,
+                                config: {
+                                    findEl: 'select[data-selectable-for="service_id"]',
+                                    keyName: 'id',
+                                    valueName: 'title',
+                                    modelFieldName: 'service_id'
+                                }
                             },
-                            parentModel: this.model,
-                            itemWidgets: {
-                                'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
-                                'cnrsSelectable .selectable[data-field="status"]': [{
-                                    save: 'cb_update',
-                                    options: dac.ServicesCollection.prototype.status
-                                }],
-                                'cnrsSelectable .selectable[data-field="user_id"]': [{
-                                    save: 'cb_update',
-                                    options: e.users.toStatusList()
-                                }],
-                                'cnrsSelectable .selectable[data-field="website_id"]': [{
-                                    save: 'cb_update',
-                                    options: e.websites.toStatusList()
-                                }],
-                                'cnrsCollapse .collapse': [{}]
+                            websites: {
+                                collection: customer.extras.websites,
+                                config: {
+                                    findEl: 'select[data-selectable-for="website_id"]',
+                                    keyName: 'id',
+                                    valueName: 'uri',
+                                    modelFieldName: 'website_id'
+                                }
                             },
-                            itemTagName: 'article'
-                        }),
-                        invoicesView = new cbb.ListView({
-                            modelName: 'Invoice',
-                            el: $('.invoice.list').get(0),
-                            collection: invoicesCollection,
-                            extras: {
-                                users: {
-                                    collection: e.users,
-                                    config: {
-                                        findEl: 'select[data-selectable-for="user_id"]',
-                                        keyName: 'id',
-                                        valueName: 'name',
-                                        modelFieldName: 'user_id'
-                                    }
-                                },
-                                services: {
-                                    collection: e.services,
-                                    config: {
-                                        findEl: 'select[data-selectable-for="service_id"]',
-                                        keyName: 'id',
-                                        valueName: 'title',
-                                        modelFieldName: 'service_id'
-                                    }
-                                },
-                                websites: {
-                                    collection: e.websites,
-                                    config: {
-                                        findEl: 'select[data-selectable-for="website_id"]',
-                                        keyName: 'id',
-                                        valueName: 'uri',
-                                        modelFieldName: 'website_id'
-                                    }
-                                },
-                            },
-                            parentModel: this.model,
-                            itemWidgets: {
-                                'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
-                                'cnrsCollapse .collapse': [{}]
-                            },
-                            itemTagName: 'article',
-                            widgets: {
-                                'datepicker input[type="date"]': [{ dateFormat: 'yy-mm-dd', }]
-                            }
-                        }),
-                        customersView = new cbb.ListView({
-                            modelName: 'Customer',
-                            el: $('.customer.list').get(0),
-                            collection: customersCollection,
-                            parentModel: this.model,
-                            gotoViewOnAdd: true
-                        });
-                    this.trigger('renderChildren');
-                });
+                        },
+                        parentModel: customer,
+                        itemWidgets: {
+                            'cnrsEditable [contenteditable]': [ {save: 'cb_update'} ],
+                            'cnrsCollapse .collapse': [{}]
+                        },
+                        itemTagName: 'article',
+                        widgets: {
+                            'datepicker input[type="date"]': [{ dateFormat: 'yy-mm-dd', }]
+                        }
+                    }),
+                    customers: new cbb.ListView({
+                        modelName: 'Customer',
+                        el: $('.customer.list').get(0),
+                        collection: customer.customers,
+                        parentModel: customer,
+                        gotoViewOnAdd: true
+                    })
+                };
+            }, this);
         },
         index: function(filter) {
             this
-                .bind('rendered', function(){
-                    var customersView = new cbb.ListView({
-                            modelName: 'Customer',
-                            el: $('.customer.list').get(0),
-                            collection: new dac.CustomersCollection({
-                                page: 1,
-                                params: {limit: 'all', filter: filter},
-                                watch: {parent: this, event: 'renderChildren'}
-                            }),
-                            gotoViewOnAdd: true
-                        });
-                    this.trigger('renderChildren');
-                    this.customersView = customersView;
+                .trigger('reset')
+                .trigger('rendering');
+            this.collection = new dac.CustomersCollection({
+                page: 1,
+                params: {
+                    limit: 'all',
+                    filter: filter
+                },
+                watch: {
+                    parent: this,
+                    event: 'renderChildren'
+                }
+            });
+            this.bind('rendered', function() {
+                    var customers = this.collection;
+                    this.views.customers = new cbb.ListView({
+                        modelName: 'Customer',
+                        el: $('.customer.list').get(0),
+                        collection: customers,
+                        gotoViewOnAdd: true
+                    });
                 })
                 .render();
+            this.trigger('rendered');
         },
         _filterBy: function(e) {
             e.preventDefault();
             var filter = $(e.target).text();
-            if (this.customersView !== undefined) {
-                var collection = this.customersView.collection,
+            if (this.collection) {
+                var collection = this.collection,
                     router = this.router;
                 collection.params.filter = filter;
                 collection.fetch({
