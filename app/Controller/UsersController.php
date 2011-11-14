@@ -2,7 +2,8 @@
 class UsersController extends AppController {
     public $primaryModel = 'User';
     public $paginate = array(
-        'limit' => 50,
+        'limit' => 10,
+        'fields' => array('id', 'email', 'name'),
         'order' => array('User.name' => 'ASC'),
         'recursive' => 0
     );
@@ -14,15 +15,17 @@ class UsersController extends AppController {
     }
     
     function index() {
-        $title_for_layout = 'Users';
-        $paginationOptions = array();
-        $doPaginate = !(isset($this->params['url']['limit']) && $this->params['url']['limit'] == 'all');
-        if ($this->RequestHandler->isAjax()) { $this->paginate['limit'] = 10; }
+        extract($this->Odn->requestInfo);
+
+        $title_for_layout = __('Users');
+        $fields = $this->paginate['fields'];
+        $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
+
         if ($doPaginate) {
             $users = $this->paginate('User');
         } else {
             $this->User->recursive = 0;
-            $User = $this->User->find('all');
+            $users = $this->User->find('all', compact('fields', 'isAjax'));
         }
         $this->set(compact('doPaginate', 'users', 'title_for_layout'));
     }
