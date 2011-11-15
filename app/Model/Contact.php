@@ -52,7 +52,13 @@ class Contact extends AppModel {
         }
 
         if (isset($customer_id)) {
-            if ($customer = $this->Customer->find('first', array('conditions' => array('id' => $customer_id), 'recursive' => -1))) {
+            $this->Customer->id = $customer_id;
+            $reseller_id = $this->Customer->field('customer_id');
+            $customer = $this->Customer->find('first', array(
+                'conditions' => array('Customer.id' => $reseller_id),
+                'recursive' => -1
+            ));
+            if ($customer) {
                 $conditions[$key] = array($customer_id, $customer['Customer']['id']);
             }
         }
