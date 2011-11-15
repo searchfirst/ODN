@@ -1,55 +1,54 @@
     dac.SearchView = cbb.PageView.extend({
         el: $('[role=search]').get(0),
         events: {
-            'keyup input[type="search"]': 'search',
             'change input[type="search"]': 'search',
-            //'mouseout': 'hide',
-            'focusin': 'show',
-            'keydown input[type="search"]': '_preventDefault'
+            'click a': 'resultActivated',
+            'keydown input[type="search"]': 'stopKeySubmission',
+            'keyup input[type="search"]': 'search'
         },
         initialize: function(options) {
             cbb.PageView.prototype.initialize.call(this, options);
             this.render();
-            $('.search.list', this.el).addClass('empty');
-            this.searchListView = new cbb.ListView({
-                collection: new dac.SearchCollection({
-                    page: 1,
-                    params: {limit: 10, model: 'Customer'}
-                }),
-                el: $('[role=search] .search.list').get(0),
-                modelName: 'Search',
-                showButtons: false
+            this.collection = new dac.SearchCollection({
+                page: 1,
+                params: {
+                    limit: 10,
+                    model: 'Customer'
+                }
             });
+            this.views = {
+                search: new cbb.ListView({
+                    collection: this.collection,
+                    el: $('[role=search] .search.list').get(0),
+                    modelName: 'Search',
+                    showButtons: false
+                })
+            };
             this.searchTimer = 0;
             this.searchText = '';
         },
-        hide: function(e) {
-            var view = this.searchListView,
-                el = view.el,
-                $el = $(el);
-
-            setTimeout(function() {
-                $el.addClass('empty', 500);
-            }, 250);
-        },
-        show: function(e) {
-            var view = this.searchListView,
-                el = view.el,
-                $el = $(el),
-                $input = $('input[type="search"]', this.el);
-
-            if ($input.val() !== '') {
-                $el.removeClass('empty', 500);
+        resultActivated: function(e) {
+            var type = e.type,
+                url = $(e.target).attr('href').replace(/^\/?(.*)/, '$1');
+            if (type == 'click') {
+                e.preventDefault();
+                this.resetSearch();
             }
+            this.router.navigate(url, true);
+        },
+        resetSearch: function() {
+            this.$('input').val('');
+            this.collection.params.q = '';
+            this.collection.reset();
         },
         search: function(e) {
             var $target = $(e.target),
                 query = $target.val(),
                 which = e.which,
-                view = this.searchListView,
+                view = this.views.search,
                 collection = view.collection,
                 inputWasCleared = query === '',
-                searchTextChanged = query !== this.searchText,
+                searchTextChanged = query !== collection.params.q,
                 pressedEscape = (which === 27),
                 pressedEnter = (which === 13);
 
@@ -61,14 +60,20 @@
                 collection.reset();
             } else if (searchTextChanged) {
                 clearTimeout(this.searchTimer);
-                this.searchTimer = setTimeout(function() {
-                    collection.params.q = query;
-                    collection.fetch();
-                }, 500);
+                if (query !== '') {
+                    this.searchTimer = setTimeout(function() {
+                        collection.page = 1;
+                        collection.params.q = encodeURIComponent(query);
+                        collection.fetch();
+                    }, 500);
+                } else {
+                    collection.params.q = '';
+                    collection.page = 1;
+                    collection.reset();
+                }
             }
-            this.searchText = $target.val();
         },
-        _preventDefault: function(e) {
+        stopKeySubmission: function(e) {
             var which = e.which;
             if (which === 13) {
                 e.preventDefault();

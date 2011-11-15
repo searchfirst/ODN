@@ -1,15 +1,17 @@
 $(function(){
-    var ODN = {
-        routers: {
-            app: new dac.AppRouter,
-            facades: new dac.FacadesRouter,
-            customers: new dac.CustomersRouter,
-            invoices: new dac.InvoicesRouter,
-            utilities: new dac.UtilitiesRouter
-        },
-        views: {
-            search: new dac.SearchView({viewTemplate: 'searchView'})
-        }
+    var ODN = {};
+    ODN.routers = {
+        app: new dac.AppRouter,
+        facades: new dac.FacadesRouter,
+        customers: new dac.CustomersRouter,
+        invoices: new dac.InvoicesRouter,
+        utilities: new dac.UtilitiesRouter
+    };
+    ODN.views = {
+            search: new dac.SearchView({
+                router: ODN.routers.app,
+                viewTemplate: 'searchView'
+            })
     };
     $('nav#menu a').click(function(e){
         var usedModifier = e.which == 1 && (e.altKey || e.ctrlKey || e.shiftKey || e.metaKey),
