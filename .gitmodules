@@ -46,3 +46,6 @@
 [submodule "app/webroot/css/handy"]
 	path = app/webroot/css/handy
 	url = git://github.com/connrs/handy.git
+[submodule "app/webroot/js/libs/underscore"]
+	path = app/webroot/js/libs/underscore
+	url = git://github.com/documentcloud/underscore.git
