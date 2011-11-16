@@ -28,7 +28,7 @@ class NotesController extends AppController {
 
         $this->paginate['conditions'] += $conditions;
         $notes = $this->paginate('Note');
-        $this->set(compact('notes'));
+        $this->set(compact('doPaginate', 'notes'));
     }
 
     public function you() {
