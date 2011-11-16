@@ -212,7 +212,7 @@
                     }
                 });
             } else {
-                this.router.navigate('customers?f='+filter,true);
+                this.router.navigate('customers?f='+filter, true);
             }
         },
         _navigateInvoiceView: function(e) {
