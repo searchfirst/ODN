@@ -48,9 +48,11 @@
                         }
                     })
                 };
-                this.extras.users.fetch();
-                this.extras.websites.fetch();
-                this.extras.services.fetch();
+                this.bind('fetched', _.once(function() {
+                    this.extras.users.fetch();
+                    this.extras.websites.fetch();
+                    this.extras.services.fetch();
+                }), this);
             }
         }
     });

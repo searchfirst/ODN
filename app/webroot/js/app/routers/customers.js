@@ -23,13 +23,13 @@
         index: function(filter) {
             var filter = filter || 'A',
                 view = new dac.CustomersView({
-                    collection: new dac.CustomersCollection,
+                    //collection: new dac.CustomersCollection,
                     el: $('[role=main]').get(0),
                     gotoViewOnAdd: true,
                     hideFormOnSubmit: false,
                     router: this,
                     viewTemplate: 'customersIndex'
                 });
-            view.rendering().index(filter);
+            view.index(filter);
         }
     });

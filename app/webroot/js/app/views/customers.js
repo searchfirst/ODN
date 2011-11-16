@@ -185,10 +185,6 @@
                 params: {
                     limit: 'all',
                     filter: filter
-                },
-                watch: {
-                    parent: this,
-                    event: 'renderChildren'
                 }
             });
             this.bind('rendered', function() {
@@ -199,9 +195,9 @@
                         collection: customers,
                         gotoViewOnAdd: true
                     });
+                    customers.fetch();
                 })
                 .render();
-            this.trigger('rendered');
         },
         _filterBy: function(e) {
             e.preventDefault();
