@@ -1,6 +1,5 @@
 <?php
 class CustomersController extends AppController {
-    public $primaryModel = 'Customer';
     public $helpers = array(
         'Customer',
         'Service',
