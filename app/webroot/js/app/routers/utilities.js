@@ -1,4 +1,4 @@
-    dac.UtilitiesRouter = cbb.Router.extend({
+    /*dac.UtilitiesRouter = cbb.Router.extend({
         routes: {
             'utilities': 'index'
         },
@@ -9,4 +9,4 @@
             });
             view.rendering().index();
         },
-    });
+    });*/

@@ -1,4 +1,4 @@
-    dac.FacadesRouter = cbb.Router.extend({
+    /*dac.FacadesRouter = cbb.Router.extend({
         routes: {
             '': 'index'
         },
@@ -9,4 +9,4 @@
             });
             view.rendering().index();
         },
-    });
+    });*/

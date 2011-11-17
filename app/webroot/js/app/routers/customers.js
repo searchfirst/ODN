@@ -1,4 +1,4 @@
-    dac.CustomersRouter = cbb.Router.extend({
+    /*dac.CustomersRouter = cbb.Router.extend({
         routes: {
             'customers': 'index',
             'customers?f=:filter': 'index',
@@ -32,4 +32,4 @@
                 });
             view.index(filter);
         }
-    });
+    });*/
