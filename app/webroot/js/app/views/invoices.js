@@ -1,8 +1,8 @@
-    dac.InvoicesView = cbb.View.extend({
+    dac.InvoicesView = cbb.PageView.extend({
         view: function(id) {
             this.trigger('reset')
                 .trigger('rendering');
-            this.model = new dac.Customer({
+            this.model = new dac.Invoice({
                 id: +id,
                 childOptions: {
                     page: 1,
@@ -18,11 +18,11 @@
             this.model
                 .bind('change', this.render, this)
                 .fetch();
-            this.bind('rendered', function() {
+            /*this.bind('rendered', function() {
                 var invoice = this.model;
                 this.views = {
                 };
-            }, this);
+            }, this);*/
         },
         index: function() {
             this

@@ -4,9 +4,10 @@
             'focus .note.list .filter_hooks a': '_filterNotes'
         },
         index: function() {
-            this
+            this.trigger('reset')
+                .trigger('rendering')
                 .bind('rendered', function() {
-                    var customersCollection = new dac.CustomersCollection({
+                    var customers = new dac.CustomersCollection({
                             baseUrl: '/customers/by_service',
                             page: 1,
                             params: {
@@ -18,15 +19,7 @@
                                 event: 'renderChildren'
                             }
                         }),
-                        customersView = new cbb.ListView({
-                            collection: customersCollection,
-                            el: $('.project.list').get(0),
-                            itemListTemplateStem: 'DetailsItemView',
-                            itemTagName: 'article',
-                            modelName: 'Customer',
-                            showButtons: false
-                        }),
-                        notesCollection = new dac.NotesCollection({
+                        notes = new dac.NotesCollection({
                             baseUrl: '/notes/you',
                             page: 1,
                             params: {
@@ -37,23 +30,29 @@
                                 parent: this,
                                 event: 'renderChildren'
                             }
+                        });
+
+                    this.views = {
+                        customers: new cbb.ListView({
+                            collection: customers,
+                            el: $('.project.list').get(0),
+                            itemListTemplateStem: 'DetailsItemView',
+                            itemTagName: 'article',
+                            modelName: 'Customer',
+                            showButtons: false
                         }),
-                        notesView = new cbb.ListView({
-                            collection: notesCollection,
+                        notes: new cbb.ListView({
+                            collection: notes,
                             el: $('.note.list').get(0),
                             itemListTemplateStem: 'DetailsItemView',
                             itemTagName: 'article',
                             modelName: 'Note',
                             showButtons: false
-                        });
-
-                    this.customersCollection = customersCollection;
-                    this.customersView = customersView;
-                    this.notesCollection = notesCollection;
-                    this.notesView = notesView;
+                        })
+                    }
                 })
                 .render()
-                .trigger('renderChildren');
+                .trigger('rendered');
         },
         _filterCustomers: function(e) {
             e.preventDefault();
@@ -62,8 +61,8 @@
                 $li = $target.parent('li'),
                 paramField = $target.data('paramField'),
                 paramVal = $target.data('paramVal'),
-                collection = this.customersCollection,
-                view = this.customersView
+                view = this.views.customers
+                collection = view.collection,
                 hasChanged = false;
 
             if (collection.params[paramField] !== paramVal) {
@@ -88,8 +87,8 @@
                 $li = $target.parent('li'),
                 paramField = $target.data('paramField'),
                 paramVal = $target.data('paramVal'),
-                collection = this.notesCollection,
-                view = this.notesView,
+                view = this.views.notes,
+                collection = view.collection,
                 hasChanged = false;
 
             if (paramField === 'flagged' && collection.params[paramField] !== paramVal) {
