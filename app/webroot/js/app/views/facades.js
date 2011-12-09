@@ -7,17 +7,12 @@
             this.trigger('reset')
                 .trigger('rendering')
                 .bind('rendered', function() {
-                    console.log('test');
                     var customers = new dac.CustomersCollection({
                             baseUrl: '/customers/by_service',
                             page: 1,
                             params: {
                                 status: 2,
                                 limit: 'all'
-                            },
-                            watcher: {
-                                parent: this,
-                                event: 'renderChildren'
                             }
                         }),
                         notes = new dac.NotesCollection({
@@ -26,10 +21,6 @@
                             params: {
                                 flagged: 0,
                                 limit: 10
-                            },
-                            watcher: {
-                                parent: this,
-                                event: 'renderChildren'
                             }
                         });
 
@@ -51,10 +42,10 @@
                             showButtons: false
                         })
                     }
-                    window.f = this.views;
+                    notes.fetch();
+                    customers.fetch();
                 })
                 .render();
-                //.trigger('rendered');
         },
         _filterCustomers: function(e) {
             e.preventDefault();
