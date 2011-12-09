@@ -20,7 +20,7 @@
                         params: {
                             limit:'all'
                         },
-                        watch: {
+                        watcher: {
                             parent: this,
                             event: 'childAdd'
                         }
@@ -31,7 +31,7 @@
                             limit: 'all',
                             customer_id: this.get('id')
                         },
-                        watch: {
+                        watcher: {
                             parent: this,
                             event: 'childAdd'
                         }
@@ -42,7 +42,7 @@
                             limit: 'all',
                             customer_id: this.get('id')
                         },
-                        watch: {
+                        watcher: {
                             parent: this,
                             event: 'childAdd'
                         }

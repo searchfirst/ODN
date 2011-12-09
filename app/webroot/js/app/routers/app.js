@@ -15,6 +15,7 @@
         facadesIndex: function() {
             var view = new dac.FacadesView({
                 el: $('[role=main]').get(0),
+                router: this,
                 viewTemplate: 'facadesIndex'
             });
             view.index();

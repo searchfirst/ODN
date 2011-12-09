@@ -69,7 +69,7 @@
 	Handlebars.registerHelper('pageLinks', function(pageInfo,model,customerId) {
 		if (pageInfo.pages < 2) { return ''; }
 		var nextPage = pageInfo.page++,
-				previousPage = pageInfo.page--, params = customerId ? '&customer_id=' + customerId : '',
+				previousPage = pageInfo.page--, params = _(customerId).isString() ? '&customer_id=' + customerId : '',
 				controller = model.toLowerCase() + 's',
 				r = '<ul class="pagelinks">';
 		r += '<li>';

@@ -9,7 +9,7 @@
                     params: {
                         invoice_id: +id
                     },
-                    watch: {
+                    watcher: {
                         parent: this,
                         event: 'renderChildren'
                     }

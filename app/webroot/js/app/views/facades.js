@@ -7,6 +7,7 @@
             this.trigger('reset')
                 .trigger('rendering')
                 .bind('rendered', function() {
+                    console.log('test');
                     var customers = new dac.CustomersCollection({
                             baseUrl: '/customers/by_service',
                             page: 1,
@@ -14,7 +15,7 @@
                                 status: 2,
                                 limit: 'all'
                             },
-                            watch: {
+                            watcher: {
                                 parent: this,
                                 event: 'renderChildren'
                             }
@@ -26,7 +27,7 @@
                                 flagged: 0,
                                 limit: 10
                             },
-                            watch: {
+                            watcher: {
                                 parent: this,
                                 event: 'renderChildren'
                             }
@@ -50,9 +51,10 @@
                             showButtons: false
                         })
                     }
+                    window.f = this.views;
                 })
-                .render()
-                .trigger('rendered');
+                .render();
+                //.trigger('rendered');
         },
         _filterCustomers: function(e) {
             e.preventDefault();

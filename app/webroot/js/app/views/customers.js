@@ -14,7 +14,7 @@
                     params: {
                         customer_id: +id
                     },
-                    watch: {
+                    watcher: {
                         parent: this,
                         event: 'renderChildren'
                     }

@@ -1,9 +1,8 @@
     dac.UtilitiesView = cbb.PageView.extend({
         index: function() {
-            this
-                .bind('rendered', function() {
+            this.bind('rendered', function() {
                     var utilitiesCollection = new dac.UtilitiesCollection({
-                            watch: {
+                            watcher: {
                                 parent: this,
                                 event: 'renderChildren'
                             }
@@ -14,8 +13,6 @@
                             modelName: 'Utility',
                             showButtons: false
                         });
-
-                    window.uv = utilitiesView;
                 })
                 .render()
                 .trigger('renderChildren');
