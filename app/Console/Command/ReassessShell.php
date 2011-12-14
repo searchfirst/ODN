@@ -1,5 +1,5 @@
 <?php
-class ReassessShell extends Shell {
+class ReassessShell extends AppShell {
     var $uses = array('Customer');
 
     function main() { $this->help(); }
@@ -10,12 +10,11 @@ class ReassessShell extends Shell {
     }
 
     function go() {
-        $customers = $this->Customer->find('all', array(
-            'recursive' => -1,
-            'fields' => array('id')
-        ));
+        $customers = $this->Customer->find('all', array( 'recursive' => -1));
         foreach ($customers as $customer) {
+            $this->out($customer['Customer']['company_name']);
             $this->Customer->reassessStatus($customer['Customer']['id']);
+            $this->out(' ');
         }
     }
 }
