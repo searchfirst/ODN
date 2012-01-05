@@ -412,6 +412,7 @@ class Customer extends AppModel {
     public function reassessStatus($id) {
         $Customer = new Customer();
         $Customer->id = $id;
+        $Customer->recursive = 1;
         if ($Customer->id && $customer = $Customer->read()) {
             $serviceStatus = false;
             if (!empty($customer['Service'])) {
@@ -419,7 +420,7 @@ class Customer extends AppModel {
                     $serviceStatus = $serviceStatus || ( $service['status'] > 0 );
                 }
             }
-            $serviceStatus = $serviceStatus || $this->hasActiveCustomers($id);
+            $serviceStatus = $serviceStatus || $Customer->hasActiveCustomers($id);
             $serviceStatus = (integer) $serviceStatus;
             $Customer->saveField('status', $serviceStatus, array('validate' => false, 'callbacks' => false));
         }
