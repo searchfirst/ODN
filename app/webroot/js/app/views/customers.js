@@ -8,7 +8,8 @@
             this.trigger('reset')
                 .trigger('rendering');
             this.model = new dac.Customer({
-                id: +id,
+                    id: +id,
+                }, {
                 childOptions: {
                     page: 1,
                     params: {

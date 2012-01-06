@@ -4,8 +4,8 @@
             var id = this.get('id');
             return '/customers' + (id ? '/' + id : '');
         },
-        initialize: function(options) {
-            cbb.Model.prototype.initialize.call(this, options);
+        initialize: function(attributes, options) {
+            cbb.Model.prototype.initialize.call(this, attributes, options);
             if (this.collection == undefined && this.get('id')) {
                 var childOptions = this.childOptions || {params: {customer_id: this.get('id')}};
                 this.contacts = new dac.ContactsCollection(childOptions);
