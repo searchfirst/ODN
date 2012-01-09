@@ -3,7 +3,9 @@
             this.trigger('reset')
                 .trigger('rendering');
             this.model = new dac.Invoice({
-                id: +id,
+                id: +id
+            },
+            {
                 childOptions: {
                     page: 1,
                     params: {
