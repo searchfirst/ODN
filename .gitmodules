@@ -49,3 +49,6 @@
 [submodule "app/webroot/js/libs/underscore"]
 	path = app/webroot/js/libs/underscore
 	url = git://github.com/documentcloud/underscore.git
+[submodule "app/webroot/js/libs/js-markdown-extra"]
+	path = app/webroot/js/libs/js-markdown-extra
+	url = git://github.com/connrs/js-markdown-extra.git
