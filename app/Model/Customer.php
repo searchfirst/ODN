@@ -16,7 +16,7 @@ class Customer extends AppModel {
         'allThroughService' => true
     );
     public $order = 'Customer.company_name';
-    public $recursive = 1;
+    public $recursive = 0;
     public $validate = array();
     public $virtualFields = array(
         'text_status' => "(SELECT CASE Customer.status WHEN 1 THEN 'Active' WHEN 0 THEN 'Inactive' END)"
