@@ -417,7 +417,7 @@ class Customer extends AppModel {
             $serviceStatus = false;
             if (!empty($customer['Service'])) {
                 foreach ($customer['Service'] as $service) {
-                    $serviceStatus = $serviceStatus || ( $service['status'] > 0 );
+                    $serviceStatus = $serviceStatus || ( $service['status'] == 1 || $service['status'] == 2 );
                 }
             }
             $serviceStatus = $serviceStatus || $Customer->hasActiveCustomers($id);
