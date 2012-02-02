@@ -11,6 +11,9 @@ class NotesController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Note->isAjax = true;
+        }
         $conditions = array();
         $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
 
@@ -33,6 +36,9 @@ class NotesController extends AppController {
 
     public function you() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Note->isAjax = true;
+        }
         $doPaginate = true;
         $conditions = array(
             'Note.user_id' => User::getCurrent('id')
@@ -54,12 +60,15 @@ class NotesController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Note->isAjax = true;
+        }
 
         if ($isPost || $isPut) {
             if ($this->Note->save($this->data)) {
                 $message = __('Note added successfully.');
                 if ($isAjax) {
-                    $note = $this->Note->read(null, null, $isAjax);
+                    $note = $this->Note->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect($this->referer('/'));
@@ -100,13 +109,16 @@ class NotesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Note->isAjax = true;
+        }
         $title_for_layout = __('Edit Note: %s', $id);
 
         if ($isPost || $isPut) {
             if ($this->Note->save($this->data)) {
                 $message = __('Note saved successfully.');
                 if ($isAjax) {
-                    $note = $this->Note->read(null, null, $isAjax);
+                    $note = $this->Note->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Note->field('customer_id')));

@@ -21,6 +21,9 @@ class SearchController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->SearchIndex->isAjax = true;
+        }
         $conditions = array();
         $doPaginate = true;
 

@@ -14,6 +14,9 @@ class InvoicesController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Invoice->isAjax = true;
+        }
         $conditions = array();
         $wizard = true;
         $title_for_layout = __('Invoices');
@@ -28,64 +31,23 @@ class InvoicesController extends AppController {
             $this->paginate['conditions'] += $conditions;
             $invoices = $this->paginate('Invoice');
         } else {
-            $invoices = $this->Invoice->find('all', compact('conditions', 'isAjax'));
+            $invoices = $this->Invoice->find('all', compact('conditions'));
         }
 
         $this->set(compact('doPaginate', 'invoices', 'title_for_layout', 'wizard'));
-        /*
-        if (empty($this->params['url']['customer_id'])) {
-            if(!empty($this->data['Invoice']['types'])) {
-                $type = $this->data['Invoice']['types'];
-                if (!empty($this->data['Invoice']['date'])) {
-                    $month = $this->data['Invoice']['date']['month'];
-                    $year = $this->data['Invoice']['date']['year'];
-                    $title = __('Invoices: ',true).sprintf(' %s - %s/%s',Inflector::humanize($type),$month,$year);
-                    $invoices = $this->Invoice->find('all',array(
-                        'conditions' => array("MONTH(Invoice.$type)"=>$month,"YEAR(Invoice.$type)"=>$year),
-                        'order' => "Invoice.$type DESC",
-                        'recursive' => 1
-                    ));
-                } elseif (!( empty($this->data['Invoice']['start_date']) || empty($this->data['Invoice']['end_date']) )) {
-                    $start_date = $this->data['Invoice']['start_date'];
-                    $start_date = sprintf('%s-%s-%s 00:00:00',$start_date['year'],$start_date['month'],$start_date['day']);
-                    $end_date = $this->data['Invoice']['end_date'];
-                    $end_date = sprintf('%s-%s-%s 23:59:59',$end_date['year'],$end_date['month'],$end_date['day']);
-                    $title = __('Invoices: '.Inflector::humanize($type),true).sprintf(' %s - %s',substr($start_date,0,10),substr($end_date,0,10));
-                    $invoices = $this->Invoice->find('all',array(
-                        'conditions' => array("Invoice.$type BETWEEN ? and ?" => array($start_date,$end_date)),
-                        'order' => "Invoice.$type DESC",
-                        'recursive' => 1
-                    ));
-                } elseif (!empty($this->data['Invoice']['type'])) {
-                    if($this->data['Invoice']['type'] == 'overdue') {
-                        $invoices = $this->Invoice->find('overdue');
-                        $title = __('Invoices: All Overdue',true);
-                    } elseif ($this->data['Invoice']['type'] == 'notoverdue') {
-                        $invoices = $this->Invoice->find('notOverdue');
-                        $title = __('Invoices: All Due',true);
-                    }
-                }
-            }
-            $this->set('invoices', $invoices);
-            $this->set('title_for_layout', $title);
-        } else {
-            $customer_id = $this->params['url']['customer_id'];
-            $paginationOptions = array('Invoice.customer_id' => $customer_id);
-            $invoices = $this->paginate('Invoice',$paginationOptions);
-            $this->set('invoices', $invoices);
-        }
-        $this->set('types',array('created'=>'Raised','date_invoice_paid'=>'Paid'));
-        */
     }
 
     public function add() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Invoice->isAjax = true;
+        }
 
         if ($isPost || $isPut) {
             if ($this->Invoice->save($this->request->data)) {
                 $message = __('Invoice created successfully');
                 if ($isAjax) {
-                    $invoice = $this->Invoice->read(null, null, $isAjax);
+                    $invoice = $this->Invoice->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Invoice->field('customer_id')));
@@ -120,6 +82,9 @@ class InvoicesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Invoice->isAjax = true;
+        }
         $this->Invoice->id = $id;
         $this->Invoice->recursive = -1;
 
@@ -127,7 +92,7 @@ class InvoicesController extends AppController {
             if ($this->Invoice->save($this->request->data)) {
                 $message = __('Invoice saved successfully.');
                 if ($isAjax) {
-                    $invoice = $this->Invoice->read(null, null, $isAjax);
+                    $invoice = $this->Invoice->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Invoice->field('customer_id')));
@@ -152,9 +117,12 @@ class InvoicesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Invoice->isAjax = true;
+        }
         $this->Invoice->id = $id;
 
-        if ($invoice = $this->Invoice->read(null, null, $isAjax)) {
+        if ($invoice = $this->Invoice->read()) {
             if (!$isAjax) {
                 $title_for_layout = __('%s | Invoice', $invoice['Invoice']['reference']);
             }

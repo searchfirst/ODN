@@ -11,6 +11,9 @@ class WebsitesController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Website->isAjax = true;
+        }
 
         $conditions = array();
         $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
@@ -24,7 +27,7 @@ class WebsitesController extends AppController {
             $this->paginate['conditions'] += $conditions;
             $websites = $this->paginate('Website');
         } else {
-            $websites = $this->Website->find('all', compact('conditions', 'isAjax'));
+            $websites = $this->Website->find('all', compact('conditions'));
         }
 
         $this->set(compact('doPaginate', 'websites'));
@@ -32,12 +35,15 @@ class WebsitesController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Website->isAjax = true;
+        }
 
         if ($isPost || $isPut) {
             if ($this->Website->save($this->request->data)) {
                 $message = __('Website created successfully.');
                 if ($isAjax) {
-                    $website = $this->Website->read(null, null, $isAjax);
+                    $website = $this->Website->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Website->field('customer_id')));
@@ -72,6 +78,9 @@ class WebsitesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Website->isAjax = true;
+        }
         $this->Website->id = $id;
         $this->Website->recursive = -1;
 
@@ -79,7 +88,7 @@ class WebsitesController extends AppController {
             if ($this->Website->save($this->request->data)) {
                 $message = __('Website saved successfully.');
                 if ($isAjax) {
-                    $website = $this->Website->read(null, null, $isAjax);
+                    $website = $this->Website->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Website->field('customer_id')));
@@ -106,9 +115,12 @@ class WebsitesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Website->isAjax = true;
+        }
         $this->Website->id = $id;
 
-        if ($website = $this->Website->read(null, null, $isAjax)) {
+        if ($website = $this->Website->read()) {
             if (!$isAjax) {
                 $title_for_layout = __('%s | Website', $website['Website']['uri']);
             }

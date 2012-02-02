@@ -5,7 +5,6 @@ class Contact extends AppModel {
         'IntCaster'=>array(
             'cacheConfig'=>'lenore'
         ),
-        'Searchable.Searchable',
         'Alkemann.Revision'
     );
     public $belongsTo = array('Customer');
@@ -15,15 +14,13 @@ class Contact extends AppModel {
         if (!empty($conditions['Contact.customer_id'])) {
             $conditions = $this->addResellerToCustomerCondition($conditions);
         }
-
-        return parent::paginate($conditions, $fields, $order, $limit, $page, $recursive, $extra);
+        return $this->find('all', compact('conditions', 'fields', 'order', 'limit', 'page', 'recursive'));
     }
 
     public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
         if (!empty($conditions['Contact.customer_id'])) {
             $conditions = $this->addResellerToCustomerCondition($conditions);
         }
-
         return $this->find('count', compact('conditions', 'recursive'));
     }
 
@@ -32,9 +29,6 @@ class Contact extends AppModel {
             $query['conditions'] = $this->addResellerToCustomerCondition($query['conditions']);
             return $query;
         } else if ($state == "after") {
-            if (array_key_exists('isAjax', $query) && $query['isAjax']) {
-                $results = $this->moveModelsToRoot($results);
-            }
             return $results;
         }
     }

@@ -39,13 +39,13 @@ class AppController extends Controller {
     public function beforeFilter() {
         parent::beforeFilter();
         
-        if (isset($this->paginate)) {
-            if (!array_key_exists('extra', $this->paginate)) {
-                $this->paginate['extra'] = array();
-            }
-            if ($this->request->is('ajax')) {
-                $this->paginate['isAjax'] = true;
-            }
-        }
+        //if (isset($this->paginate)) {
+            //if (!array_key_exists('extra', $this->paginate)) {
+                //$this->paginate['extra'] = array();
+            //}
+            //if ($this->request->is('ajax')) {
+                //$this->paginate['isAjax'] = true;
+            //}
+        //}
     }
 }

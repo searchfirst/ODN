@@ -11,21 +11,10 @@ class Invoice extends AppModel {
 
     public $hasMany = array('Note'=>array());
     public $belongsTo = array('Service','Customer');
-    public $virtualFields = array();
-
-    public function __construct($id = false,$table = null,$ds = null) {
-        parent::__construct($id,$table,$ds);
-        $this->statuses = array(
-            'due' => __('Due',true),
-            'overdue' => __('Overdue',true),
-            'cancelled' => __('Cancelled',true),
-            'paid' => __('Paid',true)
-        );
-        $this->virtualFields = array(
-            'status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN -1 WHEN Invoice.due_date > now() AND Invoice.date_invoice_paid IS NULL THEN 1 WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 0 WHEN Invoice.date_invoice_paid IS NOT NULL THEN 2 END)",
-            'text_status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN 'Cancelled' WHEN Invoice.due_date > now() AND Invoice.date_invoice_paid IS NULL THEN 'Due' WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 'Overdue' WHEN Invoice.date_invoice_paid IS NOT NULL THEN 'Paid' END)"
-        );
-    }
+    public $virtualFields = array(
+        'status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN -1 WHEN Invoice.due_date > now() AND Invoice.date_invoice_paid IS NULL THEN 1 WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 0 WHEN Invoice.date_invoice_paid IS NOT NULL THEN 2 END)",
+        'text_status' => "(SELECT CASE WHEN Invoice.cancelled IS TRUE THEN 'Cancelled' WHEN Invoice.due_date > now() AND Invoice.date_invoice_paid IS NULL THEN 'Due' WHEN Invoice.date_invoice_paid IS NULL AND Invoice.due_date < now() THEN 'Overdue' WHEN Invoice.date_invoice_paid IS NOT NULL THEN 'Paid' END)"
+    );
 
     function beforeSave() {
         parent::beforeSave();
@@ -129,9 +118,10 @@ class Invoice extends AppModel {
     }
 
     function afterFind($results, $primary) {
-        //$this->setStatus($results,$primary);
-        $this->addPrimaryAddressToCustomer($results,$primary);
-        return $results;
+        if (!(isset($this->Ajax) || $this->Ajax)) {
+            $this->addPrimaryAddressToCustomer($results, $primary);
+        }
+        return parent::afterFind($results, $primary);
     }
 
     private function addPrimaryAddressToCustomer(&$results, $primary) {

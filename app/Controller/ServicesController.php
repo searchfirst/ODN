@@ -11,6 +11,9 @@ class ServicesController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Service->isAjax = true;
+        }
         $conditions = array();
         $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
 
@@ -23,7 +26,7 @@ class ServicesController extends AppController {
             $services = $this->paginate('Service');
         } else {
             $this->Service->recursive = 0;
-            $services = $this->Service->find('all', compact('conditions', 'isAjax'));
+            $services = $this->Service->find('all', compact('conditions'));
         }
 
         $this->set(compact('doPaginate', 'services'));
@@ -42,8 +45,11 @@ class ServicesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Service->isAjax = true;
+        }
 
-        if ($service = $this->Service->read(null, null, $isAjax)) {
+        if ($service = $this->Service->read()) {
             if (!$isAjax) {
                 $title_for_layout = __('%s | Service', $service['Service']['title']);
             }
@@ -57,12 +63,15 @@ class ServicesController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Service->isAjax = true;
+        }
 
         if ($isPost || $isPut) {
             if ($this->Service->save($this->data)) {
                 $message = __('Service created successfully.');
                 if ($isAjax) {
-                    $service = $this->Service->read(null, null, $isAjax);
+                    $service = $this->Service->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Service->field('customer_id')));
@@ -106,13 +115,16 @@ class ServicesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Service->isAjax = true;
+        }
         $this->Service->recursive = -1;
 
         if ($isPost || $isPut) {
             if ($this->Service->save($this->request->data)) {
                 $message = __('Service saved successfully.');
                 if ($isAjax) {
-                    $service = $this->Service->read(null, null, $isAjax);
+                    $service = $this->Service->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Service->field('customer_id')));

@@ -16,6 +16,9 @@ class UsersController extends AppController {
     
     function index() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->User->isAjax = true;
+        }
 
         $title_for_layout = __('Users');
         $fields = $this->paginate['fields'];
@@ -25,7 +28,7 @@ class UsersController extends AppController {
             $users = $this->paginate('User');
         } else {
             $this->User->recursive = 0;
-            $users = $this->User->find('all', compact('fields', 'isAjax'));
+            $users = $this->User->find('all', compact('fields'));
         }
         $this->set(compact('doPaginate', 'users', 'title_for_layout'));
     }

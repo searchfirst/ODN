@@ -12,6 +12,9 @@ class ContactsController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Contact->isAjax = true;
+        }
 
         $conditions = array();
         $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
@@ -24,7 +27,7 @@ class ContactsController extends AppController {
             $this->paginate['conditions'] += $conditions;
             $contacts = $this->paginate('Contact');
         } else {
-            $contacts = $this->Contact->find('allRelated', compact('conditions', 'isAjax'));
+            $contacts = $this->Contact->find('allRelated', compact('conditions'));
         }
         $this->set(compact('contacts', 'doPaginate'));
     }
@@ -36,9 +39,12 @@ class ContactsController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Contact->isAjax = true;
+        }
         $this->Contact->id = $id;
 
-        if ($contact = $this->Contact->read(null, null, $isAjax)) {
+        if ($contact = $this->Contact->read()) {
             if (!$isAjax) {
                 $title_for_layout = __('%s | Contact', $contact['Contact']['name']);
             }
@@ -52,12 +58,15 @@ class ContactsController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Contact->isAjax = true;
+        }
 
         if ($isPost || $isPut) {
             if ($this->Contact->save($this->request->data)) {
                 $message = __('Contact created successfully.');
                 if ($isAjax) {
-                    $contact = $this->Contact->read(null, null, $isAjax);
+                    $contact = $this->Contact->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Contact->field('customer_id')));
@@ -98,13 +107,16 @@ class ContactsController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Contact->isAjax = true;
+        }
         $this->Contact->recursive = 0;
 
         if ($isPost || $isPut) {
             if ($this->Contact->save($this->request->data)) {
                 $message = __('Contact saved successfully.');
                 if ($isAjax) {
-                    $contact = $this->Contact->read(null, null, $isAjax);
+                    $contact = $this->Contact->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Contact->field('customer_id')));

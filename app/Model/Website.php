@@ -4,8 +4,7 @@ class Website extends AppModel {
         'IntCaster'=>array(
             'cacheConfig'=>'lenore'
         ),
-        'Searchable.Searchable',
-        'Alkemann.Revision'
+        //'Alkemann.Revision'
     );
     public $belongsTo = array(
         'Customer'
@@ -15,8 +14,4 @@ class Website extends AppModel {
     );
     public $recursive = 0;
     public $validate = array();
-
-    public function indexData() {
-        return $this->data[$this->alias]['uri'];
-    }
 }

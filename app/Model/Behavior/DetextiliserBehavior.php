@@ -1,14 +1,14 @@
 <?php
 class DetextiliserBehavior extends ModelBehavior {
-    var $fields = array('description', 'content');
-    var $Model;
+    public $__defaultSettings = array(
+        'fields' => array('description', 'content')
+    );
 
-    function setup (&$Model, $config = array()) {
-        $this->Model =& $model;
-        $this->_set($config);
+    public function setup(&$Model, $settings = array()) {
+        $this->settings[$Model->alias] = $settings + $this->__defaultSettings;
     }
 
-    function beforeSave(&$Model) {
+    public function beforeSave(&$Model) {
         $this->deTextilise($Model);
         return true;
     }
@@ -17,7 +17,7 @@ class DetextiliserBehavior extends ModelBehavior {
         App::import('Vendor','textile');
         $textile = new Textile();
         $alias = $Model->alias;
-        $fields = $this->fields;
+        $fields = $this->settings[$Model->alias]['fields'];
         if (is_array($Model->data) && array_key_exists($alias,$Model->data)) {
             foreach ($fields as $field) {
                 if (array_key_exists($field,$Model->data[$alias])) {

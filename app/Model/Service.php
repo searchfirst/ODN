@@ -5,7 +5,6 @@ class Service extends AppModel {
             'cacheConfig'=>'lenore'
         ),
         'Joined',
-        'Searchable.Searchable',
         'Alkemann.Revision',
         'Detextiliser'=>array(
             'fields'=>array('description')

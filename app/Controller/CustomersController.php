@@ -30,11 +30,15 @@ class CustomersController extends AppController {
             $conditions['Customer.company_name LIKE'] = $this->request->query['filter'] . '%';
         }
 
+        if ($isAjax) {
+            $this->Customer->isAjax = true;
+        }
+
         if ($doPaginate) {
-            $customers = $this->paginate('Customer',$conditions);
+            $customers = $this->paginate('Customer', $conditions);
         } else {
             $this->Customer->recursive = 0;
-            $customers = $this->Customer->find('all',compact('isAjax', 'conditions'));
+            $customers = $this->Customer->find('all', compact('conditions'));
         }
 
         $this->set(compact('title_for_layout', 'customers', 'doPaginate'));
@@ -67,10 +71,14 @@ class CustomersController extends AppController {
             $conditions['user_id'] = $this->request->query['user_id'];
         }
 
+        if ($isAjax) {
+            $this->Customer->isAjax = true;
+        }
+
         if ($doPaginate) {
             $customers = $this->paginate('Customer',$conditions);
         } else {
-            $customers = $this->Customer->find('allThroughService', compact('conditions', 'status', 'isAjax'));
+            $customers = $this->Customer->find('allThroughService', compact('conditions', 'status'));
         }
 
         $this->set(compact('customers', 'doPaginate', 'title_for_layout'));
@@ -84,9 +92,14 @@ class CustomersController extends AppController {
 
         extract($this->Odn->requestInfo);
         $this->Customer->id = $id;
-        $this->Customer->recursive = $isAjax ? 0 : 2;
+        if ($isAjax) {
+            $this->Customer->recursive = 0;
+            $this->Customer->isAjax = true;
+        } else {
+            $this->Customer->recursive = 2;
+        }
 
-        if ($customer = $this->Customer->find('firstCustomerView', compact('isAjax'))) {
+        if ($customer = $this->Customer->find('firstCustomerView')) {
             if (!$isAjax) {
                 $title_for_layout = __('%s | Customer', $customer['Customer']['company_name']);
             }
@@ -100,15 +113,18 @@ class CustomersController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
+        if ($isAjax) {
+            $this->Customer->isAjax = true;
+        }
 
         if ($isPost || $isPut) {
             if ($this->Customer->saveAll($this->request->data)) {
                 $message = __('Customer added successfully.');
                 if ($isAjax) {
-                    $customer = $this->Customer->read(null, null, $isAjax);
+                    $customer = $this->Customer->read();
                 } else {
                     $this->Session->setFlash($message);
-                    $this->redirect(array('action' => 'view', $id));
+                    $this->redirect(array('action' => 'view', $this->Customer->id));
                 }
                 $this->set(compact('customer'));
             } else {
@@ -140,6 +156,9 @@ class CustomersController extends AppController {
 
         extract($this->Odn->requestInfo);
 
+        if ($isAjax) {
+            $this->Customer->isAjax = true;
+        }
         $this->Customer->id = $id;
         $this->Customer->recursive = -1;
 
@@ -147,7 +166,7 @@ class CustomersController extends AppController {
             if ($this->Customer->save($this->request->data)) {
                 $message = __('Customer saved successfully.');
                 if ($isAjax) {
-                    $customer = $this->Customer->read(null, null, $isAjax);
+                    $customer = $this->Customer->read();
                 } else {
                     $this->Session->setFlash($message);
                     $this->redirect(array('action' => 'view', $id));

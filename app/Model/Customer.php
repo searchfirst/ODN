@@ -80,37 +80,37 @@ class Customer extends AppModel {
         $index[] = $this->data[$this->alias][$this->displayField];
         if (array_key_exists('id', $this->data[$this->alias])) {
             $id = $this->data[$this->alias]['id'];
-            $Customer = new Customer;
-            $Customer->id = $id;
-            $Customer->read();
-            $contacts = $Customer->Contact->find('all', array(
+            $Contact = ClassRegistry::init('Contact', true);
+            $Website = ClassRegistry::init('Website', true);
+            $contacts = $Contact->find('all', array(
                 'conditions' => array('Contact.customer_id' => $id),
                 'recursive' => -1
             ));
-            $websites = $Customer->Website->find('all', array(
+            $websites = $Website->find('all', array(
                 'conditions' => array('Website.customer_id' => $id),
                 'recursive' => -1
             ));
             if (!empty($contacts)) {
                 foreach ($contacts as $contact) {
-                    $Contact = new Contact();
-                    $Contact->id = $contact['Contact']['id'];
-                    $Contact->recursive = -1;
-                    $Contact->read();
-                    $index[] = $Contact->processData();
+                    $index[] = sprintf("%s\n%s\n%s\n%s\n%s",
+                        $contact['Contact']['name'],
+                        $contact['Contact']['telephone'],
+                        $contact['Contact']['mobile'],
+                        $contact['Contact']['fax'],
+                        $contact['Contact']['email'],
+                        $contact['Contact']['address']
+                    );
                 }
             }
             if (!empty($websites)) {
                 foreach ($websites as $website) {
-                    $Website = new Website();
-                    $Website->id = $website['Website']['id'];
-                    $Website->recursive = -1;
-                    $Website->read();
-                    $index[] = $Website->processData();
+                    $index[] = sprintf("%s",
+                        $website['Website']['uri']
+                    );
                 }
             }
         }
-        return join("\n", $index);
+        return join(". ", $index);
     }
 
     protected function _findListPotentialParents($state, $query, $results = array()) {
@@ -197,8 +197,7 @@ class Customer extends AppModel {
             ), false);
             $this->rebindJustServicesForUser($serviceConditions['Service.user_id']);
         }
-
-        return parent::paginate($conditions, $fields, $order, $limit, $page, $recursive, $extra);
+        return $this->find('all', compact('conditions', 'fields', 'order', 'limit', 'page', 'recursive'));
     }
 
     public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
@@ -334,15 +333,16 @@ class Customer extends AppModel {
     }
 
     public function afterFind($results, $primary) {
-        $results = parent::afterFind($results, $primary);
-        if (!preg_match('/^list/',$this->findQueryType)) {
-            if ($primary) {
-                if ($this->recursive >= 0) {
-                    $this->getResellerContacts($results);
+        if (!(isset($this->Ajax) || $this->Ajax)) {
+            if (!preg_match('/^list/',$this->findQueryType)) {
+                if ($primary) {
+                    if ($this->recursive >= 0) {
+                        $this->getResellerContacts($results);
+                    }
                 }
             }
         }
-        return $results;
+        return parent::afterFind($results, $primary);
     }
 
     private function getResellerContacts(&$results) {
