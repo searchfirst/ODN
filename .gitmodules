@@ -54,4 +54,4 @@
 	url = git://github.com/connrs/js-markdown-extra.git
 [submodule "app/Plugin/Rest"]
 	path = app/Plugin/Rest
-	url = git://github.com/kvz/cakephp-rest-plugin.git
+	url = git://github.com/connrs/cakephp-rest-plugin.git
