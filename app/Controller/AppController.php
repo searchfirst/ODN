@@ -18,9 +18,6 @@ class AppController extends Controller {
             )
         ),
         'Odn',
-        'RequestHandler' => array(
-            'className' => 'OdnRequestHandler'
-        ),
         'Session',
         'Sma.Sma'
     );
