@@ -25,6 +25,13 @@ class CustomersController extends AppController {
                         'customer.Reseller' => 'Reseller'
                     ),
                     'embed' => false
+                ),
+                'by_service' => array(
+                    'extract' => array(
+                        'customers.{n}.Customer' => 'customers',
+                        'customers.{n}.Service' => 'customers.{n}.Service'
+                    ),
+                    'embed' => false
                 )
             )
         )

@@ -13,13 +13,23 @@ class NotesController extends AppController {
             'actions' => array(
                 'index' => array(
                     'extract' => array(
-                        'notes.{n}.Note' => 'notes'
+                        'notes.{n}.Note' => 'notes',
+                        'notes.{n}.User' => 'notes.{n}.User',
+                        'notes.{n}.Customer' => 'notes.{n}.Customer'
                     ),
                     'embed' => false
                 ),
                 'view' => array(
                     'extract' => array(
                         'note.Note' => 'Note'
+                    ),
+                    'embed' => false
+                ),
+                'you' => array(
+                    'extract' => array(
+                        'notes.{n}.Note' => 'notes',
+                        'notes.{n}.User' => 'notes.{n}.User',
+                        'notes.{n}.Customer' => 'notes.{n}.Customer'
                     ),
                     'embed' => false
                 )
