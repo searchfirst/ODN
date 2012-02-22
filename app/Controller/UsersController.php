@@ -1,6 +1,33 @@
 <?php
 class UsersController extends AppController {
-    public $primaryModel = 'User';
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'catchredir' => true,
+            'paginate' => true,
+            'debug' => 0,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'users.{n}.User' => 'users'
+                    ),
+                    'embed' => false
+                ),
+                'view' => array(
+                    'extract' => array(
+                        'user.User' => 'User'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $paginate = array(
         'limit' => 10,
         'fields' => array('id', 'email', 'name'),
@@ -16,9 +43,6 @@ class UsersController extends AppController {
     
     function index() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->User->isAjax = true;
-        }
 
         $title_for_layout = __('Users');
         $fields = $this->paginate['fields'];
@@ -34,19 +58,54 @@ class UsersController extends AppController {
     }
 
     function view($id = null) {
-        if(!$id) {
-            $this->Session->setFlash('Invalid Employee');
-            $this->redirect($this->referer('/'));
+        if (!$id) {
+            $message = __('No id was provided to view a customer.');
+            throw new NotFoundException($message);
         }
-        if($user=$this->User->findById($id)) {
-            $this->set(compact('user'));
+
+        extract($this->Odn->requestInfo);
+        $this->Customer->id = $id;
+
+        if ($customer = $this->Customer->read()) {
+            if (!$isAjax) {
+                $title_for_layout = __('%s | User', $user['User']['email']);
+            }
         } else {
-            
+            $message = __('User not found with this id: %s', $id);
+            throw new NotFoundException($message);
         }
+
+        $this->set(compact('user', 'title_for_layout'));
     }
 
     function add() {
         extract($this->Odn->requestInfo);
+
+        if ($isPost || $isPut) {
+            if ($this->Website->save($this->request->data)) {
+                $message = __('Website created successfully.');
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'websites', 'action' => 'view', $this->Website->id), 201);
+            } else {
+                $message = __('There was an error saving this website. Please correct any highlighted errors.');
+                if ($isAjax) {
+                    throw new InternalErrorException($message);
+                } else {
+                    $this->Session->setFlash($message);
+                }
+            }
+        } else {
+            if (!array_key_exists('customer_id', $this->request->query)) {
+                $message = __('No customer id was provided to add a user.');
+                throw new BadRequestException($message);
+            }
+
+            $this->request->data += array(
+                'User' => array(
+                    'customer_id' => $this->request->query['customer_id']
+                )
+            );
+        }
         if ($isPost) {
             if (!$isAjax) {
                 if ($this->User->saveAll($this->data)) {

@@ -1,6 +1,32 @@
 <?php
 class ContactsController extends AppController {
-    public $primaryModel = 'Contact';
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'catchredir' => true,
+            'paginate' => true,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'contacts.{n}.Contact' => 'contacts'
+                    ),
+                    'embed' => false
+                ),
+                'view' => array(
+                    'extract' => array(
+                        'contact.Contact' => 'Contact'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $helpers = array('Contact');
     public $paginate = array(
         'conditions' => array(),
@@ -12,9 +38,6 @@ class ContactsController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Contact->isAjax = true;
-        }
 
         $conditions = array();
         $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
@@ -39,9 +62,6 @@ class ContactsController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Contact->isAjax = true;
-        }
         $this->Contact->id = $id;
 
         if ($contact = $this->Contact->read()) {
@@ -58,20 +78,12 @@ class ContactsController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Contact->isAjax = true;
-        }
 
         if ($isPost || $isPut) {
             if ($this->Contact->save($this->request->data)) {
                 $message = __('Contact created successfully.');
-                if ($isAjax) {
-                    $contact = $this->Contact->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Contact->field('customer_id')));
-                }
-                $this->set(compact('contact'));
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'contacts', 'action' => 'view', $this->Contact->id), 201);
             } else {
                 $message = __('There was an error saving this contact. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -107,20 +119,13 @@ class ContactsController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Contact->isAjax = true;
-        }
         $this->Contact->recursive = 0;
 
         if ($isPost || $isPut) {
             if ($this->Contact->save($this->request->data)) {
                 $message = __('Contact saved successfully.');
-                if ($isAjax) {
-                    $contact = $this->Contact->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Contact->field('customer_id')));
-                }
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Contact->field('customer_id')));
             } else {
                 $message = __('There was an error saving this contact. Please correct any highlighted errors.');
                 if ($isAjax) {

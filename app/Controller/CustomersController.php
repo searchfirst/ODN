@@ -1,5 +1,34 @@
 <?php
 class CustomersController extends AppController {
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'catchredir' => true,
+            'paginate' => true,
+            'debug' => 1,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'customers.{n}.Customer' => 'customers'
+                    ),
+                    'embed' => false
+                ),
+                'view' => array(
+                    'extract' => array(
+                        'customer.Customer' => 'Customer',
+                        'customer.Reseller' => 'Reseller'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $helpers = array(
         'Customer',
         'Service',
@@ -14,6 +43,7 @@ class CustomersController extends AppController {
         'order' => array('Customer.company_name' => 'ASC'),
         'recursive' => 0
     );
+    public $uses = array('Customer');
 
     public function index() {
         extract($this->Odn->requestInfo);
@@ -30,18 +60,13 @@ class CustomersController extends AppController {
             $conditions['Customer.company_name LIKE'] = $this->request->query['filter'] . '%';
         }
 
-        if ($isAjax) {
-            $this->Customer->isAjax = true;
-        }
-
         if ($doPaginate) {
             $customers = $this->paginate('Customer', $conditions);
         } else {
             $this->Customer->recursive = 0;
             $customers = $this->Customer->find('all', compact('conditions'));
         }
-
-        $this->set(compact('title_for_layout', 'customers', 'doPaginate'));
+        $this->set(compact('title_for_layout', 'customers', 'page', 'total', 'per_page'));
     }
 
     public function by_service() {
@@ -94,7 +119,6 @@ class CustomersController extends AppController {
         $this->Customer->id = $id;
         if ($isAjax) {
             $this->Customer->recursive = 0;
-            $this->Customer->isAjax = true;
         } else {
             $this->Customer->recursive = 2;
         }
@@ -113,20 +137,12 @@ class CustomersController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Customer->isAjax = true;
-        }
 
         if ($isPost || $isPut) {
             if ($this->Customer->saveAll($this->request->data)) {
                 $message = __('Customer added successfully.');
-                if ($isAjax) {
-                    $customer = $this->Customer->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('action' => 'view', $this->Customer->id));
-                }
-                $this->set(compact('customer'));
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Customer->id));
             } else {
                 $message = __('There was an error saving this customer. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -156,21 +172,14 @@ class CustomersController extends AppController {
 
         extract($this->Odn->requestInfo);
 
-        if ($isAjax) {
-            $this->Customer->isAjax = true;
-        }
         $this->Customer->id = $id;
         $this->Customer->recursive = -1;
 
         if ($isPost || $isPut) {
             if ($this->Customer->save($this->request->data)) {
                 $message = __('Customer saved successfully.');
-                if ($isAjax) {
-                    $customer = $this->Customer->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('action' => 'view', $id));
-                }
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'customers', 'action' => 'view', $id));
             } else {
                 $message = __('There was an error saving this customer. Please correct any highlighted errors.');
                 if ($isAjax) {
