@@ -1,5 +1,33 @@
 <?php
 class WebsitesController extends AppController {
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'catchredir' => true,
+            'paginate' => true,
+            'debug' => 1,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'websites.{n}.Website' => 'websites'
+                    ),
+                    'embed' => false
+                ),
+                'view' => array(
+                    'extract' => array(
+                        'website.Website' => 'Website'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $primaryModel = 'Website';
     public $paginate = array(
         'conditions' => array(),
@@ -35,20 +63,12 @@ class WebsitesController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Website->isAjax = true;
-        }
 
         if ($isPost || $isPut) {
             if ($this->Website->save($this->request->data)) {
                 $message = __('Website created successfully.');
-                if ($isAjax) {
-                    $website = $this->Website->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Website->field('customer_id')));
-                }
-                $this->set(compact('website'));
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'websites', 'action' => 'view', $this->Website->id), 201);
             } else {
                 $message = __('There was an error saving this website. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -78,21 +98,14 @@ class WebsitesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Website->isAjax = true;
-        }
         $this->Website->id = $id;
         $this->Website->recursive = -1;
 
         if ($isPost || $isPut) {
             if ($this->Website->save($this->request->data)) {
                 $message = __('Website saved successfully.');
-                if ($isAjax) {
-                    $website = $this->Website->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Website->field('customer_id')));
-                }
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'websites', 'action' => 'view', $this->Website->id));
             } else {
                 $message = __('There was an error saving this website. Please correct any highlighted errors.');
                 if ($isAjax) {

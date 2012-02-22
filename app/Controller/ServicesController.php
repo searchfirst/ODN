@@ -1,5 +1,35 @@
 <?php
 class ServicesController extends AppController {
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'catchredir' => true,
+            'paginate' => true,
+            'debug' => 1,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'services.{n}.Service' => 'services',
+						'services.{n}.Website' => 'services.{n}.Website',
+						'services.{n}.User' => 'services.{n}.User'
+                    ),
+                    'embed' => false
+                ),
+                'view' => array(
+                    'extract' => array(
+                        'service.Service' => 'Service'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $primaryModel = 'Service';
     public $paginate = array(
         'conditions' => array(),
@@ -11,9 +41,6 @@ class ServicesController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Service->isAjax = true;
-        }
         $conditions = array();
         $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
 
@@ -45,9 +72,6 @@ class ServicesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Service->isAjax = true;
-        }
 
         if ($service = $this->Service->read()) {
             if (!$isAjax) {
@@ -63,20 +87,11 @@ class ServicesController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Service->isAjax = true;
-        }
-
         if ($isPost || $isPut) {
             if ($this->Service->save($this->data)) {
                 $message = __('Service created successfully.');
-                if ($isAjax) {
-                    $service = $this->Service->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Service->field('customer_id')));
-                }
-                $this->set(compact('service'));
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'services', 'action' => 'view', $this->Service->id), 201);
             } else {
                 $message = __('There was an error saving this service. Please correct any highlighted errors.');
                 if ($isAjax) {

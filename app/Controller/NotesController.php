@@ -1,5 +1,31 @@
 <?php
 class NotesController extends AppController {
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'paginate' => true,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'notes.{n}.Note' => 'notes'
+                    ),
+                    'embed' => false
+                ),
+                'view' => array(
+                    'extract' => array(
+                        'note.Note' => 'Note'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $primaryModel = 'Note';
     public $paginate = array(
         'conditions' => array(),
@@ -11,9 +37,6 @@ class NotesController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Note->isAjax = true;
-        }
         $conditions = array();
         $doPaginate = !(isset($this->request->query['limit']) && $this->request->query['limit'] == 'all');
 
@@ -36,9 +59,6 @@ class NotesController extends AppController {
 
     public function you() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Note->isAjax = true;
-        }
         $doPaginate = true;
         $conditions = array(
             'Note.user_id' => User::getCurrent('id')
@@ -60,24 +80,16 @@ class NotesController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Note->isAjax = true;
-        }
 
         if ($isPost || $isPut) {
             if ($this->Note->save($this->data)) {
                 $message = __('Note added successfully.');
-                if ($isAjax) {
-                    $note = $this->Note->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect($this->referer('/'));
-                }
-                $this->set(compact('note'));
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'notes', 'action' => 'view', $this->Note->id), 201);
             } else {
                 $message = __('There was an error saving this note. Please correct any highlighted errors.');
                 if ($isAjax) {
-                    $this->cakeError('ajaxError', compact('message'));
+                    throw new BadRequestException($message);
                 } else {
                     $this->Session->setFlash($message);
                 }
@@ -109,20 +121,13 @@ class NotesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Note->isAjax = true;
-        }
         $title_for_layout = __('Edit Note: %s', $id);
 
         if ($isPost || $isPut) {
             if ($this->Note->save($this->data)) {
                 $message = __('Note saved successfully.');
-                if ($isAjax) {
-                    $note = $this->Note->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Note->field('customer_id')));
-                }
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'notes', 'action' => 'view', $id));
             } else {
                 $message = __('There was an error saving this note. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -136,5 +141,23 @@ class NotesController extends AppController {
         }
 
         $this->set(compact('note', 'title_for_layout'));
+    }
+
+    public function view($id) {
+        if (!$id) {
+            $message = __('No id was provided to view a note');
+            throw new BadRequestException($message);
+        }
+
+        extract($this->Odn->requestInfo);
+        $this->Note->id = $id;
+
+		$note = $this->Note->read();
+        if (!$note) {
+            $message = __('A note could not be found with id: %s', $id);
+            throw new NotFoundException($message);
+        }
+
+        $this->set(compact('note'));
     }
 }

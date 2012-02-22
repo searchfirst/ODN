@@ -27,8 +27,8 @@
                     router: this,
                     viewTemplate: 'customersView',
                     widgets: {
-                        'cnrsEditable [contenteditable]': [{save: 'cb_update'}],
-                        'cnrsCollapse .collapse': [{}]
+                        'cnrsEditable [contenteditable]': {save: 'update'},
+                        'cnrsCollapse .collapse': {}
                     }
                 });
             view.view(id);

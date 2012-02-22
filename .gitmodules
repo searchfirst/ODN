@@ -52,3 +52,6 @@
 [submodule "app/webroot/js/libs/js-markdown-extra"]
 	path = app/webroot/js/libs/js-markdown-extra
 	url = git://github.com/connrs/js-markdown-extra.git
+[submodule "app/Plugin/Rest"]
+	path = app/Plugin/Rest
+	url = git://github.com/connrs/cakephp-rest-plugin.git

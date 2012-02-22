@@ -18,9 +18,6 @@ class AppController extends Controller {
             )
         ),
         'Odn',
-        'RequestHandler' => array(
-            'className' => 'OdnRequestHandler'
-        ),
         'Session',
         'Sma.Sma'
     );
@@ -35,17 +32,4 @@ class AppController extends Controller {
     );
     var $uses = array('User');
     var $view = 'Theme';
-
-    public function beforeFilter() {
-        parent::beforeFilter();
-        
-        //if (isset($this->paginate)) {
-            //if (!array_key_exists('extra', $this->paginate)) {
-                //$this->paginate['extra'] = array();
-            //}
-            //if ($this->request->is('ajax')) {
-                //$this->paginate['isAjax'] = true;
-            //}
-        //}
-    }
 }

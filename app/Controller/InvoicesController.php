@@ -1,5 +1,32 @@
 <?php
 class InvoicesController extends AppController {
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'catchredir' => true,
+            'paginate' => true,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'invoices.{n}.Invoice' => 'invoices'
+                    ),
+                    'embed' => false
+                ),
+                'view' => array(
+                    'extract' => array(
+                        'invoice.Invoice' => 'Invoice'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $helpers = array(
         'Invoice'
     );
@@ -14,9 +41,6 @@ class InvoicesController extends AppController {
 
     public function index() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Invoice->isAjax = true;
-        }
         $conditions = array();
         $wizard = true;
         $title_for_layout = __('Invoices');
@@ -39,20 +63,12 @@ class InvoicesController extends AppController {
 
     public function add() {
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Invoice->isAjax = true;
-        }
 
         if ($isPost || $isPut) {
             if ($this->Invoice->save($this->request->data)) {
                 $message = __('Invoice created successfully');
-                if ($isAjax) {
-                    $invoice = $this->Invoice->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Invoice->field('customer_id')));
-                }
-                $this->set(compact('invoice'));
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'invoices', 'action' => 'view', $this->Invoice->id), 201);
             } else {
                 $message = __('There was an error saving this invoice. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -82,21 +98,14 @@ class InvoicesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Invoice->isAjax = true;
-        }
         $this->Invoice->id = $id;
         $this->Invoice->recursive = -1;
 
         if ($isPost || $isPut) {
             if ($this->Invoice->save($this->request->data)) {
                 $message = __('Invoice saved successfully.');
-                if ($isAjax) {
-                    $invoice = $this->Invoice->read();
-                } else {
-                    $this->Session->setFlash($message);
-                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Invoice->field('customer_id')));
-                }
+				$this->Session->setFlash($message);
+				$this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Invoice->field('customer_id')));
             } else {
                 $message = __('There was an error saving this invoice. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -117,9 +126,6 @@ class InvoicesController extends AppController {
         }
 
         extract($this->Odn->requestInfo);
-        if ($isAjax) {
-            $this->Invoice->isAjax = true;
-        }
         $this->Invoice->id = $id;
 
         if ($invoice = $this->Invoice->read()) {
