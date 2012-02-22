@@ -1,7 +1,7 @@
 dac.CustomersListView = cbb.ListView.extend({
     gotoViewOnAdd: true,
     initialize: function(options) {
-        cbb.ListView.prototype.initialize.apply(this, options);
+        cbb.ListView.prototype.initialize.call(this, options);
         this.setElement($('.customer.list').get(0));
     },
     modelName: 'Customer'

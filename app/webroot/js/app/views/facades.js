@@ -1,56 +1,46 @@
     dac.FacadesView = cbb.PageView.extend({
         events: {
-            'focus .project.list .filter_hooks a': '_filterCustomers',
+            'focus .customer.list .filter_hooks a': '_filterCustomers',
             'focus .note.list .filter_hooks a': '_filterNotes'
         },
         index: function() {
             this.trigger('reset')
                 .trigger('rendering')
-                .bind('rendered', function() {
-                    var customers = new dac.CustomersCollection({
-                            baseUrl: '/customers/by_service',
-                            page: 1,
-                            params: {
-                                status: 2,
-                                limit: 'all'
-                            }
-                        }),
-                        notes = new dac.NotesCollection({
-                            baseUrl: '/notes/you',
-                            page: 1,
-                            params: {
-                                flagged: 0,
-                                limit: 10
-                            }
-                        });
-
-                    this.views = {
-                        customers: new cbb.ListView({
-                            collection: customers,
-                            el: $('.project.list').get(0),
-                            itemListTemplateStem: 'DetailsItemView',
-                            itemTagName: 'article',
-                            modelName: 'Customer',
-                            showButtons: false
-                        }),
-                        notes: new cbb.ListView({
-                            collection: notes,
-                            el: $('.note.list').get(0),
-                            itemListTemplateStem: 'DetailsItemView',
-                            itemTagName: 'article',
-                            modelName: 'Note',
-                            showButtons: false
-                        })
-                    }
-                    notes.fetch();
-                    customers.fetch();
-                })
+                .bind('rendered', this.renderedIndex)
                 .render();
+        },
+        renderedIndex: function() {
+            var customers = new dac.CustomersCollection({
+                    baseUrl: '/customers/by_service',
+                    page: 1,
+                    params: {status: 2, limit: 'all'}
+                }),
+                notes = new dac.NotesCollection({
+                    baseUrl: '/notes/you',
+                    page: 1,
+                    params: {flagged: 0, limit: 10}
+                });
+
+            this.addSubView('customers', new dac.CustomersListView({
+                    collection: customers,
+                    itemListTemplateStem: 'DetailsItemView',
+                    itemTagName: 'article',
+                    showButtons: false
+                }))
+                .addSubView('notes', new dac.NotesListView({
+                    collection: notes,
+                    itemListTemplateStem: 'DetailsItemView',
+                    itemTagName: 'article',
+                    showButtons: false
+                }));
+
+            notes.fetch();
+            customers.fetch();
         },
         _filterCustomers: function(e) {
             e.preventDefault();
             var $target = $(e.target),
-                $current = $('.project.list .current', this.el),
+                $current = this.$('.customer.list .current'),
                 $li = $target.parent('li'),
                 paramField = $target.data('paramField'),
                 paramVal = $target.data('paramVal'),
