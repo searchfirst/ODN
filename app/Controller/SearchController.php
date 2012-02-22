@@ -1,5 +1,28 @@
 <?php
 class SearchController extends AppController {
+    public $components = array(
+        'RequestHandler' => array(
+            'className' => 'Rest.Rest',
+            'catchredir' => true,
+            'paginate' => true,
+            'debug' => 1,
+            'ratelimit' => array(
+                'enable' => false
+            ),
+            'meta' => array(
+                'enable' => false
+            ),
+            'actions' => array(
+                'index' => array(
+                    'extract' => array(
+                        'search_indices.{n}.SearchIndex' => 'search_indices',
+                        'search_indices.{n}.Customer' => 'search_indices.{n}.Customer'
+                    ),
+                    'embed' => false
+                )
+            )
+        )
+    );
     public $helpers = array(
         'Paginator',
         'Searchable.Searchable'
@@ -34,8 +57,8 @@ class SearchController extends AppController {
 
         if (array_key_exists('q', $this->request->query)) {
             App::uses('Sanitize', 'Utility');
-            $this->request->data['q'] = $this->request->query['q'];
-            $query = $this->SearchIndex->fuzzyize(Sanitize::escape($this->data["q"]));
+            $this->request->data['q'] = Sanitize::escape(urldecode($this->request->query['q']));
+            $query = $this->SearchIndex->fuzzyize($this->request->data["q"]);
             $conditions[] = "SearchIndex.data ~* '$query'";
 
             if (empty($model)) {
@@ -46,8 +69,8 @@ class SearchController extends AppController {
             }
 
             $this->paginate['conditions'] += $conditions;
-            $results = $this->paginate('SearchIndex');
-            $this->set(compact('doPaginate', 'results'));
+            $search_indices = $this->paginate('SearchIndex');
+            $this->set(compact('search_indices'));
         }
     }
 }
