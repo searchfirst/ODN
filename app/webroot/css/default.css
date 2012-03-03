@@ -15,14 +15,14 @@ min-height: 100%;
 }
 
 body {
-font-family: 'Helvetica Neue',HelveticaNeue,Helvetica-Neue,Helvetica,Arial,sans-serif;
+font-family: sans-serif;
 color: rgba(0,0,0,.5);
 text-shadow: 1px 1px 0 rgba(255,255,255,.2);
 margin: .5em;
 }
 
 h1 {
-font-family: CartoGothicProBold,Verdana,Helvetica,Arial,sans-serif;
+font-family: sans-serif;
 margin-bottom: .5em;
 line-height: 1.6;
 }
