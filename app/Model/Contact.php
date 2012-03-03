@@ -5,7 +5,7 @@ class Contact extends AppModel {
         'IntCaster'=>array(
             'cacheConfig'=>'lenore'
         ),
-        'Alkemann.Revision'
+        //'Alkemann.Revision'
     );
     public $belongsTo = array('Customer');
     public $findMethods = array('allRelated' => true);

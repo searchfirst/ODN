@@ -7,7 +7,7 @@ class Customer extends AppModel {
         'IntCaster'=>array(
             'cacheConfig'=>'lenore'
         ),
-        'Alkemann.Revision'=>array('limit'=>2)
+        //'Alkemann.Revision'=>array('limit'=>2)
     );
     public $displayField = 'company_name';
     public $findMethods = array(

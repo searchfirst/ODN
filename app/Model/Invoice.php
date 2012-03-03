@@ -5,7 +5,7 @@ class Invoice extends AppModel {
     public $recursive = 1;
     public $actsAs = array(
         'IntCaster' => array('cacheConfig' => 'lenore'),
-        'Alkemann.Revision'
+        //'Alkemann.Revision'
     );
     public $_findMethods = array('overdue' => true,'notOverdue' => true);
 

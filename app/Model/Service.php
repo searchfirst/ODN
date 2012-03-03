@@ -5,7 +5,7 @@ class Service extends AppModel {
             'cacheConfig'=>'lenore'
         ),
         'Joined',
-        'Alkemann.Revision',
+        //'Alkemann.Revision',
         'Detextiliser'=>array(
             'fields'=>array('description')
         )
