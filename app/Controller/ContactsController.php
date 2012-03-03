@@ -82,8 +82,8 @@ class ContactsController extends AppController {
         if ($isPost || $isPut) {
             if ($this->Contact->save($this->request->data)) {
                 $message = __('Contact created successfully.');
-				$this->Session->setFlash($message);
-				$this->redirect(array('controller' => 'contacts', 'action' => 'view', $this->Contact->id), 201);
+                $this->Session->setFlash($message);
+                $this->redirect(array('controller' => 'contacts', 'action' => 'view', $this->Contact->id), 201);
             } else {
                 $message = __('There was an error saving this contact. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -124,8 +124,8 @@ class ContactsController extends AppController {
         if ($isPost || $isPut) {
             if ($this->Contact->save($this->request->data)) {
                 $message = __('Contact saved successfully.');
-				$this->Session->setFlash($message);
-				$this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Contact->field('customer_id')));
+                $this->Session->setFlash($message);
+                $this->redirect(array('controller' => 'contacts', 'action' => 'view', $id));
             } else {
                 $message = __('There was an error saving this contact. Please correct any highlighted errors.');
                 if ($isAjax) {
