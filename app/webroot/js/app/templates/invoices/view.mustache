@@ -3,6 +3,10 @@
 <section class="detail list">
 <h1>Details</h1>
 <article>
+{{#if description}}
+<p><b>Description:</b></p>
+<pre>{{description}}</pre>
+{{/if}}
     <p><b>Status:</b> {{text_status}}</p>
     <p><b>Reference:</b> {{reference}}</p>
     <p><b>Your Reference:</b> {{your_reference}}</p>
