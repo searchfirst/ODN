@@ -104,8 +104,13 @@ class InvoicesController extends AppController {
         if ($isPost || $isPut) {
             if ($this->Invoice->save($this->request->data)) {
                 $message = __('Invoice saved successfully.');
-				$this->Session->setFlash($message);
-				$this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Invoice->field('customer_id')));
+                if ($isAjax) {
+                    $this->redirect(array('controller' => 'invoices', 'action' => 'view', $this->Invoice->id));
+                }
+                else {
+                    $this->Session->setFlash($message);
+                    $this->redirect(array('controller' => 'customers', 'action' => 'view', $this->Invoice->field('customer_id')));
+                }
             } else {
                 $message = __('There was an error saving this invoice. Please correct any highlighted errors.');
                 if ($isAjax) {
@@ -132,12 +137,23 @@ class InvoicesController extends AppController {
             if (!$isAjax) {
                 $title_for_layout = __('%s | Invoice', $invoice['Invoice']['reference']);
             }
+
+            if(isset($this->params['ext']) && $this->params['ext']=='pdf') {
+                // Prep for PDF
+                $extra_vars = $this->params['url'];
+                unset($extra_vars['url']);
+                if(!count($extra_vars)) $extra_vars = null;
+
+                $this->Invoice->cacheFDF($id,$extra_vars);
+                header("Content-Disposition: inline; filename=\"Invoice-{$invoice['Invoice']['reference']}.pdf\"");
+                $invoice = $this->Invoice->generatePDF($id,$extra_vars);
+            }
+
+            $this->set(compact('invoice', 'title_for_layout'));
         } else {
             $message = __('An invoice could not be found with id: %s', $invoice['Invoice']['id']);
             throw new NotFoundException($message);
         }
-
-        $this->set(compact('invoice', 'title_for_layout'));
     }
 
     public function delete($id = null) {
@@ -173,4 +189,26 @@ class InvoicesController extends AppController {
 
         $this->set(compact('invoice', 'title_for_layout'));
     }
+
+    public function generate($id) {
+        $conditions = array('Invoice.id'=>$id);
+        $extra_vars = $this->params['url'];
+        unset($extra_vars['url']);
+        if(!count($extra_vars)) $extra_vars = null;
+        if($invoice = $this->Invoice->find($conditions)) {
+            if(isset($this->params['alt_content']) && $this->params['alt_content']=='Pdf') {
+                $this->Invoice->cacheFDF($id,$extra_vars);
+                $invoice_pdf = $this->Invoice->generatePDF($id,$extra_vars);
+                header("Content-Disposition: inline; filename=\"Invoice-{$invoice['Invoice']['reference']}.pdf\"");
+                $this->set('invoice',$invoice_pdf);
+            } else {
+                $this->set('invoice',$invoice);
+            }
+        } else {
+            $this->viewPath = 'errors';
+            $this->render('not_found');
+            return true;
+        }
+    }
+
 }

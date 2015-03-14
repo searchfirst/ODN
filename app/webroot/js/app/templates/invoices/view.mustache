@@ -1,16 +1,38 @@
-<h1>Invoice</h1>
-<div class="detail box">
-<p>{{Customer.company_name}}</p>
-{{{txtl Customer.address}}}
-<p><b>Reference:</b> {{reference}}</p>
-</div>
-<div class="fwrap c2 p">
-<div>
+<h1>Invoice: {{reference}}</h1>
+<p><a href="/customers/view/{{customer_id}}">« Back to customer</a></p><br />
 <section class="detail list">
 <h1>Details</h1>
-{{{txtl description}}}
+<article>
+    <p><b>Status:</b> {{text_status}}</p>
+    <p><b>Reference:</b> {{reference}}</p>
+    <p><b>Your Reference:</b> {{your_reference}}</p>
+    <p><b>Amount:</b> {{moneyFormat amount}}</p>
+    <p><b>Issued:</b> {{dateFormat created}}</p>
+    {{#date_invoice_paid}}
+    <p><b>Paid:</b> {{dateFormat .}}</p>
+    {{^}}
+    <p><b>Due:</b> {{dateFormat due_date}}</p>
+    {{/date_invoice_paid}}
+</article>
+<div class="p_form">
+    {{#if cancelled}}
+    {{^}}
+    <a role="button" data-type="cancel">Cancel</a>
+    <a role="button" data-type="generate-invoice">Generate invoice</a>
+    {{#if date_invoice_paid}}
+    <a role="button" data-type="generate-paid-invoice">Generate paid invoice</a>
+    {{/if}}
+    {{/if}}
+</div>
+{{#if cancelled}}
+{{^}}
+    {{#if date_invoice_paid}}
+    {{^}}
+    <div class="p_form">
+    <p>This invoice hasn't yet been marked as paid. To mark it as paid, select a date and then click 'Invoice paid' below.</p>
+    <p><input type="date" name="date_invoice_paid" id="date_invoice_paid" value="">
+    <a role="button" data-type="mark-invoice-paid">Invoice paid</a></p>
+    </div>
+    {{/if}}
+{{/if}}
 </section>
-</div>
-<div>
-</div>
-</div>

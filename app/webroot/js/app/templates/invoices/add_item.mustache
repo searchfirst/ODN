@@ -6,9 +6,7 @@
 <div><input type="hidden" name="vat_included" value="0"><input type="checkbox" name="vat_included" value="1" id="InvoiceVatIncluded"><label for="InvoiceVatIncluded">Vat Included</label></div> 
 <div><label for="InvoiceDueDate">Due Date</label><input name="due_date" type="date" id="InvoiceDueDate" value="{{isoDate "28"}}"></div>
 <div><label for="InvoiceServiceId">Service</label><select name="service_id" id="InvoiceServiceId">
-{{#services}}
-<option value="{{id}}">[{{text_status}}] {{Website.uri}} {{title}}</option>
-{{/services}}
+{{#parentModel}}{{#services}}<option value="{{id}}">[{{text_status}}] {{Website.uri}} {{title}}</option>{{/services}}{{/parentModel}}
 </select></div>
 <input type="hidden" name="customer_id" value="{{customer_id}}" id="InvoiceCustomerId"> 
 <div><input type="submit" value="Add"></div> 

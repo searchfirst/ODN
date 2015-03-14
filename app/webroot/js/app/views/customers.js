@@ -110,6 +110,7 @@ dac.CustomersView = cbb.PageView.extend({
             }))
             .addSubView('invoices', new dac.InvoicesListView({
                 collection: customer.invoices,
+                hideFormOnSubmit: true,
                 extras: {
                     users: {
                         collection: customer.extras.users,

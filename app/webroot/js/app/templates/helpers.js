@@ -1,3 +1,8 @@
+	Handlebars.registerHelper('consoleLog', function(h) {
+        console.log(h);
+        return '';
+	});
+	
 	Handlebars.registerHelper('statusTag', function(h) {
 		return new Handlebars.SafeString('<span class="flag ' + h.toLowerCase() + '">' + h + '</span>');
 	});
@@ -12,6 +17,10 @@
 	});
 	
 	Handlebars.registerHelper('dateFormat', function(t) {
+        if (!t) {
+            return '';
+        }
+
 		var parts = t.split(' '),dateParts = parts[0].split('-');
 		return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
 	});
